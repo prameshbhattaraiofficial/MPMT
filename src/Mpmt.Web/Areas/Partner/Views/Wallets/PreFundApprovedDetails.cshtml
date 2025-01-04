@@ -1,0 +1,70 @@
+﻿@using Mpmt.Core.Dtos.PrefundRequest
+@model FundRequestApprovedView
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered mb-0">
+
+            <tbody>
+                <tr>
+                    <td><span>Created Date :</span></td>
+                    <td><span>@Model.CreatedDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Updated Date :</span></td>
+                    <td><span>@Model.UpdatedDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Partner Id :</span></td>
+                    <td><span><strong style="color: #f98c45">@Model.PartnerCode</strong></span></td>
+                </tr>
+                <tr>
+                    <td><span>Full Name :</span></td>
+                    <td><span>@Model.Username</span></td>
+                </tr>
+                 <tr>
+                    <td><span>Source Currency :</span></td>
+                    <td><span>@Model.SourceCurrency</span></td>
+                </tr>
+                 <tr>
+                    <td><span>Destination Currency :</span></td>
+                    <td><span>@Model.DestinationCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Organization Name :</span></td>
+                    <td><span>Xpressewa pvt ltd</span></td>
+                </tr>
+                 <tr>
+                    <td><span>Request Status :</span></td>
+                    <td><span>@Model.RequestStatus</span></td>
+                </tr>
+                <tr>
+                    <td><span>Req Amount :</span></td>
+                    <td><span>Rs.@Model.Amount</span></td>
+                </tr>
+                <tr>
+                    <td><span>Currency :</span></td>
+                    <td><span class="tb-status text-orange">NPR</span></td>
+                </tr>
+                <tr>
+                    <td><span>Txn Id :</span></td>
+                    <td><span>@Model.TransactionId</span></td>
+                </tr>
+                 <tr>
+                    <td><span>Remarks:</span></td>
+                    <td><span>@Model.Remarks</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vocher Image :</span></td>
+                    <td><img src="@Model.VoucherImgPath" alt="" class="img-fluid height-150"></td>
+                </tr>
+
+            </tbody>
+        </table><!--end /table-->
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+            <!--end card-body-->

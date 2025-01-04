@@ -1,0 +1,71 @@
+﻿@using Mpmt.Core.Dtos.Notification;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@model PagedList<NotificationModel>
+
+@{
+    int sn = 1;
+}
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                @* <th>Notification Id</th> *@
+                <th>CreatedDate</th>
+                <th>PartnerCode</th>
+                <th>Message</th>
+                @* <th>AdminLink</th> *@
+                @* <th>PartnerLink</th> *@
+                @* <th>ModuleCode</th> *@
+                @* <th>IsReadByAdmin</th> *@
+                @* <th>IsReadByPartner</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+                <tr></tr>
+            }
+            else
+            {
+                <link href="~/css/customfixedheader.css" rel="stylesheet" />
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@sn</td>
+                        @* <td>@item.NotificationId</td> *@
+                        <td>@item.CreatedDate</td>
+                        <td>@item.PartnerCode</td>
+                        <td>@item.Message</td>
+                        @* <td>@item.AdminLink</td> *@
+                        @* <td>@item.PartnerLink</td> *@
+                        @* <td>@item.ModuleCode</td> *@
+                        @* <td>@item.IsReadByAdmin</td> *@
+                        @* <td>@item.IsReadByPartner</td> *@
+                    </tr>
+                    sn = sn + 1;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

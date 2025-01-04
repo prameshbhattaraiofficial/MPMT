@@ -1,0 +1,61 @@
+﻿@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.ActivityLog
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP;
+@model PagedList<UserActivityLogDetails>
+@{
+    var sn = 1;
+}
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive">
+    <table id="datatable-buttons156"  class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>ActivityDate</th>
+                <th>UserType</th>
+                <th>UserName</th>
+                <th>Email</th>
+                <th>IPAddress</th>
+                <th>Path</th>
+                <th>User Agent</th>
+                <th>ActionPerformed</th>               
+                <th>Action</th>
+
+            </tr>
+        </thead>
+
+
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.SN</td>
+                    <td>@item.ActivityDate</td>
+                    <td>@item.UserType</td>
+                    <td>@item.UserName</td>
+                    <td>@item.Email</td>
+                    <td>@item.IPAddress</td>
+                    <td>@item.Path</td>
+                    <td>@item.UserAgent</td>
+                    <td>@item.ActionPerformed</td>
+                    
+                    <td name="buttons">
+                        <div class=" float-center">
+                            @if (actors.FirstOrDefault(x => x.Action == "ViewActivityLog")?.Permission ?? false)
+                            {
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2"> <i class="dripicons-preview" aria-hidden="true"></i></a>
+                            }
+                        </div>
+                    </td>                 
+                </tr>
+                sn = sn + 1;
+            }
+
+        </tbody>
+    </table>
+</div>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

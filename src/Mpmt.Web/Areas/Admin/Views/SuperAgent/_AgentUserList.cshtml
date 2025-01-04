@@ -1,0 +1,197 @@
+﻿@using Mpmt.Core.Dtos.AdminUser
+@using Mpmt.Core.Dtos.CashAgent;
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP;
+@model PagedList<AgentDetail>
+
+@{
+    int sn = 1;
+}
+
+
+
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Full Name</th>
+                <th>Agent Code</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>District</th>
+                <th>Mobile Number</th>
+                
+                <th>User Type</th>
+                <th>Registered Date</th>
+                <th>Status</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+
+
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <style>
+                    tr.active {
+                        background: #ccc;
+                    }
+
+                    .tableFixHead {
+                        overflow-y: auto;
+                        height: 500px;
+                    }
+
+                        .tableFixHead thead th {
+                            position: sticky;
+                            top: 0px;
+                        }
+                </style>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.SN</td>
+                        <td>
+
+                            <form asp-area="Admin" id="@item.FullName" asp-controller="SuperAgent" asp-action="AgentListBySuperAgent" method="post">
+                                <input type="hidden" name="SuperAgentCode" value="@item.Agentcode" />
+                                @*                                 <input type="hidden" name="Agentcode" value="@item.Agentcode" /> *@
+                                <input type="hidden" name="AgentName" value="@item.FullName" />
+                                @if (item.UserType == "Agent")
+                                {
+                                    <p>@item.FullName</p>
+                                }
+                                else
+                                {
+                                    <a href="javascript:void(0);" onclick="submitForm(this);" class="text-primary">@item.FullName</a>
+                                }
+
+
+                            </form>
+                        </td>
+                        <td>@item.Agentcode</td>
+                        <td>@item.Email</td>
+                        <td>@item.FullAddress</td>
+                        <td>@item.District</td>
+                        <td>@item.ContactNumber</td>
+                        <td>@item.UserType</td>
+                        <td>@item.RegisteredDate</td>
+                        
+
+                        @if (item.IsActive == true)
+                        {
+                            <td><span class="badge bg-soft-success px-2">Active</span></td>
+                        }
+                        else
+                        {
+                            <td><span class="badge bg-soft-danger px-2">InActive</span></td>
+                        }
+                        <td name="buttons">
+                            <div class=" float-center">
+                                <a onclick="ShowPopUp('@Url.Action("UpdateAgent","SuperAgent",new {AgentCode=item.Agentcode})','Update Agent')" class="btn btn-sm btn-success" data-bs-toggle="modal" title="Edit" data-bs-target="#exampleModalLogin">
+                                    <i class="dripicons-pencil" aria-hidden="true"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <i class="dripicons-dots-3"></i></button>
+                                <div class="dropdown-menu">
+                                    @if (item.IsPrefunding)
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("AddFundRequest", "SuperAgent", new { AgentCode = item.Agentcode, SuperAgentName = item.FullName })', 'Add Fund')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">Agent Prefunding</a>
+                                    }
+                                    <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("AddCommissionRules", "SuperAgent", new { AgentCode = item.Agentcode, agentType = item.UserType })', 'Commission Rules', 'modal-xl')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">Commission Rules</a>
+                                    <form asp-area="Admin" asp-controller="SuperAgent" asp-action="AgentLedger" method="post">
+                                        <input type="hidden" name="AgentCode" value="@item.Agentcode" />
+                                        <button class="dropdown-item" type="submit">Agent Ledger</button>
+                                    </form>
+                                    @if (item.IsActive)
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("ActivateUser", "SuperAgent", new { AgentCode = item.Agentcode, isActive = "False" })', 'Activate User','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">DeactivateUser</a>
+                                    }
+                                    else
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("ActivateUser", "SuperAgent", new { AgentCode = item.Agentcode, isActive = "True"  })', 'Deactivate User','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">ActivateUser</a>
+                                    }
+                                    <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("DeleteUser", "SuperAgent", new { AgentCode = item.Agentcode, isActive = "True"  })', 'Delete User','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">Delete User</a>
+                                    @if (item.UserType == "Agent")
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("MarkasSuperAgent", "SuperAgent", new { AgentCode = item.Agentcode, isActive = "True"  })', 'Mark as SuperAgent','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">Mark as SuperAgent</a>
+                                    }
+                                   
+
+                                    @if (!string.IsNullOrEmpty(item.CredentialId))
+                                    {
+                                     
+
+                                        <a onclick="ShowPopUp('@Url.Action("ViewCredentialsAgent", "SuperAgent", new { AgentCode = item.Agentcode })', 'Api Key')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="mdi mdi-lock-reset align-self-center font-16 icon-dual me-1"></i> View ApiKey</a>
+
+                                        <a onclick="ShowPopUp('@Url.Action("ViewPasswordCredentialsAgent", "SuperAgent", new { AgentCode = item.Agentcode})', 'Api Password')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="mdi mdi-lock-reset align-self-center font-16 icon-dual me-1"></i> View Api Username/Password</a>
+
+                                        <a onclick="ShowPopUp('@Url.Action("ViewPasswordSystemRsakeyPair", "SuperAgent", new { AgentCode = item.Agentcode })', 'System Rsa keyPair')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="mdi mdi-lock-reset align-self-center font-16 icon-dual me-1"></i> View System RSA Key Pair</a>
+
+                                        <a onclick="ShowPopUp('@Url.Action("ViewPasswordUserRsakeyPair", "SuperAgent", new { AgentCode = item.Agentcode })', 'User Rsa keyPair')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="mdi mdi-lock-reset align-self-center font-16 icon-dual me-1"></i> View User RSA Key Pair</a>
+
+                                        <a onclick="ShowPopUp('@Url.Action("UpdateIpAddress", "SuperAgent", new { AgentCode = item.Agentcode })', 'Update API KEY')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="mdi mdi-lock-reset align-self-center font-16 icon-dual me-1"></i> Update IP </a>
+                                        
+                                    }
+                                    else
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("AddApiKey", "SuperAgent", new { AgentCode = item.Agentcode, isActive = "True"  })', 'Add Agent Api Key','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">Add Agent Api Key</a>
+
+                                    }
+
+                                    <a onclick="ShowPopUp('@Url.Action("GetAgentDetailsByAgentCode", "SuperAgent", new { AgentCode = item.Agentcode })', 'View Details')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="dripicons-preview" aria-hidden="true"></i>&emsp; View Details</a>
+
+                                   
+
+                                    @* <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("AddMultipleIP", "SuperAgent", new { AgentCode = item.Agentcode })', 'Add IP Address','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">Add IP Address</a> *@
+                                    @* <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("AgentSettlementReport", "SuperAgent", new { AgentCode = item.Agentcode })', 'Settlement Report','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">Settlement Report</a> *@
+                                    <a class="dropdown-item" href="@Url.Action("AgentSettlementReport","SuperAgent", new { AgentCode = item.Agentcode })">Statement Report</a>
+                                    @if (item.IsPrefunding)
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("Withdraw", "SuperAgent", new { AgentCode = item.Agentcode})', 'Withdraw Prefund','.modal-sm')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">Withdraw</a>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    sn = sn + 1;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+
+    function submitForm(anchor) {
+        var form = anchor.closest('form');
+        if (form) {
+            form.submit();
+        }
+    }
+
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

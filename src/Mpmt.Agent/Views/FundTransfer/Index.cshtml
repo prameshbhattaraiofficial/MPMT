@@ -1,0 +1,279 @@
+﻿@using Mpmt.Agent.Models.FundTransfer;
+@model FundTransferModel
+
+<div id="confirmation-overlay"></div>
+<div class="modal" id="confirmation-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel"> Are you sure ? </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Want to proceed for fund request ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="confirmYes" data-bs-dismiss="modal">Confirm</button>
+                <button type="button" class="btn btn-danger btn-sm" id="confirmNo" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-content">
+    <div class="container-fluid">
+        <form method="post" id="myForm" enctype="multipart/form-data" asp-controller="FundTransfer" asp-action="Index">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-title-box0">
+                        <div class="row">
+                            <div class="col">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item "><a href="javascript:void(0);">Reports</a></li>
+                                    <li class="breadcrumb-item active">Fund Request</li>
+                                </ol>
+                            </div>
+                            <div class="col-auto">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-bs-toggle="tab" href="#home" role="tab" aria-selected="false">Agent fund payout </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane p-3 active" id="home" role="tabpanel">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h4 class="card-title font-16">Net Receivable </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="earning-data text-center">
+                                        @if (Model.IsAgentPrefunding)
+                                        {
+                                            <h5>Prefund Amount: <strong>NPR. @Model.PrefundBalance</strong></h5>
+                                        }
+                                        <img src="../assets/images/money-begs.png" alt="" class="money-bag" height="95">
+                                        <h5 class="earn-money mb-1" id="receivableamt">NPR.  @Model.ReceivableAmount</h5>
+                                        <input type="hidden" id="ReceivableAmount" name="ReceivableAmount" value="@Model.ReceivableAmount" />
+                                        <div class="custom-control custom-switch switch-success" id="recList">
+                                            @if (Model.RequestStatus == 1)
+                                            {
+                                                <input type="checkbox" disabled class="custom-control-input" name="isReceivable" value="0" onclick='handleCheckClick(this);' id="receivable1">
+                                            }
+                                            else if (Model.ReceivableAmount <= 0)
+                                            {
+                                                <input type="checkbox" disabled class="custom-control-input" name="isReceivable" value="0" onclick='handleCheckClick(this);' id="receivable1">
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" class="custom-control-input" name="isReceivable" value="0" onclick='handleCheckClick(this);' id="receivable1">
+                                            }
+                                            <label class="form-label text-muted" for="receivable1">Request Receivable</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h4 class="card-title font-16">Net Commission</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="earning-data text-center">
+                                        <img src="../assets/images/money-begs.png" alt="" class="money-bag" height="100">
+                                        <h5 class="earn-money mb-1" id="commissionAmt">NPR. @Model.CommissionAmount</h5>
+                                        <input type="hidden" id="CommissionAmount" name="CommissionAmount" value="@Model.CommissionAmount" />
+                                        <div class="custom-control custom-switch switch-success" id="chkCommList">
+                                            @if (Model.CommRequestStatus == 1)
+                                            {
+                                                <input type="checkbox" disabled class="custom-control-input" onclick='handleClick(this);' name="isCommission" value="0" id="commission2">
+
+                                            }
+                                            else if (Model.CommissionAmount <= 0)
+                                            {
+                                                <input type="checkbox" disabled class="custom-control-input" onclick='handleClick(this);' name="isCommission" value="0" id="commission2">
+
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" class="custom-control-input" onclick='handleClick(this);' name="isCommission" value="0" id="commission2">
+                                            }
+                                            <label class="form-label text-muted" for="commission2">Request Commission</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h4 class="card-title font-16">Total Balance</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="earning-data text-center">
+                                        <img src="../assets/images/money-beg.png" alt="" class="align-self-center mt-2 mb-2" height="67">
+                                        <h5 class="earn-money mb-1" id="amtTotal" name="amtTotal">NPR. @Model.TotalAmount</h5>
+                                        <input type="hidden" name="TotalAmount" id="TotalAmount" value="@Model.TotalAmount" />
+                                        <h6 class="text-danger" id="isNegative" style="display:none">Invalid total amount!</h6>
+                                    </div>
+                                    <div class="text-center my-2">
+                                        <button class="btn btn-md btn-warning  waves-effect waves-light" type="button" id="api-key-btn1" data-bs-toggle="modal" disabled>Request Fund <i class="fas fa-paper-plane ms-1"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+        <div class="tab-content">
+            <div class="tab-pane p-3 active" id="home" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title font-16">Agent Ledger</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="earning-data text-center">
+                                    <img src="../assets/images/money-begs.png" alt="" class="money-bag" height="100">
+                                    <h5></h5>
+                                    <a asp-area="Agent" asp-controller="Agent" asp-action="AgentLedger" class="btn btn-md btn-warning w-100 waves-effect waves-light" type="button" id="api-key-btn1">Agent Ledger <i class="fas fa-paper-plane ms-1"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function handleCheckClick(cb) {
+        cb.value = cb.checked ? 1 : 0;
+    }
+    function handleClick(cb) {
+        cb.value = cb.checked ? 1 : 0;
+    }
+
+    $('#recList').on('change', 'input[type=checkbox]', function () {
+        debugger;
+        var ischecked = $(this).is(':checked');
+        var ischecked1 = $('#commission2').is(':checked');
+        var commissionStatus = @Model.CommRequestStatus;
+        var valueReceived = @Model.ReceivableAmount;
+        var valueReceived1 = @Model.CommissionAmount;
+        $('#commission2').prop("disabled", (commissionStatus == "1" || valueReceived1 == 0 || ischecked == true) ? true : false);
+        var value = @Model.TotalAmount;
+        var id = $(this).val();
+        if (ischecked == true && ischecked1 == true) {
+            var numbers = parseFloat(valueReceived) + parseFloat(valueReceived1);
+            $('#amtTotal').text('NPR. ' + (Math.round(numbers * 100) / 100).toFixed(2));
+            $('#TotalAmount').val(numbers.toFixed(2));
+            $("#api-key-btn1").prop("disabled", false);
+        }
+        else if (this.checked) {
+            $('#amtTotal').text('NPR. ' + valueReceived);
+            $('#TotalAmount').val(valueReceived);
+            $("#api-key-btn1").prop("disabled", false);
+        }
+        else if (ischecked1 == true) {
+            $('#amtTotal').text('NPR. ' + valueReceived1);
+            $('#TotalAmount').val(valueReceived1);
+            $("#api-key-btn1").prop("disabled", false);
+        }
+        else {
+            $('#amtTotal').text('NPR. ' + value);
+            $('#TotalAmount').val(value);
+            $("#api-key-btn1").prop("disabled", true);
+        }
+    });
+    $('#chkCommList').on('change', 'input[type=checkbox]', function () {
+        debugger;
+        var ischecked = $(this).is(':checked');
+        var ischecked1 = $('#receivable1').is(':checked');
+        var receivableStatus = @Model.RequestStatus;
+        var valueReceived1 = @Model.ReceivableAmount;
+        var valueReceived = @Model.CommissionAmount;
+        $('#receivable1').prop("disabled", (receivableStatus == "1" || valueReceived1 == 0 || ischecked == true) ? true : false);
+
+        var value = @Model.TotalAmount;
+        var id = $(this).val();
+        if (ischecked == true && ischecked1 == true) {
+            var numbers = parseFloat(valueReceived) + parseFloat(valueReceived1);
+            $('#amtTotal').text('NPR. ' + (Math.round(numbers * 100) / 100).toFixed(2));
+            $('#TotalAmount').val(numbers.toFixed(2));
+            $("#api-key-btn1").prop("disabled", false);
+        }
+        else if (this.checked) {
+            $('#amtTotal').text('NPR. ' + valueReceived);
+            $('#TotalAmount').val(valueReceived);
+            $("#api-key-btn1").prop("disabled", false);
+        }
+        else if (ischecked1 == true) {
+            $('#amtTotal').text('NPR. ' + valueReceived1);
+            $('#TotalAmount').val(valueReceived1);
+            $("#api-key-btn1").prop("disabled", false);
+        }
+        else {
+            $('#amtTotal').text('NPR. ' + value);
+            $('#TotalAmount').val(value);
+            $("#api-key-btn1").prop("disabled", true);
+        }
+    });
+
+
+    document.getElementById('api-key-btn1').addEventListener('click', function () {
+        if ($('#totalAmount').val() < 0) {
+            $("#isNegative").css("display", "block");
+            return false;
+        }
+        else if (!$('#myForm').valid()) {
+            document.getElementById('confirmation-overlay').style.display = 'none';
+            document.getElementById('confirmation-modal').style.display = 'none';
+        }
+        else {
+            $('#confirmation-modal').modal('show');
+        }
+    });
+    document.getElementById('confirmYes').addEventListener('click', function () {
+        document.getElementById('myForm').submit();
+    });
+
+    document.getElementById('confirmNo').addEventListener('click', function () {
+        document.getElementById('confirmation-overlay').style.display = 'none';
+        document.getElementById('confirmation-modal').style.display = 'none';
+    });
+</script>
+
+
+

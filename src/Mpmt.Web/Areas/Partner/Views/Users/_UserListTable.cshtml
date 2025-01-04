@@ -1,0 +1,104 @@
+﻿@using Mpmt.Core.Domain.Partners.Senders;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@model PagedList<SenderDto>
+
+<div class="table-responsive">
+    <table id="datatable-buttons45" class="table table-striped nowrap dataTable">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Full Name</th>
+                <th>User ID</th>
+                <th>Reg Date</th>
+                <th>Country</th>
+                <th>Email</th>
+                <th>Number</th>
+                <th>Recipient List</th>
+                <th>KYC Status</th>
+                <th>Registered By</th>
+                <th>Status</th>
+                <th>Action</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Items)
+            {
+
+                <tr>
+                    <td>@user.SN</td>
+                    <td><img src="~/partner/assets/images/player.png" alt="" class="rounded-circle thumb-xs me-1">@user.FirstName</td>
+                    <td>#@user.Id</td>
+                    <td>@user.CreatedDate </td>
+                    <td>@user.CountryCode</td>
+                    <td>@user.Email</td>
+                    <td>@user.MobileNumber</td>
+                    <td><a asp-action="RecipientsView" asp-controller="Recipient" asp-route-SenderId="@user.Id">View</a></td>
+                    @{
+                        switch (user.KycStatusCode)
+                        {
+                            case "1":
+                                <td><span class="badge bg-soft--warning px-2">Not Filled</span></td>
+
+                                break;
+                            case "2":
+                                <td><span class="badge bg-soft--warning px-2">Pending</span></td>
+
+                                break;
+                            case "3":
+                                <td><span class="badge bg-soft--danger px-2">Rejected</span></td>
+                                break;
+                            case "4":
+                                <td><span class="badge bg-soft--success px-2">Verified</span></td>
+
+                                break;
+                            default:
+                                <td><span class="badge bg-soft--secondary px-2">Incomplete</span></td>
+                                break;
+                        }
+                    }
+
+                    <td><a href="#" data-bs-toggle="modal" data-bs-target="#receiver" class="text-primary">@user.AccountNumber </a></td>
+
+                    <td>
+                        <div class="form-check form-switch form-switch-success">
+                            <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                        </div>
+                    </td>
+                    <td name="buttons">
+                        <div class=" float-center">
+                            <button type="button" class="btn btn-sm btn-soft-success btn-circle me-2 tippy-btn" onclick="ShowPopUp('@Url.Action("UpdateUser", "Users", new { UserId = user.Id })', 'Update Users')" title="Edit User">
+                                <i class="dripicons-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-soft-danger btn-circle" onclick="ShowPopUp('@Url.Action("DeleteUser", "Users", new { UserId = user.Id })', 'Delete Users')" title="Delete User">
+                                <i class="dripicons-trash" aria-hidden="true"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-soft-warning btn-circle" onclick="ShowPopUp('@Url.Action("UserBankDetail", "Users", new { UserId = user.Id })', 'User Bank Detail')" data-tippy-placement="top" data-tippy-arrow="true" title="Bank Details">
+                                <i class="mdi mdi-bank font-13" aria-hidden="true"></i>
+                            </button>
+
+
+                            <button type="button" class="btn btn-sm btn-soft-primary btn-circle tippy-btn" onclick="ShowPopUp('@Url.Action("UserDetail", "Users", new { UserId = user.Id })', 'User Detail')" data-tippy-placement="top" data-tippy-arrow="true" title="KYC Details">
+                                <i class="mdi mdi-shield-account font-13" aria-hidden="true"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-soft-primary btn-circle tippy-btn" onclick="ShowPopUp('@Url.Action("RecipientsAdd", "Recipient", new { SenderId = user.Id })', 'Add Recipient')" data-tippy-placement="top" data-tippy-arrow="true" title="Add Recipient">
+                                <i class="mdi mdi-account-box font-13" aria-hidden="true"></i>
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+
+
+    </table>
+</div>
+
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

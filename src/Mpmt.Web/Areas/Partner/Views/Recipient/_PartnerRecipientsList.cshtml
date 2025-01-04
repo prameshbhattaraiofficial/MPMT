@@ -1,0 +1,63 @@
+﻿@using Mpmt.Core.Domain.Partners.Recipient
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP;
+@model PagedList<RecipientsList>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<table id="datatable-buttons123"  class="table table-striped dataTable nowrap">
+    <thead class="table-light">
+        <tr>
+            <th>Full Name</th>
+            <th>Contact</th>
+            <th>City</th>
+            <th>Bank Name/Wallet Name</th>
+            <th>Account Number</th>
+            <th>Currency</th>
+            <th>Created By</th>
+            <th>Status</th>
+            <th>Action</th>
+
+        </tr>
+    </thead>
+
+
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            var activestatus = item.IsActive == true ? "Active" : "InActive";
+            var activestatusClass = item.IsActive == true ? "badge bg-soft--success px-2" : "badge bg-soft--danger px-2";
+            <tr>
+                <td>@item.FirstName @item.SurName</td>
+                <td>@item.MobileNumber</td>
+                <td>@item.City</td>
+                <td>@item.BankName / @item.WalletName</td>
+                <td>@item.AccountNumber</td>
+                <td>@item.SourceCurrency</td>
+                <td>@item.CreatedByName</td>
+               <td><span class="@activestatusClass">@activestatus</span></td>
+                <td name="buttons">
+                    <div class=" float-center">
+                        @if (actors.FirstOrDefault(x => x.Action == "RecipientsUpdate")?.Permission ?? false)
+                        {
+                            <button type="button" class="btn btn-sm btn-soft-success btn-circle me-2 tippy-btn" onclick="ShowPopUp('@Url.Action("RecipientsUpdate", "Recipient", new { Recipientid = item.Id })', 'Update Recipients')">
+                                <i class="dripicons-pencil"></i>
+                            </button>
+                        }
+                        @if (actors.FirstOrDefault(x => x.Action == "RecipientsDetails")?.Permission ?? false)
+                        {
+                            <button type="button" class="btn btn-sm btn-soft-danger btn-circle" onclick="ShowPopUp('@Url.Action("RecipientsDetails", "Recipient", new { Recipientid = item.Id })', 'View  Recipients')">
+                                <i class="dripicons-preview" aria-hidden="true"></i>
+                            </button>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

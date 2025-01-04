@@ -1,0 +1,530 @@
+﻿@using Mpmt.Core.Dtos.PartnerSignUp;
+@{
+    Layout = null;
+}
+
+@model SignUpStep3
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <style>
+        .small-label {
+            font-size: 8px;
+        }
+
+    </style>
+    <meta charset="utf-8" />
+    <title>MyPay Remit Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets/images/logo-sm.png">
+    <!--Form Wizard-->
+    <link rel="stylesheet" href="~/plugins/jquery-steps/jquery.steps.css">
+    <!-- App css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/progressbar.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css">
+
+</head>
+
+
+
+<body class="account-body accountbg">
+
+    <!-- Log In page -->
+    <div class="container">
+        <div class="row vh-100 d-flex justify-content-center">
+            <div class="col-12 align-self-center">
+                <div class="row">
+                    <div class="col-lg-7 mx-auto">
+                        <div class="card">
+                            <div class="card-body p-0 ">
+                                <div class="p-3 text-center">
+                                    <a href="index.php" class="logo logo-admin text-center">
+                                        <img src="~/assets/images/logo.png" height="50" alt="logo" class="auth-logo">
+                                    </a>
+                                    <p class="text-muted  mb-0">Please fill up additional details for further process.</p>
+                                </div>
+                            </div>
+
+                            <section class="step-wizard">
+                                <ul class="step-wizard-list">
+                                    <li class="step-wizard-item">
+                                        <span class="progress-count">1</span>
+                                        <span class="progress-label">User Details</span>
+                                    </li>
+                                    <li class="step-wizard-item">
+                                        <span class="progress-count">2</span>
+                                        <span class="progress-label">Company Details</span>
+                                    </li>
+                                    <li class="step-wizard-item">
+                                        <span class="progress-count ">3</span>
+                                        <span class="progress-label">Director Details</span>
+                                    </li>
+                                    <li class="step-wizard-item current-item">
+                                        <span class="progress-count">4</span>
+                                        <span class="progress-label">Document Details</span>
+                                    </li>
+                                </ul>
+                            </section>
+
+                            <div class="card-body p-0">
+                                <
+                                <div class="p-3 text-start">
+                                    <form id="form-horizontal" enctype="multipart/form-data" class="form-horizontal form-wizard-wrapper register" asp-action="Step3" asp-controller="Registration" method="post">
+                                        <input asp-for="Email" hidden readonly />
+                                        <input asp-for="Token" hidden readonly />
+                                        @if (ViewBag.Error is not null)
+                                        {
+                                            <li class="text-danger">@ViewBag.Error</li>
+                                        }
+                                        <h3>Document Details</h3>
+                                        <fieldset>
+                                            <div class="row ">
+                                                <div class="col-md-3 position-relative mb-2">
+                                                    <label class="form-label">Document Type <sapn class="text-danger">*</sapn></label>
+                                                    <select asp-for="DocumentTypeId" name="DocumentTypeId" class="form-select" id="RDocumentTypedropdown" onchange="citizenship()" asp-items="@ViewBag.DocumentType">
+                                                        <option value=""> Select Document Type</option>
+                                                    </select>
+                                                    <span asp-validation-for="DocumentTypeId" class="text-danger"></span>
+                                                </div>
+
+                                                <div class="col-md-3 mb-2">
+                                                    <label class="form-label">Document Number <sapn class="text-danger">*</sapn></label>
+                                                    <input type="number" id="DocumentNumber"  asp-for="DocumentNumber" class="form-control">
+                                                    <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-2" id="RExpiryDatediv" style="display:none">
+                                                    <label asp-for="ExpiryDate" class="form-label">Expiry date</label>
+                                                    <input asp-for="ExpiryDate"  id="RExpiryDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" type="date" value="@DateTime.Now" class="form-control">
+                                                    <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-2" id="RIssueDatediv">
+                                                    <label asp-for="IssueDate" class="form-label">Issue Date<sapn class="text-danger">*</sapn></label>
+                                                    <input asp-for="IssueDate"  id="RIssueDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" value="@DateTime.Now" type="date" class="form-control">
+                                                    <span asp-validation-for="IssueDate" class="text-danger"></span>
+                                                </div>
+
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">ID Front <sapn class="text-danger">*</sapn></label>
+                                                    <div class="input-group mb-3">
+                                                        <input asp-for="IdFrontImg"  type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimageUploadchange(this,'Odfrontreqid','logohide','IdFrontImgtextid')">
+                                                        
+                                                    </div>
+                                                    <label style="font-weight: bold;" class="small-label">Insert images with png, jpg, jpeg, and pdf format</label>
+                                                    <span id="IdFrontImgtextid" class="text-danger" hidden></span>
+                                                    @{
+                                                        if (Model != null)
+                                                        {
+                                                            if (!string.IsNullOrWhiteSpace(Model.IdFrontImgPath))
+                                                            {
+                                                                                <input asp-for="IdFrontImgPath" hidden readonly />
+                                                                                <img style="width:90px;"  src="@Model.IdFrontImgPath" alt="IdFrontImgPath">
+                                                            }
+
+                                                        }
+                                                    }
+                                                    <img id="Odfrontreqid" src="#" style="width:90px;" hidden>
+                                                    <span asp-validation-for="IdFrontImg" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">ID Back <sapn class="text-danger">*</sapn></label>
+                                                    <div class="input-group mb-3">
+                                                        <input asp-for="IdBackImg"  type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimageUploadchange(this,'IdBackImgregid','IdBackImglogohide','IdBackImgImgtextid')">
+                                                    </div>
+                                                    <label style="font-weight: bold;" class="small-label">Insert images with png, jpg, jpeg, and pdf format</label>
+                                                    <span id="IdBackImgImgtextid" class="text-danger" hidden></span>
+                                                    @{
+                                                        if (Model != null)
+                                                        {
+                                                            if (!string.IsNullOrWhiteSpace(Model.IdBackImgPath))
+                                                            {
+                                                                                <input asp-for="IdBackImgPath" hidden readonly />
+                                                                                <img style="width:90px;" id="IdBackImglogohide" src="@Model.IdBackImgPath" alt="IdBackImgPath">
+                                                            }
+
+                                                        }
+                                                    }
+                                                    <img id="IdBackImgregid" src="#" style="width:90px;" hidden>
+                                                    <span asp-validation-for="IdBackImg" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-6 position-relative mb-2">
+                                                    <label class="form-label">Address Prof Type <sapn class="text-danger">*</sapn></label>
+                                                    <select asp-for="AddressProofTypeId" class="form-select" asp-items="@ViewBag.Addressproof">
+                                                        <option value="">Select Address Proof Type</option>
+                                                    </select>
+                                                    <span asp-validation-for="AddressProofTypeId" class="text-danger"></span>
+                                                </div>
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Address Prof Image <sapn class="text-danger">*</sapn></label>
+                                                    <div class="input-group mb-3">
+                                                        <input asp-for="AddressProofImg" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimageUploadchange(this,'AddressProfImageaddregid','AddressProofImgPathlogohide','AddressProofImgtextid')">
+                                                       
+                                                    </div>
+                                                    <label style="font-weight: bold;" class="small-label"> Insert images with png, jpg, jpeg, and pdf format</label>
+                                                  
+                                                    <span id="AddressProofImgtextid" class="text-danger" hidden></span>
+                                                    @{
+                                                        if (Model != null)
+                                                        {
+                                                            if (!string.IsNullOrWhiteSpace(Model.AddressProofImgPath))
+                                                            {
+                                                                                <input asp-for="AddressProofImgPath" hidden readonly />
+                                                                                <img style="width:90px;" id="AddressProofImgPathlogohide" src="@Model.AddressProofImgPath" alt="AddressProofImgPath">
+                                                            }
+
+                                                        }
+                                                    }
+                                                    <img id="AddressProfImageaddregid" src="#" style="width:90px;" hidden>
+                                                    <span asp-validation-for="AddressProofImg" class="text-danger"></span>
+                                                </div>
+                                            </div><!--end form-->
+                                        </fieldset><!--end fieldset-->
+                                        <div class="text-end">
+                                            <a class="btn btn-primary" asp-action="Step1" asp-controller="Registration" asp-route-Token="@Model.Token">
+                                                Previous
+                                            </a>
+                                            <button id="Submitbutton" class="btn btn-primary" type="submit">Submit</button>
+                                        </div>
+                                    </form><!--end form-->
+                                </div>
+                            </div><!--end card-body-->
+                            <div class="card-body bg-light-alt text-center border-top">
+                                <span class="text-muted d-none d-sm-inline-block">
+                                    MyPay Remit © <script>
+                                                      document.write(new Date().getFullYear())
+                                    </script>
+                                </span>
+                            </div>
+                        </div><!--end card-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end container-->
+    <!-- End Log In page -->
+
+    <script src="~/js/imageupload.js"></script>
+    <script>
+        function onimagechange(data, id) {
+           debugger;
+           readURL(data, id);
+
+
+        }
+        function readURL(input, id) {
+            debugger;
+           if (input.files && input.files[0]) {
+               var reader = new FileReader();
+               reader.onload = function (e) {
+
+                   var data = e.target.result;
+
+                   $('#' + id).attr('src', e.target.result);
+                   $('#' + id).removeAttr('hidden');
+
+
+               }
+               reader.readAsDataURL(input.files[0]);
+           }
+        };
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            debugger;
+            const form = document.getElementById('form-horizontal');
+            //r data = document.querySelectorAll('input["required"]', '#License input[name^="LicensedocImg"]'
+
+            const fields = form.querySelectorAll('input');
+            const nextButton = document.getElementById('submitButton');
+
+            function checkFields() {
+                let allFilled = true;
+                fields.forEach(field => {
+                    if (!field.value.trim()) {
+                        allFilled = false;
+                    }
+                });
+                nextButton.disabled = !allFilled;
+            }
+
+            fields.forEach(field => {
+                field.addEventListener('input', checkFields);
+            });
+
+            checkFields(); // Initial check in case fields are pre-filled
+        });
+
+
+
+        $(document).ready(function () {
+            var button = document.getElementById("submitButton");
+            button.disabled = true;
+
+            if (checkFields()) {
+                button.disabled = false;
+            }
+
+
+            validateImageInput();
+            checkFields();
+
+            $('select[name="DocumentTypeId"]').on('change', function () {
+        var selectedValue = $(this).val();
+        console.log('Selected value:', selectedValue);
+    });
+            debugger;
+            $('.DocumentTypeId').on('change', function () {
+                var selectedValue = $(this).val();
+                console.log('Selected value:', selectedValue);
+            });
+             // For getting dropdown 
+            // var data = document.getElementsByName(".DocumentTypeId").value;
+            // debugger;
+
+            // $.ajax({
+            //     url: '/Registration/Step3', // Replace with your controller and action method
+            //     type: 'GET',
+            //     dataType: 'json',
+            //     success: function (data) {
+            //         // Populate select dropdown with fetched data
+            //         if (data && data.length > 0) {
+            //             var dropdown = $('#RDocumentTypedropdown');
+            //             $.each(data, function (index, item) {
+            //                 dropdown.append($('<option></option>').attr('value', item.value).text(item.text));
+            //             });
+            //         }
+            //     },
+            //     error: function (xhr, status, error) {
+            //         console.error('Error fetching document types:', error);
+            //     }
+            // });
+
+            // Function to validate the entire form
+            function validateForm() {
+                debugger;
+                var isValid = true;
+
+                // Validate document type
+                var documentType = $('select[name="DocumentTypeId"]').val();
+                debugger;
+                if (!documentType) {
+                    isValid = false;
+                }
+
+                // Validate document number
+                var documentNumber = $('#DocumentNumber').val().trim();
+                debugger;
+                if (!documentNumber) {
+                    isValid = false;
+                }
+
+                // Validate expiry date based on document type
+                var expiryDateValid = validateExpiryDate(documentType);
+                debugger;
+                if (!expiryDateValid) {
+                    isValid = false;
+                }
+
+                // You can add more validations for other fields here
+
+                return isValid;
+            }
+
+            // Function to validate expiry date based on document type
+            function validateExpiryDate(documentType) {
+                debugger;
+                var expiryDate = $('#RExpiryDate').val();
+                var issueDate = $('#RIssueDate').val();
+                if (!expiryDate) {
+                    return false;
+                }
+
+                // Parse dates
+                var expiryDateObj = new Date(expiryDate);
+                var issueDateObj = new Date(issueDate);
+                var currentDate = new Date();
+
+                // Perform validation based on document type
+                if (documentType === 'passport') {
+                    debugger;
+                    // Passport expiry must be at least 6 months in the future and cannot be more than 10 years
+                    var minExpiryDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6, currentDate.getDate());
+                    var maxExpiryDate = new Date(currentDate.getFullYear() + 10, currentDate.getMonth(), currentDate.getDate());
+                    return expiryDateObj >= minExpiryDate && expiryDateObj <= maxExpiryDate;
+
+                } else if (documentType === 'driverLicense') {
+                    debugger;
+                    // Driver's license expiry must be at least 6 months in the future and cannot be more than 5 years
+                    var minExpiryDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6, currentDate.getDate());
+                    var maxExpiryDate = new Date(currentDate.getFullYear() + 5, currentDate.getMonth(), currentDate.getDate());
+                    return expiryDateObj >= minExpiryDate && expiryDateObj <= maxExpiryDate;
+
+                } else if (documentType === 'citizenship') {
+                    debugger;
+                    // Citizenship expiry must be at least 6 months in the future and cannot be more than 5 years
+                    var minExpiryDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6, currentDate.getDate());
+                    var maxExpiryDate = new Date(currentDate.getFullYear() + 5, currentDate.getMonth(), currentDate.getDate());
+                    return expiryDateObj >= minExpiryDate && expiryDateObj <= maxExpiryDate;
+
+                } else if (documentType === 'NationalIdCard') {
+                    debugger;
+                    // National ID card expiry must be at least 6 months in the future and cannot be more than 5 years
+                    var minExpiryDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6, currentDate.getDate());
+                    var maxExpiryDate = new Date(currentDate.getFullYear() + 5, currentDate.getMonth(), currentDate.getDate());
+                    return expiryDateObj >= minExpiryDate && expiryDateObj <= maxExpiryDate;
+                }
+
+                return expiryDateObj >= currentDate;
+            }
+
+           
+            $('select[name="DocumentTypeId"]').on('change', function () {
+                validateForm();
+
+                if (validateForm.isValid == true) {
+                    document.getElementById("Submitbutton").disable = false;
+                } else {
+                    document.getElementById("Submitbutton").disable = true;
+                }
+            });
+        });
+
+
+
+        function citizenship() {
+            debugger;
+            var documentExpirableMap = @Html.Raw(Json.Serialize(ViewBag.DocumentExpirable));
+            var documenttype = $("#RDocumentTypedropdown").val();
+            var isExpirable = documentExpirableMap[documenttype] == true;
+
+            if (isExpirable) {
+                //hide expiry and show  issue
+                $("#RExpiryDatediv").css("display", "block");
+                $("#RIssueDatediv").css("display", "block");
+            } else {
+                //show expiry and hide issue
+                $("#RExpiryDatediv").css("display", "none");
+                $("#RIssueDatediv").css("display", "block");
+            }
+            // if (documenttype == 4 ) {
+            //     //hide expiry and show  issue
+            //     $("#RExpiryDatediv").css("display", "block");
+            //     $("#RIssueDatediv").css("display", "block");
+            // } else if (documenttype == 5) {
+            //     //hide expiry and show  issue
+            //     $("#RExpiryDatediv").css("display", "block");
+            //     $("#RIssueDatediv").css("display", "block");
+            // }
+            // else {
+            //     //show expiry and hide issue
+            //     $("#RExpiryDatediv").css("display", "none");
+            //     $("#RIssueDatediv").css("display", "block");
+            // }
+
+        };
+    </script>
+
+
+
+    <!-- jQuery  -->
+    <script src="~/assets/js/jquery.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/waves.js"></script>
+    <script src="~/assets/js/feather.min.js"></script>
+    <script src="~/assets/js/simplebar.min.js"></script>
+
+
+    <script src="~/plugins/jquery-steps/jquery.steps.min.js"></script>
+    <script src="~/assets/pages/jquery.form-wizard.init.js"></script>
+
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
+
+    <script src="~/plugins/repeater/jquery.repeater.min.js"></script>
+    <script src="~/assets/pages/jquery.form-repeater.js"></script>
+
+    <script>
+        function showContainer() {
+            var selectedOption = document.getElementById("payoutTypeSelect").value;
+            var PrefundingContainers = document.getElementsByClassName("PrefundingContainer");
+            var ConsContainers = document.getElementsByClassName("ConsContainer");
+
+            for (var i = 0; i < PrefundingContainers.length; i++) {
+                var PrefundingContainer = PrefundingContainers[i];
+
+                if (selectedOption === "prefunding") {
+                    PrefundingContainer.style.display = "block";
+                } else {
+                    PrefundingContainer.style.display = "none";
+                }
+            }
+
+            for (var j = 0; j < ConsContainers.length; j++) {
+                var ConsContainer = ConsContainers[j];
+
+                if (selectedOption === "consumption") {
+                    ConsContainer.style.display = "block";
+                } else {
+                    ConsContainer.style.display = "none";
+                }
+            }
+        }
+    </script>
+
+    <script>
+        function txnContainer() {
+            var selectedOption = document.getElementById("txnTypeSelect").value;
+            var TxnContainers = document.getElementsByClassName("OthersContainer");
+
+            for (var i = 0; i < TxnContainers.length; i++) {
+                var OthersContainer = TxnContainers[i];
+
+                if (selectedOption === "others") {
+                    OthersContainer.style.display = "block";
+                } else {
+                    OthersContainer.style.display = "none";
+                }
+            }
+
+
+        }
+        $("#mobile_code").intlTelInput({
+            initialCountry: "in",
+            separateDialCode: true,
+            // utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.4/js/utils.js"
+        });
+
+        function test() {
+            $("#mobile_codes").intlTelInput({
+                initialCountry: "in",
+                separateDialCode: true,
+                // utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.4/js/utils.js"
+            });
+        }
+    </script>
+
+
+
+
+
+</body>
+
+
+</html>

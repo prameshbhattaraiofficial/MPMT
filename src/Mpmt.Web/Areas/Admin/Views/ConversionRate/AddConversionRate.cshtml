@@ -1,0 +1,71 @@
+﻿@using Mpmt.Core.ViewModel.ConversionRate
+@model AddConversionRateVm
+
+<form id="ConversionRateAddForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <div class="row">
+        <div class="col-md-6 mb-2">
+            <label for="SourceCurrency">Source Currency</label>
+            <select asp-for="SourceCurrency" class="form-select" asp-items="ViewBag.Currency" id="SourceCurrency" required>
+            </select>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label for="DestinationCurrency">Destination Currency</label>
+            <select asp-for="DestinationCurrency" class="form-select" id="DestinationCurrency" required>
+                <option value="NPR" selected>Nepalese Rupees</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 form-group mb-2">
+            <label class="form-label">Unit Value</label>
+            <div class="input-group">
+                <input asp-for="UnitValue" type="number" class="form-control" min="1" oninput="this.value = Math.abs(this.value)">
+            </div>
+        </div>
+        <div class="col-md-3 form-group mb-2">
+            <label class="form-label">Buying Rate</label>
+            <div class="input-group">
+                <input asp-for="BuyingRate" type="number" class="form-control" step="0.01">
+            </div>
+        </div>
+        <div class="col-md-3 form-group mb-2">
+            <label class="form-label">Selling Rate</label>
+            <div class="input-group">
+                <input asp-for="SellingRate" type="number" class="form-control" step="0.01">
+            </div>
+        </div>
+        <div class="col-md-3 form-group mb-2">
+            <label class="form-label">Current Rate</label>
+            <div class="input-group">
+                <input asp-for="CurrentRate" type="number" class="form-control" step="0.01">
+            </div>
+        </div>
+    </div>
+    <div class="form-check form-switch mb-2">
+        <input asp-for="IsActive" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Is Active</label>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit<i class="fas fa-paper-plane ms-1"></i></button>
+    </div>
+</form>
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddConversionRate", "ConversionRate")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#ConversionRateAddForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>

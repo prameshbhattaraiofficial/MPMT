@@ -1,0 +1,80 @@
+﻿@using Mpmt.Core.Dtos.PartnerReport
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.Pagination
+@model PagedList<RemitFeeTxnReport>
+
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Sender Txn Date</th>
+                <th>Receiver Txn Date</th>
+                <th>Transcation Id</th>
+                <th>Partner Transcation Id</th>
+                <th>Partner Id</th>
+                <th>Partner Full Name</th>
+                <th>Source Currency</th>
+                @* <th>Destination Currency</th> *@
+                <th>Payment Type</th>
+                <th>Send Amount</th>
+                <th>Service Charge</th>
+               @*  <th>Service Charge (USD)</th> *@
+                <th>Status</th>
+                @* <th>Payment Details</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <link href="~/css/customfixedheader.css" rel="stylesheet" />
+
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.SN</td>
+                        <td>@item.SenderCreatedDate.ToString("yyyy-MM-dd hh:mm:ss tt")</td>
+                        <td>@item.ReceiverCreatedDate.ToString("yyyy-MM-dd hh:mm:ss tt")</td>
+                        <td>@item.TransactionId</td>
+                        <td>@item.ParentTransactionId</td>
+                        <td>@item.PartnerId</td>
+                        <td>@item.PartnerFullName</td>
+                        <td>@item.SourceCurrency</td>
+                       @*  <td>@item.DestinationCurrency</td> *@
+                        <td>@item.PaymentType</td>
+                        <td>@item.Amount.ToString("N2")</td>
+                        <td>@item.ServiceCharge.ToString("N2")</td>
+                       @*  <td>@item.ServiceChargeUSD.ToString("N2")</td> *@
+                        <td>@item.Status</td>
+                        @* <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("PaymentDetail", "Reports", new { TransactionId = item.ParentTransactionId })', 'Payment Detail')">View Detail</a></td> *@
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

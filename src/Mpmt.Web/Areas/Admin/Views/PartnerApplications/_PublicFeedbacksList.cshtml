@@ -1,0 +1,50 @@
+﻿@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Dtos.PartnerApplications;
+@using Mpmt.Core.Models.RMP;
+@model PagedList<PublicFeedbacksModel>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<div class="table-responsive">
+    <table id="datatable-buttons78" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Created Date</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Subject</th>
+                @*<th>Message</th>*@
+                <th>Ip Address</th>
+                <th>IsReviewed</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td> @item.Sn </td>
+                    <td> @item.CreatedLocalDate </td>
+                    <td> @item.FullName </td>
+                    <td> @item.Email </td>
+                    <td> @item.ContactNo </td>
+                    <td> @item.Subject </td>
+                    @*<td> @item.Message </td>*@
+                    <td> @item.IpAddress </td>
+                    <td> @item.IsReviewed </td>
+                    <td>
+                        <a onclick="ShowPopUp('@Url.Action("ViewPublicFeedbacksDetail","PartnerApplications",new {FeedbackId = item.FeedbackId, FullName = item.FullName, Email = item.Email, ContactNo = item.ContactNo, Subject = item.Subject, Message = item.Message, IpAddress = item.IpAddress, IsReviewed = item.IsReviewed, CreatedLocalDate = item.CreatedLocalDate})','Public Feedbacks Detail','.modal-lg')" data-bs-toggle="modal" data-bs-target="#sender" title="View Detail" class="text-primary"><i class="dripicons-preview"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

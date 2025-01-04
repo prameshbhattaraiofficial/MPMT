@@ -1,0 +1,98 @@
+﻿@using Mpmt.Core.ViewModel.ConversionRate
+@using Mpmt.Core.Dtos.ConversionRate
+@model List<AddPartnerConversionRateVm>
+
+@{
+    var conversationfilter = ViewBag.ConversionRate as PartnerConversionRate;
+}
+
+<form id="ConversionRateUpdateForm" class="form-horizontal auth-form" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <div class="row">
+        <div class="col-md-2 form-group mb-2">
+            <label for="SourceCurrency" class="form-label">Payment Type</label>
+            <div class="input-group">
+                <select name="PaymentTypeId" class="form-control form-select" asp-items="@ViewBag.PaymentType" id="PaymentTypeId"></select>
+            </div>
+        </div>
+        <div class="col-md-2 form-group mb-2">
+            <label for="SourceCurrency" class="form-label">Source Currency</label>
+            <div class="input-group">
+                <select name="SourceCurrency" class="form-control form-select" asp-items="@ViewBag.SCurrency" id="SourceCurrency" disabled></select>
+            </div>
+        </div>
+        <div class="col-md-2 form-group mb-2">
+            <label for="DestinationCurrency" class="form-label">Destination Currency</label>
+            <div class="input-group">
+                <select name="DestinationCurrency" class="form-control form-select" asp-items="@ViewBag.DCurrency" id="DestinationCurrency" disabled></select>
+            </div>
+        </div>
+        <div class="col-md-2 form-group mb-2">
+            <label class="form-label">Unit Value</label>
+            <div class="input-group">
+                <input name="UnitValue" value="@conversationfilter.UnitValue" type="text" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="col-md-2 form-group mb-2">
+            <label class="form-label">Min Rate</label>
+            <div class="input-group">
+                <input name="BuyingRate" value="@conversationfilter.MinRate.ToString("N2")" type="text" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="col-md-2 form-group mb-2">
+            <label class="form-label">Max Rate</label>
+            <div class="input-group">
+                <input name="SellingRate" value="@conversationfilter.MaxRate.ToString("N2")" type="text" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="col-md-2 form-group mb-2">
+            <label class="form-label">Current Rate</label>
+            <div class="input-group">
+                <input name="CurrentRate" value="@conversationfilter.CurrentRate.ToString("N2")" type="text" class="form-control" readonly>
+            </div>
+        </div>
+    </div>
+    <div id="servicechargedata">
+        <partial name="_ViewServiceCharge" model="@Model" />
+    </div>
+   
+    <br />
+</form>
+
+
+<script>
+    $(document).ready(function() {
+        $("#PaymentTypeId").on("change", function() {
+            var selectedPaymentType = $(this).val();
+            var selectedSourceCurrency = $("#SourceCurrency").val();
+            var selectedDestinationCurrency = $("#DestinationCurrency").val();
+
+            $.ajax({
+                url: "/Partner/ConversionRates/ViewConversionRate", // Replace with your server endpoint URL
+                method: "POST", // Note: "Post" should be changed to "POST" (uppercase)
+                data: {
+                    PaymentTypeId: selectedPaymentType,
+                    SourceCurrency: selectedSourceCurrency,
+                    DestinationCurrency: selectedDestinationCurrency
+                },
+                dataType: "text",
+                headers: {
+                    "Accept": "application/json"
+                },
+                success: function(response) {                               
+                    $("#servicechargedata").html(response);
+                },
+                error: function(xhr, status, error) {
+                    // Handle any errors that occur during the AJAX request
+                    console.log(error, "Error");
+
+                }
+            });
+        });
+    });
+</script>

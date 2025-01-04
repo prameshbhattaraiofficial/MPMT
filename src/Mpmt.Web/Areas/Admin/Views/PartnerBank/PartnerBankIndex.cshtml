@@ -1,0 +1,148 @@
+﻿@using Mpmt.Core.Dtos.PartnerBank
+@model IEnumerable<PartnerBankDetails>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Setting</a></li>
+                            <li class="breadcrumb-item active">Partner Bank List</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                        <form id="formPartnerBankfilter" class="row row-cols-lg-auto align-items-end">
+                            <div class="row justify-content-end">
+                                <div class="col-2">
+                                    <div class="input-group">
+                                        <input name="PartnerCode" id="partnerCode" type="text" class="form-control" placeholder="Partner Code">
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="input-group">
+                                        <input name="BankCode" id="bankCode" type="text" class="form-control" placeholder="Bank Code">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="input-group">
+                                        <input name="AccountNumber" id="accountNumber" type="text" class="form-control" placeholder="Account Number">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="input-group">
+                                        <input name="AccountName" id="accountName" type="text" class="form-control" placeholder="Account Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label mb-0" for="inlineFormSelectPref">Status</label>
+                                <select name="Status" class="form-select" id="validationTooltip04" required>
+                                    <option value="0" selected>All</option>>
+                                    <option value="1">Active</option>>
+                                    <option value="2">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <button id="btnPartnerBankfilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Partner Bank List</h4>
+                            </div>
+                            <div class="col-auto">
+                                @* <div class="add-btn">
+                                    <a onclick="ShowPopUp('@Url.Action("AddPartnerBank","PartnerBank")','Add Partner Bank')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                        <i class="las la-plus ms-1"></i> Add Partner Bank
+                                    </a>
+                                </div> *@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="PartnerBankTableWrapper" class="table-responsive">
+                            <partial name="_PartnerBankIndex" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("PartnerBankIndex", "PartnerBank")',
+                selector: '#PartnerBankTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formPartnerBankfilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+                $('#formPartnerBankfilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnPartnerBankfilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                $('#bankCode').on('input', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                $('#accountNumber').on('input', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                $('#partnerCode').on('input', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                $('#accountName').on('input', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+    }

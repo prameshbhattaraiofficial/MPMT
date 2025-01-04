@@ -1,0 +1,113 @@
+﻿@using Mpmt.Core.Dtos.ActivityLog;
+@using Mpmt.Core.Dtos.Paging;
+@model PagedList<VendorApiLogReport>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Log Management</a></li>
+                            <li class="breadcrumb-item active">Vendor Api Log</li>
+                        </ol>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="formReportsFilter" class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="PartnerCode" class="form-control" placeholder="Partner Code">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" name="StartDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" name="EndDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="TransactionId" class="form-control" placeholder="Transaction Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="TrackerId" class="form-control" placeholder="Tracker Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="button" id="btnReportsFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Vendor Api Log Report</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="ReportsTableWrapper" class="table-responsive">
+                        <partial name="_VendorApiLogReportIndex" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("VendorApiLogReportIndex", "LogManagement")',
+                selector: '#ReportsTableWrapper'
+            });
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formReportsFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+            addUsersPageHandlers();
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+                $('#formReportsFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                $('#btnReportsFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}

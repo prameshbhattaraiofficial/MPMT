@@ -1,0 +1,68 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@model AgentDetailSignUp
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered mb-0">
+            <tbody>
+                <tr>
+                    <td><span>Created Date :</span></td>
+                    <td><span>@Model.CreatedDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Id :</span></td>
+                    <td><span><strong style="color: #f98c45">@Model.Id</strong></span></td>
+                </tr>
+                <tr>
+                    <td><span>Full Name :</span></td>
+                    <td><span>@Model.FirstName  @Model.LastName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Contact Number :</span></td>
+                    <td><span>@Model.PhoneNumber</span></td>
+                </tr>
+                <tr>
+                    <td><span>Email :</span></td>
+                    <td><span>@Model.Email</span></td>
+                </tr>
+                <tr>
+                    <td><span>Organization Name :</span></td>
+                    <td><span>@Model.OrganizationName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Registration Number :</span></td>
+                    <td><span>@Model.RegistrationNumber</span></td>
+                </tr>
+                <tr>
+                    <td><span>City :</span></td>
+                    <td><span>@Model.City</span></td>
+                </tr>
+                <tr>
+                    <td><span>Full Address :</span></td>
+                    <td><span>@Model.FullAddress</span></td>
+                </tr>
+                <tr>
+                    <td><span>Document Number :</span></td>
+                    <td><span>@Model.DocumentNumber</span></td>
+                </tr>
+                <tr>
+                    <td><span>Issue Date :</span></td>
+                    <td><span>@Model.IssueDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Expiry Date :</span></td>
+                    <td><span>@Model.ExpiryDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Status :</span></td>
+                    <td><span>@Model.IsActive</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

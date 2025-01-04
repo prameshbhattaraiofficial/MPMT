@@ -1,0 +1,56 @@
+﻿@using Mpmt.Core.Dtos.Transaction;
+@model IEnumerable<TransactionRecipient>
+
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+
+            <tbody>
+                @foreach (var reciver in Model)
+                {
+                    @* <tr>
+                        <td><span>User ID :</span></td>
+                        <td><span>@reciver.RecipientId</span></td>
+                    </tr> *@
+                    <tr>
+                        <td><span>Full Name :</span></td>
+                        <td><span class="tb-lead">@reciver.RecipientName</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Country :</span></td>
+                        <td><span class="tb-lead">@reciver.CountryName</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Address :</span></td>
+                        <td><span class="tb-lead">@reciver.Address</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Number :</span></td>
+                        <td><span><strong style="color: #f98c45">@reciver.ContactNumber</strong></span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Email :</span></td>
+                        <td><span>@reciver.Email</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>A/c Details :</span></td>
+                        <td><span>@reciver.TransactionId</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Receiving Amount:</span></td>
+                        <td><span>@reciver.ReceivingAmount</span></td>
+                    </tr>
+
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,312 @@
+﻿@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Models.CashAgent;
+@model PagedList<FundRequest>
+
+
+<link href="~/nepali.datepicker.v3/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/nepali.datepicker.v3/css/nepali.datepicker.v3.min.css" rel="stylesheet" />
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+
+                    <div class="row">
+                        <div class="col">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">Agent</a></li>
+                                <li class="breadcrumb-item active">Fund Request</li>
+                            </ol>
+                        </div>
+                        <div class="col-auto">
+                        </div>
+                        <div class="col-auto align-self-center">
+                            <div class="general-label">
+                                <form class="row row-cols-lg-auto align-items-center" id="FormAgentFundRequestfilter">
+                                    <div class="col-12  mb-3">
+                                        <label class="form-label">Agent Name</label>
+                                        <input type="text" class="form-control" id="AgentCode" name="AgentCode" placeholder="Agentname">
+                                    </div>
+                                   @*  <div class="col-12  mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="text" class="form-control" id="Email" name="Email" placeholder="Email">
+                                    </div> *@
+                                    <div class="col-md-6 mb-3" hidden>
+                                        <label class="form-label">Start Date(AD)</label>
+                                        <input type="date" id="IssueDateAD" name="RequestedDate" class="form-control">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Start Date(BS)</label>
+                                        <input type="date" id="IssueDateBS" name="StartDateBS" class="form-control">
+                                    </div>
+                                    <div class="col-md-6 mb-3" id="EndDate" hidden>
+                                        <label class="form-label">End date</label>
+                                        <input type="date" id="ExpireDateAD" class="form-control">
+                                    </div>
+                                    <div class="col-md-6 mb-3" id="ExpiryBs">
+                                        <label class="form-label">End date(BS)</label>
+                                        <input type="date" id="ExpireDateBS" name="EndDateBS" class="form-control">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">District</label>
+                                        <select class="form-select" id="validationTooltip04" required>
+                                            <option>Kathamndu</option>
+                                            <option>Biratnagar</option>
+                                            <option>Hetauda</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6 mt-2">
+                                        <button type="button" id="btnFundRequestFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="AgentTableRequestFundWrapper" class="table-responsive12">
+            <partial name="_AgentFundRequestList" model="@Model" />
+        </div>
+    </div>
+</div>
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="details" tabindex="-1" role="dialog" aria-labelledby="exampleModalDefaultLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">Agent Transaction Detail</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+                <div class="card-body p-0 auth-header-box mb-3">
+
+                    <div class="general-label">
+                        <form class="mt-3 align-items-center">
+                            <div class="row">
+                                <div class="col-md-4 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                                <div class="col-md-4 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <tbody>
+                                <tr>
+                                    <td><span>Agent Name:</span></td>
+                                    <td><span class="tb-lead">Sagar Maharjan</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>No. of Txn:</span></td>
+                                    <td><span class="tb-lead">5</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Total Amount:</span></td>
+                                    <td><span>Rs.97,151.51</td>
+                                </tr>
+                                <tr>
+                                    <td><span>Total Commission:</span></td>
+                                    <td><span>Rs.97,151.51</td>
+                                </tr>
+                            </tbody>
+                        </table><!--end /table-->
+                    </div>
+                    <div class="mt-4">
+                        <div class="button-items">
+                            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-sm" id="statusconfirm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <img src="assets/images/fail.png" alt="" class="img-fluid">
+                <h3 class="mb-1">Are you sure?</h3>
+                <p class="mb-2 text-muted">You won't be able to revert this!</p>
+                <div class="p-5 pt-0 pb-0">
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 70px"></textarea>
+                        <label for="floatingTextarea2">Remarks</label>
+                    </div>
+                </div>
+
+
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script src="~/js/admin/admin.partners.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+            // Initialize pagination settings object
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("Index", "AgentFundRequest")',
+                selector: '#AgentTableRequestFundWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#FormAgentFundRequestfilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#FormAgentFundRequestfilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnFundRequestFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+    }
+
+<script src="~/nepali.datepicker.v3/jquery-ui.min.js"></script>
+<script src="~/nepali.datepicker.v3/js/nepali.datepicker.v3.min.js"></script>
+
+<script>
+    var yearRangeDOB = "1944:-10"; //"1944:+0";
+    var yearRangeIssue = "1944:-0";
+    var yearRangeExpire = "1944:+10"; //"1944:+20";
+    var minimum = "[1943, 04, 14]";
+    var dateFormat = "yy-mm-dd";
+    var today = new Date();
+    var startDate = today.getFullYear() - 10 + '-' + today.getMonth() + '-01';
+    var nepaliDOB = NepaliFunctions.ConvertDateFormat({ year: NepaliFunctions.GetCurrentBsYear() - 9, month: 1, day: 1 }, "YYYY-MM-DD");
+    var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+
+    $("#IssueDateAD").datepicker({
+        dateFormat: dateFormat,
+        defaultDate: startDate,
+        maxDate: new Date,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: '1943:' + today.getFullYear(),
+        showAnim: "slideDown",
+        autoSize: true
+    }).attr('readonly', 'readonly');
+
+    $('#IssueDateBS').nepaliDatePicker({
+        ndpYear: true,
+        ndpMonth: true,
+        readOnlyInput: true,
+        defaultDate: NepalDateToday,
+        ndpEnglishInput: 'IssueDateAD',
+        disableAfter: NepalDateToday,
+        onChange: function () {
+            $('#IssueDateBS').removeClass("input-validation-error");
+            if ($('#IssueDateBS-error').length > 0) {
+                $('#IssueDateBS-error').html("");
+            };
+            $('#IssueDateAD').removeClass("input-validation-error");
+            if ($('#IssueDateAD-error').length > 0) {
+                $('#IssueDateAD-error').html("");
+            }
+        }
+    });
+
+    $('#IssueDateAD').change(function () {
+        var dateObj = NepaliFunctions.ConvertToDateObject($('#IssueDateAD').val(), "YYYY-MM-DD");
+        $('#IssueDateBS').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+        $('#IssueDateAD').removeClass("input-validation-error");
+        if ($('#IssueDateAD-error').length > 0) {
+            $('#IssueDateAD-error').html("");
+        }
+        $('#IssueDateBS').removeClass("input-validation-error");
+        if ($('#IssueDateBS-error').length > 0) {
+            $('#IssueDateBS-error').html("");
+        }
+    });
+
+    $('#ExpireDateAD').change(function () {
+        var dateObj = NepaliFunctions.ConvertToDateObject($('#ExpireDateAD').val(), "YYYY-MM-DD");
+        $('#ExpireDateBS').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+        $('#ExpireDateAD').removeClass("input-validation-error");
+        if ($('#ExpireDateAD-error').length > 0) {
+            $('#ExpireDateAD-error').html("");
+        }
+        $('#ExpireDateBS').removeClass("input-validation-error");
+        if ($('#ExpireDateBS-error').length > 0) {
+            $('#ExpireDateBS-error').html("");
+        }
+    });
+    $("#ExpireDateAD").datepicker({
+        dateFormat: dateFormat,
+        // minDate: new Date,
+        changeMonth: true,
+        changeYear: true,
+        // yearRange: "-100:+20",
+        showAnim: "slideDown",
+        autoSize: true
+    }).attr('readonly', 'readonly');
+
+    $('#ExpireDateBS').nepaliDatePicker({
+        ndpYear: true,
+        ndpMonth: true,
+        readOnlyInput: true,
+        ndpEnglishInput: 'ExpireDateAD',
+        // disableBefore: NepalDateToday,
+        onChange: function () {
+            $('#ExpireDateBS').removeClass("input-validation-error");
+            if ($('#ExpireDateBS-error').length > 0) {
+                $('#ExpireDateBS-error').html("");
+            };
+            $('#ExpireDateAD').removeClass("input-validation-error");
+            if ($('#ExpireDateAD-error').length > 0) {
+                $('#ExpireDateAD-error').html("");
+            }
+        }
+    });
+
+</script>
+

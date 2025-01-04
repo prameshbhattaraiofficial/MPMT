@@ -1,0 +1,116 @@
+﻿@using Mpmt.Core.Dtos.PartnerApplications
+@using Mpmt.Core.Dtos.Paging
+@model PagedList<PublicFeedbacksModel>
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="row">
+                        <div class="col">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item "><a href="javascript:void(0);">Feedback</a></li>
+                                <li class="breadcrumb-item active">Public Feedbacks</li>
+                            </ol>
+                        </div>
+                        <div class="col-auto">
+                            <form id="formPublicFeedbacksFilter" class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" name="StartDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" name="EndDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">Full Name</label>
+                                    <div class="input-group">
+                                        <input type="text" name="FullName" class="form-control" id="inlineFormInputGroupUsername" placeholder="Full Name">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">Email</label>
+                                    <div class="input-group">
+                                        <input type="text" name="Email" class="form-control" id="inlineFormInputGroupUsername" placeholder="Email">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">Contact</label>
+                                    <div class="input-group">
+                                        <input type="text" name="ContactNo" class="form-control" id="inlineFormInputGroupUsername" placeholder="Contact">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button id="btnPublicFeedbacksFilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Public Feedbacks List</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body overflow-x-auto">
+                        <partial name="_PaginationHeader" />
+                        <div id="PublicFeedbacksTableWrapper" class="table-responsive">
+                            <partial name="_PublicFeedbacksList" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("PublicFeedbacksIndex", "PartnerApplications")',
+                selector: '#PublicFeedbacksTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formPublicFeedbacksFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+                $('#formPublicFeedbacksFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnPublicFeedbacksFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,81 @@
+﻿@using Mpmt.Core.Dtos.AgentReport;
+@model AgentCommissionTransactionReport
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <tbody>
+                <tr>
+                    <td><span>Transaction Id :</span></td>
+                    <td><span><strong style="color: #f98c45">#@Model.TransactionId</strong></span></td>
+                </tr>
+                <tr>
+                    <td><span>Remit Transaction Id :</span></td>
+                    <td><span><strong style="color: #f98c45">#@Model.RemitTransactionId</strong></span></td>
+                </tr>
+                <tr>
+                    <td><span>Created Nepali Date :</span></td>
+                    <td><span> @Model.CreatedNepaliDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Created Date :</span></td>
+                    <td><span> @Model.CreatedDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Agent Code :</span></td>
+                    <td><span class="tb-lead">@Model.AgentCode</span></td>
+                </tr>
+
+                <tr>
+                    <td><span>Agent Name :</span></td>
+                    <td><span> @Model.AgentName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Organization Name :</span></td>
+                    <td><span> @Model.OrganizationName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Payment Type :</span></td>
+                    <td><span>@Model.PaymentType</span></td>
+                </tr>
+                <tr>
+                    <td><span>Transaction Type :</span></td>
+                    <td><span> @Model.TransactionType</span></td>
+                </tr>
+                <tr>
+                    <td><span>Receiving Amount NPR:</span></td>
+                    <td><span class="tb-lead"> @Model.ReceivingAmountNPR</span></td>
+                </tr>
+                <tr>
+                    <td><span>Commission:</span></td>
+                    <td><span class="tb-lead"> @Model.Commission</span></td>
+                </tr>
+                <tr>
+                    <td><span>Agent District :</span></td>
+                    <td><span> @Model.AgentDistrict</span></td>
+                </tr>
+                <tr>
+                    <td><span>Recipient Name :</span></td>
+                    <td><span> @Model.RecipientName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Recipient Contact :</span></td>
+                    <td><span> @Model.RecipientContactNumber</span></td>
+                </tr>
+                <tr>
+                    <td><span>Recipient District :</span></td>
+                    <td><span> @Model.RecipientDistrict</span></td>
+                </tr>
+                <tr>
+                    <td><span>Recipient Address :</span></td>
+                    <td><span> @Model.RecipientAddress</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

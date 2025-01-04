@@ -1,0 +1,101 @@
+﻿@using Mpmt.Core.Dtos.SuperAgent
+@model AddAgentFundRequestVm
+
+<form id="FormAddFundRequest" class="form-horizontal auth-form" method="post" autocomplete="off">
+    @if (ViewBag.Error is not null)
+    {
+        <ul>
+            <li class="text-danger">@ViewBag.Error</li>
+        </ul>
+    }
+    <input type="hidden" asp-for="AgentCode" value="@Model.AgentCode" />
+    <input type="hidden" asp-for="SuperAgentName" value="@Model.SuperAgentName" />
+    <div class="row">
+        <h5>Super Agent name : <b>@Model.SuperAgentName</b></h5>
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Fund Type</label>
+            <input type="text" class="form-control" value="Prefunding" disabled />
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Notification Balance</label>
+            <div class="input-group">
+                <input asp-for="NotificationBalance" type="text" class="form-control" onkeypress="return isNumber(event)" placeholder="Enter Balance" required>
+            </div>
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Amount</label>
+            <div class="input-group">
+                <input asp-for="Amount" type="text" class="form-control" onkeypress="return isNumber(event)" placeholder="Enter Amount" required>
+            </div>
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Transaction Id</label>
+            <div class="input-group">
+                <input asp-for="TransactionId" type="text" class="form-control" placeholder="Enter Transaction Id" required>
+            </div>
+        </div>
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label" for="userpassword">Remarks</label>
+            <textarea asp-for="Remarks" name="Remarks" id="Remarks" cols="30" rows="3" class="form-control" required></textarea>
+        </div>
+        <div class="col-md-12 mb-2">
+            <label for="validationCustom05" class="form-label">Upload receipt </label>
+                <input asp-for="VoucherImg" type="file" class="form-control" id="inputGroupFile01" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'voucherImgId','voucherImageTxt')">
+                <span id="voucherImageTxt" class="text-danger" hidden></span>
+                <img id="voucherImgId" src="#" style="width:90px;" hidden>
+        </div>
+        <div class="form-group mb-0 row mt-4">
+            <div class="button-items">
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+
+        </div>
+    </div>
+</form>
+
+<script>
+    function onimagechange(data, id, textid) {
+        debugger;
+        readURL(data, id, textid);
+    }
+    function readURL(input, id, textid) {
+        if (input.files && input.files[0]) {
+            if (input.files[0].type.split('/')[0] != 'image') {
+                $('#' + id).attr('src', "");
+                document.getElementById(textid).innerHTML = 'Invalid file extension'
+                $('#' + textid).removeAttr('hidden');
+                return false
+            }
+            else if (input.files[0].size < (5 * 1024 * 1024)) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    document.getElementById(textid).innerHTML = ''
+                    $('#' + id).attr('src', e.target.result);
+                    $('#' + id).removeAttr('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                $('#' + id).attr('src', "");
+                document.getElementById(textid).innerHTML = 'Invalid Image File Size (<5 MB)'
+                $('#' + textid).removeAttr('hidden');
+            }
+        }
+    };
+</script>
+
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddFundRequest", "SuperAgent")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#FormAddFundRequest'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>

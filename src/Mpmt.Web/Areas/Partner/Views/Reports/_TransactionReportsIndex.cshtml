@@ -1,0 +1,163 @@
+﻿@using Mpmt.Core.Dtos.PartnerReport
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.Pagination
+@model PagedList<RemitTxnReport>
+@{
+    var sn = 1;
+    decimal totalSendAmt = 0.0m;
+    decimal totalRecAmt = 0.0m;
+    var nooftxn = 0;
+}
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Sender Txn Date</th>
+                <th>Receiver Txn Date</th>
+                <th>Sender Details</th>
+                <th>Receiver Details</th>
+                <th>Transcation Id</th>
+                @*       <th>Agent TrackerId</th> *@
+                <th>PartnerTrackerId</th>
+                <th>Gateway Txn Id</th>
+                @*                <th>Partner Id</th>
+                <th>Partner Full Name</th> *@
+                <th>Source Currency</th>
+                @* <th>Destination Currency</th> *@
+                <th>Payment Type</th>
+                @* <th>Amount</th> *@
+                <th>Service Charge</th>
+                <th>Send Amount</th>
+                <th>Receive Amount</th>
+                @*                 <th>Partner Service Charge</th>
+                *@
+                <th>Status</th>
+                <th>Sender Status</th>
+                <th>Receiver Status</th>
+                <th>Remarks</th>
+                <th>Payment Details</th>
+                <th>View</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.SN</td>
+                    <td>@item.SenderTransactionDate</td>
+                    <td>@item.ReceiverTransactionDate</td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" style="width:200px;" onclick="ShowPopUp('@Url.Action("SenderDetail", "SendTransactions", new { TransactionId = item.TransactionId })', 'Sender Detail')">@item.SenderName</a></td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" style="width:200px;" onclick="ShowPopUp('@Url.Action("ReciverDetail", "SendTransactions", new { TransactionId = item.TransactionId })', 'Receiver Detail')">@item.ReceiverName</a></td>
+                    <td>@item.TransactionId</td>
+                    @*                     <td>@item.AgentTransactionId</td>s
+                *@
+                    <td>@item.PartnerTrackerId</td>
+                    <td>@item.GatewayTxnId</td>
+                    @*
+                <td>@item.PartnerId</td>
+                <td>@item.PartnerFullName</td> *@
+                    <td>@item.SourceCurrency</td>
+                    @*   <td>@item.DestinationCurrency</td> *@
+                    <td>@item.PaymentType</td>
+                    @*  <td>@item.Amount.ToString("N2")</td> *@
+                    <td>@item.ServiceCharge.ToString("N2")</td>
+                    <td>@item.SendAmount.ToString("N2")</td>
+                    <td>@item.ReceiveAmount.ToString("N2")</td>
+                    @*                     <td>@item.PartnerServiceCharge.ToString("N2")</td>
+                *@
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("TransactionStatus", "Reports", new { TransactionId = item.TransactionId })', 'Transaction Status')">@item.Status</a></td>
+                    <td>@item.SenderUserStatus</td>
+                    <td>@item.ReceiverUserStatus</td>
+                    <td>@item.Remarks</td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("PaymentDetail", "SendTransactions", new { TransactionId = item.TransactionId })', 'Payment Detail')">View Detail</a></td>
+                    <td><a onclick="ShowPopUp('@Url.Action("ViewDetail","Reports",new {TransactionId = item.TransactionId})','Transaction Details','.modal-sm')" data-bs-toggle="modal" data-bs-target="#sender" class="text-primary"><i class="dripicons-preview"></i></a></td>
+                    @if (item.StatusCode == "55")
+                    {
+                        <td><a class="btn btn-md btn-soft-info" title="Download Receipt" onclick="downloadReceipt('@item.TransactionId')"><i class="dripicons-download"></i></a></td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    @* <td><a class="btn btn-md btn-soft-info" title="Download" asp-controller="Reports" asp-action="DownloadReceiptReport" asp-route-Id=@item.TransactionId>Download</a></td> *@
+                </tr>
+                sn = sn + 1;
+                nooftxn = nooftxn + 1;
+                totalSendAmt = totalSendAmt + Convert.ToDecimal(item.SendAmount.ToString() ?? "0.00");
+                totalRecAmt = totalRecAmt + Convert.ToDecimal(item.ReceiveAmount.ToString() ?? "0.00");
+            }
+        </tbody>
+        <thead class="table table-striped dataTable nowrap">
+            <tr>
+                <th>Total :</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>No of Transaction : @nooftxn</th>
+                @* <th></th> *@
+                <th></th>
+                @*  <th></th>
+                <th></th> *@
+                <th></th>
+                @*  <th></th> *@
+                <th></th>
+                @*  <th></th> *@
+                <th></th>
+                <th>@totalSendAmt </th>
+                <th>@totalRecAmt </th>
+                @*                 <th></th>
+                *@
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<script>
+    function downloadReceipt(transactionId) {
+        debugger;
+        setLoadWaiting(true);
+
+        $.ajax({
+            url: '/partner/reports/DownloadReceiptReport',
+            type: 'GET',
+            data: { Id: transactionId },
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (data, status, xhr) {
+                var filename = "";
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches !== null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+
+                var blob = new Blob([data], { type: xhr.getResponseHeader('Content-Type') });
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename || 'downloaded_file';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                setLoadWaiting(false);
+            },
+            error: function () {
+                setLoadWaiting(false);
+                alert('Failed to download file.');
+            }
+        });
+    }
+</script>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

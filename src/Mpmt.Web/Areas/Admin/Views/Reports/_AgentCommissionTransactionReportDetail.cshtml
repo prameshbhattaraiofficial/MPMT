@@ -1,0 +1,69 @@
+﻿@using Mpmt.Core.Dtos.AgentReport;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+
+@model PagedList<AgentCommissionTransactionReportDetail>
+
+@{
+    var sn = 1;
+}
+
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Created Date</th>
+                <th>Sender Name</th>
+                <th>Sender Contact</th>
+                <th>Sender Country</th>
+                <th>Sender Address</th>
+                <th>Receiver Name</th>
+                <th>Receiver Contact</th>
+                <th>Receiver Address</th>
+                <th>Transcation Id</th>
+                <th>Remit Transcation Id</th>
+                <th>Sending Currency</th>
+                <th>Receiving Amount NPR</th>
+                <th>Super Agent Name</th>
+                <th>Super Agent Code</th>
+                <th>Super Agent Commission</th>
+                <th>Agent Name</th>
+                <th>Agent Code</th>
+                <th>Agent Commission</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.SN</td>
+                    <td>@item.CreatedNepaliDate</td>
+                    <td>@item.SenderName</td>
+                    <td>@item.SenderContactNumber</td>
+                    <td>@item.SenderCountry</td>
+                    <td>@item.SenderAddress</td>
+                    <td>@item.RecipientName</td>
+                    <td>@item.RecipientContactNumber</td>
+                    <td>@item.RecipientAddress</td>
+                    <td>@item.TransactionId</td>
+                    <td>@item.ParentTransactionId</td>
+                    <td>@item.SourceCurrency</td>
+                    <td>@item.ReceivingAmountNPR.ToString("F2")</td>
+                    <td>@item.SuperAgentName</td>
+                    <td>@item.SuperAgentCode</td>
+                    <td>@item.SuperAgentCommission.ToString("F2")</td>
+                    <td>@item.AgentName</td>
+                    <td>@item.AgentCode</td>
+                    <td>@item.AgentCommission.ToString("F2")</td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("ViewCommissionDetails", "Reports", new { TransactionId = item.TransactionId })', 'Commission Detail')">View Detail</a></td>
+                </tr>
+                sn = sn + 1;
+            }
+        </tbody>
+    </table>
+</div>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

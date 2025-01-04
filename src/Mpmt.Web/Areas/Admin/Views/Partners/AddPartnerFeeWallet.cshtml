@@ -1,0 +1,74 @@
+﻿@using Mpmt.Web.Areas.Admin.ViewModels.Paetner.WalletCurrency
+@model PartnerWalletCurrencyVm
+
+<form id="FormAddAddPartnerFeeWallet" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <div class="row">
+        <input type="hidden" asp-for="PartnerCode" value="@ViewBag.PartnerCode" />
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="exampleFormControlSelect1">Source Currency</label>
+            <select asp-for="SourceCurrency" class="form-select" id="SourceCurrency" asp-items="ViewBag.SourceCurrencyddl">
+                <option value="">--Select Currency--</option>
+            </select>
+            <span asp-validation-for="SourceCurrency" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Notification Balance</label>
+            <input asp-for="NotificationBalanceLimit" onkeyup="return isNumber()" type="number" class="form-control">
+            <span asp-validation-for="NotificationBalanceLimit" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6  mb-3">
+            <label class="form-label" for="exampleFormControlSelect1">Markup Value</label>
+
+            <div class="input-group">
+                <input asp-for="MarkupMinValue" type="number" class="form-control" placeholder="min">
+                <input asp-for="MarkupMaxValue" type="number" class="form-control" placeholder="max">
+                <div class="input-group-append">
+                    <select asp-for="TypeCode" class="form-select form-control" aria-label=".">
+                        <option value="PERC" selected>Perc</option>
+                        <option value="FLAT">Flat</option>
+                    </select>
+                </div>
+            </div>
+            <span asp-validation-for="MarkupMinValue" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Credit Limit</label>
+            <div class="input-group">
+                <input asp-for="CreditLimit" type="text" class="form-control" onkeypress="return isNumber(event)" placeholder="Enter Credit Limit">             
+            </div>
+            <span asp-validation-for="CreditLimit" class="text-danger"></span>
+        </div>
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label" for="userpassword">Remarks</label>
+            <textarea asp-for="Remarks" cols="30" rows="3" class="form-control"></textarea>
+        </div>
+
+        <div class="form-group mb-0 row mt-4">
+            <div class="button-items">
+                <button type="submit" class="btn btn-primary" data-bs="modal">Submit</button>
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</form>
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddPartnerFeeWallet", "Partners")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#FormAddAddPartnerFeeWallet'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>

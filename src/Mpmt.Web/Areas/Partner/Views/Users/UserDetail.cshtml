@@ -1,0 +1,147 @@
+﻿@using Mpmt.Core.Domain.Partners.Senders;
+@model SenderDto
+<h3>Personal Details</h3>
+<fieldset>
+
+    <div class="row">
+        <div class="col-md-12 mb-2">
+            <label class="form-label" for="userpassword">Full Name</label>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Sarita Baidhya" value="@Model.FirstName @Model.SurName" disabled>
+            </div>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label" for="userpassword">Contact</label>
+            <div class="input-group">
+                <input type="text" class="form-control" value="@Model.MobileNumber" disabled>
+            </div>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label" for="userpassword">Email</label>
+            <div class="input-group has-validation">
+                @{
+                    var val = "@";
+                }
+                <span class="input-group-text" id="inputGroupPrepend">@val</span>
+                <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" value="@Model.Email" disabled>
+
+            </div>
+        </div>
+
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="exampleFormControlSelect1">Gender</label>
+            <select asp-for="GenderId" class="form-select" asp-items="@ViewBag.genderType" disabled>
+            </select>
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="exampleFormControlSelect1">Date Of Birth</label>
+            <div class="input-group">
+                <input type="text" class="form-control" name="birthday" value="@Model.DateOfBirth" disabled>
+                <span class="input-group-text"><i class="ti ti-calendar font-16"></i></span>
+            </div>
+
+
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Profile Image</label>
+            <div class="input-group">
+                <img src="@Model.ProfileImagePath" alt="profile" height="150" width="150">
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="exampleFormControlSelect1">Country</label>
+            <select asp-for="CountryCode" class="form-select" asp-items="@ViewBag.Countryddl" disabled>
+            </select>
+        </div>
+        <div class="col-md-6  form-group mb-2">
+            <label class="form-label" for="userpassword">State</label>
+            <input value="@Model.Province" type="text" class="form-control" disabled>
+        </div>
+   
+        <div class="col-md-6  form-group mb-2">
+            <label class="form-label" for="userpassword">City</label>
+            <input value="@Model.City" type="text" class="form-control" disabled>
+        </div>
+
+        <div class="col-md-6  form-group mb-2">
+            <label class="form-label" for="userpassword">Zip code</label>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="" value="@Model.Zipcode" disabled>
+            </div>
+        </div>
+        <div class="col-md-6  form-group mb-2">
+            <label class="form-label" for="userpassword">Occupation</label>
+            <select asp-for="OccupationId" class="form-select" asp-items="@ViewBag.occupationType" disabled>
+            </select>
+        </div>
+    </div>
+
+</fieldset><!--end fieldset-->
+
+<h3>Identity Details </h3>
+<fieldset>
+    <div class="row ">
+        <div class="col-md-6 position-relative mb-2">
+            <label class="form-label">ID Type</label>
+            <select asp-for="DocumentTypeId" class="form-select" asp-items="@ViewBag.DocumentType" disabled>
+            </select>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">ID Number</label>
+            <input type="text" value="@Model.DocumentNumber" class="form-control" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Issued Date</label>
+            <input type="text" value="@Model.IssuedDate" class="form-control" disabled>
+        </div>
+
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Expiry date</label>
+            <input type="text" value="@Model.ExpiryDate" class="form-control" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">ID Front </label>
+            <div class="input-group mb-3">
+                <img src="@Model.IdFrontImgPath" alt="Idbackimage" height="150" width="150" />
+            </div>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">ID Back </label>
+            <div class="input-group mb-3">
+                <img src="@Model.IdBackImgPath" alt="IdBackImg" height="150" width="150" />
+            </div>
+        </div>
+    </div><!--end form-->
+</fieldset><!--end fieldset-->
+
+<h3>Bank Details</h3>
+<fieldset>
+    <div class="row">
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Bank Name</label>
+            <input type="text" class="form-control" value="@Model.BankName" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Branch</label>
+            <input type="text" class="form-control" value="@Model.Branch" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Bank Code</label>
+            <input type="text" class="form-control" value="@Model.BankCode" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">A/c Holder Name</label>
+            <input type="text" class="form-control" value="@Model.AccountHolderName" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">A/c Number</label>
+            <input type="text" class="form-control" value="@Model.AccountNumber" disabled>
+        </div>
+
+    </div>
+</fieldset><!--end fieldset-->
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+</div>

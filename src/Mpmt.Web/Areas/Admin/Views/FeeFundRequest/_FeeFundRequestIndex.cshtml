@@ -1,0 +1,108 @@
+﻿@using Mpmt.Core.Dtos.FeeFundRequest;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Models.RMP;
+@model PagedList<FeeFundRequestList>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons78" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Registered Date</th>
+                <th>Partner Code</th>
+                <th>FundType</th>
+                <th>Source Currency</th>
+                <th>Destination Currency</th>
+                <th>Amount</th>
+                <th>Remarks</th>
+                <th>Sign</th>
+                <th>Transaction Id</th>
+                <th>Request Status</th>
+                <th>Voucher Image</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <style>
+                    tr.active {
+                        background: #ccc;
+                    }
+
+                    .tableFixHead {
+                        overflow-y: auto;
+                        height: 500px;
+                    }
+
+                        .tableFixHead thead th {
+                            position: sticky;
+                            top: 0px;
+                        }
+                </style>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td> @item.Sn</td>
+                        <td> @item.RegisteredDate</td>
+                        <td> @item.PartnerCode</td>
+                        <td> @item.FundType</td>
+                        <td> @item.SourceCurrency</td>
+                        <td> @item.DestinationCurrency</td>
+                        <td> @item.Amount</td>
+                        <td> @item.Remarks</td>
+                        <td> @item.Sign</td>
+                        <td> @item.TransactionId</td>
+                        <td> @item.RequestStatus </td>
+                        <td>
+                            <a data-bs-toggle="modal" data-bs-target="#fullimage">
+                                <img src="@item.VoucherImgPath" alt="" class="thumb-xs me-1">
+                            </a>
+                        </td>
+                        <td name="buttons">
+                            <div class=" float-center">
+                                <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <i class="dripicons-dots-3"></i></button>
+                                @if (actors.FirstOrDefault(x => x.Action == "FeeFundRequestDetails")?.Permission ?? false)
+                                {
+                                    <div class="dropdown-menu">
+
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("FeeFundRequestDetails", "FeeFundRequest", new { Id = item.Id })', 'Fee Fund Request Details')"><i class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i> View Details</a>
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

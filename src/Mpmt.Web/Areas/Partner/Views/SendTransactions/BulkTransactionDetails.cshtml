@@ -1,0 +1,35 @@
+﻿@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Dtos.Transaction;
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<BulkTransactionResponse>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Bulk Transaction Error List </h4>
+                        </div>
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                <a onclick="ShowPopUp('@Url.Action("SendBulkTransaction","SendTransactions")','Add Transaction')" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addnew">
+                                    <i class="las la-plus ms-1"></i> Add Bulk Transaction
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    @*                     <partial name="_PaginationHeader" />
+                    *@                    <div id="SendTransactionTableWrapper" class="table-responsive12">
+                        <partial name="_BulkTransactionList" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

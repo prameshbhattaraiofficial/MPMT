@@ -1,0 +1,133 @@
+﻿@using Mpmt.Core.Dtos.Partner
+@model WalletCurrency
+@{
+    var sn = 1;
+}
+@*@foreach (var item in Model.PartnerWalletCurrency)
+{
+    <li class="list-group-item align-items-center d-flex justify-content-between">
+        <div class="media">
+            <img class="d-flex align-self-center me-3 rounded-circle" src="~/assets/images/widgets/opp-1.png" alt="" height="36">
+            <div class="media-body align-self-center">
+                <h4 class="mt-0 mb-1">@item.SourceCurrency</h4>
+                <h6 class="mt-0 mb-1 f-20">@item.Balance</h6>
+
+            </div><!--end media-body-->
+        </div><!--end media-->
+        <div class="align-self-center">
+            <div class=" float-center">
+                <a class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("AddFund","Wallets", new { walletcurrencyid = item.Id })','Add Fund')"><i class="dripicons-plus"></i> Add Fund</a>
+            </div>
+        </div>
+    </li>
+}
+*@
+
+<div class="table-responsive">
+    @* <table id="datatable_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer" style="border-collapse: collapse; border-spacing: 0; width: 100%;"> *@
+    <table id="datatable-buttons1234" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Partner Code</th>
+                <th>Currency</th>
+                <th>Ledger</th>
+                <th>Available</th>
+                <th>Credit Limit</th>
+                <th>Credit Balance</th>
+                <th>MarkFavourite</th>
+                <th>MarkSourceCurrencyNPR</th>
+                <th>Statement</th>
+
+                @*  <th>Remarks</th>*@
+                <th>Add Funds </th>
+
+            </tr>
+        </thead>
+
+
+        <tbody>
+            @foreach (var item in Model.PartnerWalletCurrency)
+            {
+                <tr>
+                    <td> @sn </td>
+                    <td> @item.PartnerCode </td>
+                    <td> @item.SourceCurrency </td>
+                    <td> @item.Ledger </td>
+                    <td> @item.Balance </td>
+                    <td>@item.CreditLimit</td>
+                    <td>@item.CreditBalance</td>
+                    <td>
+                        <div class="form-check form-switch form-switch-success">
+                            <input asp-for="@item.IsFavourite" class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check form-switch form-switch-success">
+                            <input asp-for="@item.IsSourceCurrencyNPR" class="form-check-input" type="checkbox" id="sourcecurrency-switch-@sn" onchange="ChangeStatus('@item.PartnerCode','@item.SourceCurrency', this.id)">
+                        </div>
+                        @* @if (item.IsSourceCurrencyNPR == "1")
+                    {
+                    <div class="form-check form-switch form-switch-success">
+                    <input asp-for="@item.IsSourceCurrencyNPR" class="form-check-input" id="switch" onchange="ChangeStatus('@item.PartnerCode','@item.SourceCurrency')" type="checkbox" checked>
+                    </div>
+                    }
+                    else
+                    {
+                    <div class="form-check form-switch form-switch-success">
+                    <input asp-for="@item.IsSourceCurrencyNPR" class="form-check-input" id="switch" onchange="ChangeStatus('@item.PartnerCode','@item.SourceCurrency')" type="checkbox">
+                    </div>
+                    } *@
+
+                    </td>
+                    @* <td> @item.Remarks </td>          *@
+                    <td name="button">
+                        <div class=" float-center">
+                            <a class="btn btn-sm btn-soft-success btn-circle me-2" href="@Url.Action("PartnerStatement","Wallets", new { walletCurrencyById = item.SourceCurrency })"><i class="dripicons-preview"></i></a>
+@*                             <a class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("PartnerStatement","Wallets", new { walletcurrencyid = item.SourceCurrency,FundType=ViewBag.partnerFundType })')"><i class="dripicons-preview"></i></a>
+ *@                        </div>
+                    </td>
+                    @if (!string.IsNullOrWhiteSpace(item.SourceCurrency) && !item.SourceCurrency.Contains("NPR", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <td name="buttons">
+                            <div class=" float-center">
+                                <a class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("AddFund","Wallets", new { walletcurrencyid = item.Id,FundType=ViewBag.partnerFundType, currency = item.SourceCurrency, partnerFullName = (Model.apppartner.FirstName+ " "+Model.apppartner.SurName), organization = Model.apppartner.OrganizationName })','Add Fund')"><i class="dripicons-plus"></i> Add Fund</a>
+                            </div>
+                        </td>
+                    }                 
+                   
+                </tr>
+                sn = sn + 1;
+            }
+
+        </tbody>
+    </table>
+</div>
+<script>
+
+    // function ChangeStatus(PartnerCode, SourceCurrency) {
+    //     debugger;
+    //     var currstatus = $("#switch").is(':checked') ? true : false;
+    //     $.ajax({
+    //         url: '/Partner/Wallets/UpdateCurrencyStatus',
+    //         type: 'POST',
+    //         data: { partnercode: PartnerCode, sourcecurrency: SourceCurrency, currStatus: currstatus },
+    //         success: function (res) {
+    //             return res;
+    //         }
+    //     })
+    // }
+
+    function ChangeStatus(partnerCode, sourceCurrency, switchId) {
+        var currStatus = $("#" + switchId).is(':checked') ? true : false;
+        $.ajax({
+            url: '/Partner/Wallets/UpdateCurrencyStatus',
+            type: 'POST',
+            data: { partnercode: partnerCode, sourcecurrency: sourceCurrency, currStatus: currStatus },
+            success: function (res) {
+                // Handle success response (e.g., update UI, display messages)
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,132 @@
+﻿@using Mpmt.Core.Models.RMP;
+@using Mpmt.Core.ViewModel.Menu
+@model List<Menuwithchield>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Role</a></li>
+                            <li class="breadcrumb-item active">Menu List</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Menu List</h4>
+                        </div>
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                @if (actors.FirstOrDefault(x => x.Action == "AddMenu")?.Permission ?? false)
+                                {
+                                    <a onclick="ShowPopUp('@Url.Action("AddMenu","Menu")','Add Menu')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                        <i class="las la-plus ms-1"></i> Add Menu
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="MenuTableWrapper" class="table-responsive">
+                        <partial name="_MenuIndex" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("MenuIndex", "Menu")',
+                selector: '#MenuTableWrapper'
+            });
+            addPaginationHandlers();
+        });
+        function changeclass(Id) {
+           
+            console.log("clicked", Id);
+            $("." + Id).toggleClass("hidden");
+        }
+        function changeDisplayOrder(Url, MenuId, DisplayOrder) {
+   
+            var decodeurl = decodeURIComponent(Url);
+            var value = DisplayOrder.value;
+
+            console.log(MenuId);
+            console.log(value);
+            console.log(decodeurl);
+            $('.loader').show();
+            $.ajax({
+              
+                url: decodeurl,
+                type: 'POST',
+                data: { Id: MenuId, DisplayOrderValue: value },
+                success: function (res) {
+                    window.location.reload();
+                    $('.loader').hide();
+                },
+                beforeSend: function () {
+                    $('.loader').hide();
+                    $('.ajax-loading-busy').removeClass('display-none');
+                }, complete: function () {
+                    $('.loader').hide();
+                    $('.ajax-loading-busy').addClass('display-none');
+                }
+            })
+        }
+        function changeMenuIsactive(Url, MenuId, Action) {
+            var decodeurl = decodeURIComponent(Url);
+            var value = Action.checked;
+            if (value == false) {
+                $(Action).removeClass('bg-success').addClass('bg-danger');
+            }
+            else
+                $(Action).removeClass('bg-danger').addClass('bg-success');
+
+
+
+            $.ajax({
+                url: decodeurl,
+                type: 'POST',
+                data: { Id: MenuId, IsActive: value },
+                success: function (res) {
+                    window.location.reload();
+                },
+                beforeSend: function () {
+
+                    $('.ajax-loading-busy').removeClass('display-none');
+                }, complete: function () {
+                    $('.ajax-loading-busy').addClass('display-none');
+                }
+            })
+        }
+
+
+
+    </script>
+}

@@ -1,0 +1,301 @@
+﻿@using Mpmt.Core.Dtos.Agent
+@model AgentDashboard
+
+@{
+    ViewData["Title"] = "DashBoard";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <h4 class="page-title">Dashboard</h4>
+
+                    </div>
+                    <!--end col-->
+                    <div class="col-auto align-self-center">
+                        <a href="#" class="btn btn-md btn-outline-primary">
+                            <span class="ay-name" id="Day_Name">Today:</span>&nbsp; <span class="" id="Select_date">Sep 7</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar align-self-center icon-xs ms-1">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </a>
+                    </div>
+                    <!--end col-->
+                </div>
+                <!--end row-->
+            </div>
+            <!--end page-title-box-->
+        </div>
+        <!--end col-->
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-lg-4">
+            <div class="card   report-card bg-one ">
+                <div class="card-body ">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col">
+                            <p class="text-white mb-0 fw-semibold font-20">Total Employee</p>
+                            <h3 class="m-0 text-white">@Model.TotalUser</h3>
+
+                        </div>
+
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <div class="media">
+                                <div class="media-body align-self-center">
+                                    <p class="mb-0 text-truncate text-white font-14">
+                                        <span class="text-white">
+                                            <i class="mdi mdi-trending-down"></i>@Model.TodayUser
+                                        </span> <br>Today
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="media">
+                                <div class="media-body align-self-center">
+                                    <p class="mb-0 text-truncate text-white font-14">
+                                        <span class="text-white">
+                                            <i class="mdi mdi-trending-up"></i>@Model.WeekUser
+                                        </span> <br>This Week
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="media">
+                                <div class="media-body align-self-center">
+                                    <p class="mb-0 text-truncate text-white font-14">
+                                        <span class="text-white">
+                                            <i class="mdi mdi-trending-up"></i>@Model.MonthUser
+                                        </span> <br>This Month
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card  report-card bg-two ">
+                <div class="card-body ">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col">
+                            <p class="text-white mb-0 fw-semibold font-20">Total Succesful Payout</p>
+                            <h3 class="m-0 text-white">@Model.TotalPayout</h3>
+
+                        </div>
+
+                    </div>
+                    <div class="row mt-3 ">
+                        <div class="col">
+                            <div class="media">
+                                <div class="media-body align-self-center">
+                                    <p class="mb-0 text-truncate text-white font-14">
+                                        <span class="text-white">
+                                            <i class="mdi mdi-trending-down"></i>@Model.TodayPayout
+                                        </span> <br>Today
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="media">
+                                <div class="media-body align-self-center">
+                                    <p class="mb-0 text-truncate text-white font-14">
+                                        <span class="text-white">
+                                            <i class="mdi mdi-trending-up"></i>@Model.WeekPayout
+                                        </span> <br>This Week
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="media">
+                                <div class="media-body align-self-center">
+                                    <p class="mb-0 text-truncate text-white font-14">
+                                        <span class="text-white">
+                                            <i class="mdi mdi-trending-up"></i>@Model.MonthPayout
+                                        </span> <br>This Month
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card  report-card bg-three">
+                <div class="card-body ">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col">
+                            <p class="text-white mb-0 fw-semibold font-20">Total Commission</p>
+                            <h3 class="m-0 text-white">@Model.TotalCommissionTransaction</h3>
+
+                        </div>
+
+                    </div>
+                    <div class="row mt-3 ">
+                        <div class="col">
+                            <div class="media">
+                                <div class="media-body align-self-center">
+                                    <p class="mb-0 text-truncate text-white font-14">
+                                        <span class="text-white">
+                                            <i class="mdi mdi-trending-up"></i>@Model.TodayCommissionTransaction
+                                        </span> <br>Today
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="media">
+                                <div class="media-body align-self-center">
+                                    <p class="mb-0 text-truncate text-white font-14">
+                                        <span class="text-white">
+                                            <i class="mdi mdi-trending-down"></i>@Model.WeekCommissionTransaction
+                                        </span> <br>This Week
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="media">
+                                <div class="media-body align-self-center">
+                                    <p class="mb-0 text-truncate text-white font-14">
+                                        <span class="text-white">
+                                            <i class="mdi mdi-trending-up"></i>@Model.MonthCommissionTransaction
+                                        </span> <br>This Month
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Today's Transactional Reports</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto ">
+                    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th>SN</th>
+                                <th>Transaction Date</th>
+                                <th>Sender Txn Date</th>
+                                <th>Payout Date</th>
+                                <th>Transcation Id</th>
+                                <th>Agent Tracker Id</th>
+                                <th>Source Currency</th>
+                                <th>Destination Currency</th>
+                                <th>Payout Type</th>
+                                <th>Send Amount</th>
+                                <th>Conversion Rate</th>
+                                <th>Net Send Amt</th>
+                                <th>Net Receive Amt NPR</th>
+                                <th>Agent District</th>
+                                <th>Agent Name</th>
+                                <th>Agent Code</th>
+                                <th>Agent Commission NPR</th>
+                                <th>Super Agent Name</th>
+                                <th>Super Agent Code</th>
+                                <th>Transaction Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.SettlementReport.Count() <= 0)
+                            {
+                                <tr></tr>
+                                <tr></tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-danger" style="font-size:16px;">
+                                        No Record Found
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <link href="~/css/customfixedheader.css" rel="stylesheet" />
+                                @foreach (var value in Model.SettlementReport.Select((item, index) => new { item, index }))
+                                {
+                                    <tr>
+                                        <td>@(value.index + 1)</td>
+                                        <td>@value.item.TransactionDate</td>
+                                        <td>@value.item.SenderTransactionDateString</td>
+                                        <td>@value.item.PayoutNepaliDate</td>
+                                        <td>@value.item.TransactionId</td>
+                                        <td>@value.item.AgentTrackerId</td>
+                                        <td>@value.item.SourceCurrency</td>
+                                        <td>@value.item.DestinationCurrency</td>
+                                        <td>@value.item.PayoutType</td>
+                                        <td>@value.item.SendingAmount.ToString("N2")</td>
+                                        <td>@value.item.ConversionRate.ToString("N2")</td>
+                                        <td>@value.item.NetSendingAmount.ToString("N2")</td>
+                                        <td>@value.item.NetReceivingAmountNPR.ToString("N2")</td>
+                                        <td>@value.item.AgentDistrict</td>
+                                        <td>@value.item.AgentName</td>
+                                        <td>@value.item.AgentCode</td>
+                                        <td>@value.item.AgentCommissionNPR.ToString("N2")</td>
+                                        <td>@value.item.SuperAgentName</td>
+                                        <td>@value.item.SuperAgentCode</td>
+                                        @if (value.item.TransactionType == "AGENTWEBTRANSACTION")
+                                        {
+                                            <td>Web Transaction</td>
+                                        }
+                                        else if (value.item.TransactionType == "AGENTAPITRANSACTION")
+                                        {
+                                            <td>API Transaction</td>
+                                        }
+                                        <td>@value.item.Status</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 col-lg-5">
+        </div>
+    </div>
+</div>

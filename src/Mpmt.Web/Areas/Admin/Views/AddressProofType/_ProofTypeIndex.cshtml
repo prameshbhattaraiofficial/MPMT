@@ -1,0 +1,52 @@
+﻿@using Mpmt.Core.Dtos.AddressProofType
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<AddressProofTypeDetails>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Address Proof Type</th>
+                <th>Address Proof Code</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@(value.index + 1)</td>
+                    <td>@value.item.AddressProofName</td>
+                    <td>@value.item.AddressProofCode</td>
+                    <td>@value.item.Description</td>
+                    @if (value.item.IsActive == true)
+                    {
+                        <td><span class="badge bg-soft-success px-2">Active</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="badge bg-soft-danger px-2">InActive</span></td>
+                    }
+                    <td name="buttons">
+                        <div class=" float-center">
+                            @if (actors.FirstOrDefault(x => x.Action == "UpdateProofType")?.Permission ?? false)
+                            {
+                                <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdateProofType", "AddressProofType", new { id = value.item.Id })', 'Update Proof Type')" title="Update Proof Type"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                            }
+                            @if (actors.FirstOrDefault(x => x.Action == "DeleteProofType")?.Permission ?? false)
+                            {
+                                <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="PopUPAjaxDelete('@Url.Action("DeleteProofType", "AddressProofType", new { id = value.item.Id })', 'Remove Proof Type')" title="Delete Proof Type"> <i class="dripicons-trash" aria-hidden="true"></i></a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

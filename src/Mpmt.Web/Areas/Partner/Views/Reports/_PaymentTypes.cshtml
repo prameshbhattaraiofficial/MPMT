@@ -1,0 +1,60 @@
+﻿@using Mpmt.Core.Dtos.Transaction;
+
+@model IEnumerable<Paymentdetails>
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+
+            <tbody>
+
+                @foreach (var paymentdetail in Model)
+                {
+                    if (paymentdetail.Type == "Bank")
+                    {
+                        <tr>
+                            <td><span>Bank Name :</span></td>
+                            <td><span>@paymentdetail.BankName</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Branch :</span></td>
+                            <td><span class="tb-lead">@paymentdetail.Branch</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Account Holder Name :</span></td>
+                            <td><span>@paymentdetail.AccountHolderName</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Account Number :</span></td>
+                            <td><span>@paymentdetail.AccountNumber</span></td>
+                        </tr>
+                    }
+                    if (paymentdetail.Type == "Wallet")
+                    {
+                        <tr>
+                            <td><span>Wallet Name :</span></td>
+                            <td><span>@paymentdetail.BankName</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Account Holder Name :</span></td>
+                            <td><span>@paymentdetail.AccountHolderName</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Wallet Number :</span></td>
+                            <td><span>@paymentdetail.AccountNumber</span></td>
+                        </tr>
+
+                    }
+
+                }
+
+
+            </tbody>
+        </table><!--end /table-->
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

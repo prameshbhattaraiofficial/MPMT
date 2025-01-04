@@ -1,0 +1,140 @@
+﻿@using Mpmt.Core.Dtos.Banks
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<BankDetails>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Setting</a></li>
+                            <li class="breadcrumb-item active">Bank List</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto">
+                        <form id="formbankfilter" class="row row-cols-lg-auto align-items-end">
+                            <div class="col-12 mb-2">
+                                <label class="form-label mb-0"  for="inlineFormSelectPref">Country</label>
+                                <select name="CountryCode" class="form-select" id="validationTooltip04" asp-items="ViewBag.Countryddl" >
+                                   <option value="">--All--</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mb-2">
+                                <div class="input-group">
+                                    <input name="BankName" type="text" class="form-control" placeholder="Bank name">
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-2">
+                                <label class="form-label mb-0" for="inlineFormSelectPref">Status</label>
+                                <select name="Status" class="form-select" id="validationTooltip04" required>
+                                    <option value="0" selected>All</option>>
+                                    <option value="1" >Active</option>>
+                                    <option value="2" >Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mb-2">
+                                <button id="btnbankfilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Bank List</h4>
+                        </div>
+                        <!--end col-->
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                @if (actors.FirstOrDefault(x => x.Action == "AddBank")?.Permission ?? false)
+                                {
+                                    <a onclick="ShowPopUp('@Url.Action("AddBank","Bank")','Add New Bank')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                        <i class="las la-plus ms-1"></i> Add Bank
+                                    </a>
+                                }
+
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body">
+                    <div id="BankTableWrapper" class="table-responsive">
+                        <partial name="_BankIndex" model="@Model" />
+                    </div>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+</div><!-- container -->
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize pagination settings object
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("BankIndex", "Bank")',
+                selector: '#BankTableWrapper'
+            });
+            addPaginationHandlers();
+             $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formbankfilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#formbankfilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnbankfilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+
+
+}

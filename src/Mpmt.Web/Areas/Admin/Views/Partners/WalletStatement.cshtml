@@ -1,0 +1,229 @@
+﻿@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.PartnerStatement
+@model PagedList<PartnerWalletStatement>
+
+<link href="~/nepali.datepicker.v3/css/nepali.datepicker.v3.min.css" rel="stylesheet" />
+<link href="~/nepali.datepicker.v3/jquery-ui.min.css" rel="stylesheet" />
+<div class="page-content">
+    <div class="container-fluid">
+        <!-- Page-Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="row">
+                        <div class="col">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item "><a href="javascript:void(0);">Balance</a></li>
+                                <li class="breadcrumb-item active">Balance Statement Report</li>
+                            </ol>
+                        </div><!--end col-->
+                        <div class="col-auto">
+                            <form id="formStatement" class="row row-cols-lg-auto align-items-end">
+                                <input type="hidden" value="@ViewBag.Walletcurrencyid" name="walletCurrencyById" />
+                                <input type="hidden" value="@ViewBag.PartnerCode" name="PartnerCode" />
+                                <div class="col-12">
+                                    <span class="spacing_10">
+                                        <input type="radio" id="radio3" name="DateFlag" onselect="myFunction()" value="AD" checked>
+                                        <label for="radio3">AD</label>
+                                    </span>
+                                    <input type="text" value="AD" name="DateFlag" id="rdText" hidden></input>
+                                    <span class="spacing_10">
+                                        <input type="radio" id="radio4" name="DateFlag" onselect="myFunction()" value="BS">
+                                        <label for="radio4">BS</label>
+                                    </span>
+                                    <br />
+                                    <div class="row">
+                                        <label for="startDate">Start Date</label>
+                                        <div class="col-8">
+                                            <input type="date" name="StartDate" style="width:200px;" id="IssueDateAD" class="form-control">
+                                            <input type="text" name="StartDateBS" style="width:200px;" placeholder="yyyy-mm-dd" id="IssueDateBS" class="form-control">
+                                        </div>
+                                        @*  <div class="col-6">
+                                        <input type="text" name="StartDate" id="IssueDateBS" class="form-control">
+                                        </div> *@
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="row">
+                                        <label for="endDate">End Date</label>
+                                        <div class="col-8">
+                                            <input type="date" name="EndDate" style="width:200px;" id="ExpireDateAD" class="form-control">
+                                            <input type="text" name="EndDateBS" placeholder="yyyy-mm-dd" style="width:200px;" id="ExpireDateBS" class="form-control">
+                                        </div>
+                                        @*        <div class="col-6">
+
+                                        </div> *@
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button id="btnStatement" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" id="btnStatementFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Export to Excel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div><!--end page-title-box-->
+            </div><!--end col-->
+        </div><!--end row--><!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Balance Statement Report</h4>
+                            </div>
+                            <!--end col-->
+                            <!--end col-->
+                        </div>
+                        <!--end row-->
+                    </div>
+                    <!--end card-header-->
+                    <div class="card-body overflow-x-auto">
+                        <partial name="_PaginationHeader" />
+                        <div id="PreFundRequestApprovedTableWrapper" class="table-responsive">
+                            <partial name="_WalletStatement" model="@Model" />
+                        </div>
+                    </div>
+                    <!--end card-body-->
+                </div>
+                <!--end card-->
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+
+
+
+    </div><!-- container -->
+
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script src="~/nepali.datepicker.v3/jquery-ui.min.js"></script>
+    <script src="~/nepali.datepicker.v3/js/nepali.datepicker.v3.min.js"></script>
+    <script>
+        var yearRangeDOB = "1944:-10"; //"1944:+0";
+        var yearRangeIssue = "1944:-0";
+        var yearRangeExpire = "1944:+10"; //"1944:+20";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        var today = new Date();
+        var startDate = today.getFullYear() - 10 + '-' + today.getMonth() + '-01';
+        var nepaliDOB = NepaliFunctions.ConvertDateFormat({ year: NepaliFunctions.GetCurrentBsYear() - 9, month: 1, day: 1 }, "YYYY-MM-DD");
+        var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+        document.getElementById('IssueDateBS').style.display = 'none';
+        document.getElementById('ExpireDateBS').style.display = 'none';
+        $('input[name="DateFlag"]').change(function (e) { // Select the radio input group
+            $('#rdText').val($(this).val());
+            if ($(this).val() == "AD") {
+                document.getElementById('IssueDateBS').style.display = 'none';
+                document.getElementById('ExpireDateBS').style.display = 'none';
+                document.getElementById('IssueDateAD').style.display = 'block';
+                document.getElementById('ExpireDateAD').style.display = 'block';
+                document.getElementById('IssueDateBS').value = '';
+                document.getElementById('ExpireDateBS').value = '';
+            }
+            else {
+                document.getElementById('IssueDateBS').style.display = 'block';
+                document.getElementById('ExpireDateBS').style.display = 'block';
+                document.getElementById('IssueDateAD').style.display = 'none';
+                document.getElementById('ExpireDateAD').style.display = 'none';
+                document.getElementById('IssueDateAD').value = '';
+                document.getElementById('ExpireDateAD').value = '';
+            }
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("WalletStatement", "Partners")',
+                selector: '#PreFundRequestApprovedTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formStatement').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#formStatement').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnStatement').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+                $('#btnStatementFilter').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("WalletStatement", "Partners", new { Export = 1 })');
+
+                    return false;
+                });
+
+            }
+
+            $('#IssueDateBS').nepaliDatePicker({
+                ndpYear: true,
+                ndpMonth: true,
+                defaultDate: NepalDateToday,
+                onChange: function () {
+                    $('#IssueDateBS').removeClass("input-validation-error");
+                    if ($('#IssueDateBS-error').length > 0) {
+                        $('#IssueDateBS-error').html("");
+                    };
+                    $('#IssueDateAD').removeClass("input-validation-error");
+                    if ($('#IssueDateAD-error').length > 0) {
+                        $('#IssueDateAD-error').html("");
+                    }
+                }
+
+            });
+
+            $('#ExpireDateBS').nepaliDatePicker({
+                ndpYear: true,
+                ndpMonth: true,
+                onChange: function () {
+                    $('#ExpireDateBS').removeClass("input-validation-error");
+                    if ($('#ExpireDateBS-error').length > 0) {
+                        $('#ExpireDateBS-error').html("");
+                    };
+                    $('#ExpireDateAD').removeClass("input-validation-error");
+                    if ($('#ExpireDateAD-error').length > 0) {
+                        $('#ExpireDateAD-error').html("");
+                    }
+                }
+            });
+        });
+    </script>
+
+
+}

@@ -1,0 +1,157 @@
+﻿@using Mpmt.Core.Domain.Partners.Recipient
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Models.RMP;
+@model PagedList<RecipientsList>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Users</a></li>
+                            <li class="breadcrumb-item active">Recipient List</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto">
+                    </div>
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="FormRecipientFilter" class="row row-cols-lg-auto align-items-end" autocomplete="off">
+                                <input type="hidden" name="SenderId" value="@ViewBag.SenderId" />
+                                <div class="col-12 mb-2">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">FirstName</label>
+                                    <div class="input-group">
+                                        <input type="text" name="FirstName" class="form-control" id="inlineFormInputGroupUsername" placeholder="Firstname">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">SurName</label>
+                                    <div class="input-group">
+                                        <input name="SurName" type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="SurName">
+                                    </div>
+                                </div>
+                                 <div class="col-12 mb-2">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">MobileNumber</label>
+                                    <div class="input-group">
+                                        <input name="MobileNumber" type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="MobileNumber">
+                                    </div>
+                                </div>
+                                 <div class="col-12 mb-2">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">Email</label>
+                                    <div class="input-group">
+                                        <input name="Email" type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Email">
+                                    </div>
+                                </div>
+                             
+                                <div class="col-12 mb-2">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">User Status</label>
+                                    <select  name="UserStatus" class="form-select" id="validationTooltip04" required>
+                                        <option selected>Active</option>
+                                        <option>Inactive</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 mb-2">
+                                    <button id="btnRecipientFilter" type="submit" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">List of Recipient</h4>
+                        </div>
+                        <!--end col-->
+                        <div class="col-auto">
+                            <div class="add-btn">
+                  
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--end row-->
+
+                </div>
+                <!--end card-header-->
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="RecipientTableWrapper" class="table-responsive">
+                        <partial name="_PartnerRecipientsList" model="@Model" />
+                    </div>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div><!-- container -->
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function() {
+            debugger;
+            $("#bankIdContainer").hide();
+            $("#walletIdContainer").hide();
+            // Initialize pagination settings object
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("RecipientsView", "Recipient")',
+                selector: '#RecipientTableWrapper'
+            });
+         
+             $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#FormRecipientFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#FormRecipientFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnRecipientFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+
+
+}

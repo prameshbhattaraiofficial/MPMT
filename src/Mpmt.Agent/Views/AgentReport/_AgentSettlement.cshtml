@@ -1,0 +1,56 @@
+﻿@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.SuperAgent
+@model PagedList<AgentAccountStatement>
+
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Agent Code</th>
+                <th>Agent Name</th>
+                <th>Address</th>
+                <th>District</th>
+                <th>Reference Id</th>
+                <th>Type</th>
+                <th>Particular</th>
+                <th>Amount</th>
+                <th>Sign</th>
+                <th>Previous Prefund Balance</th>
+                <th>Current Prefund Balance</th>
+                <th>Previous Settlement Balance</th>
+                <th>Current Settlement Balance</th>
+                <th>Remarks</th>
+                <th>Nepal Standard Date</th>
+                <th>Nepali Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Items.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@value.item.SN</td>
+                    <td>@value.item.AgentCode</td>
+                    <td>@value.item.AgentName</td>
+                    <td>@value.item.AgentAddress</td>
+                    <td>@value.item.District</td>
+                    <td>@value.item.ReferenceId</td>
+                    <td>@value.item.Type</td>
+                    <td>@value.item.Particular</td>
+                    <td>@value.item.Amount</td>
+                    <td>@value.item.Sign</td>
+                    <td>@value.item.PreviousPrefundBalance</td>
+                    <td>@value.item.CurrentPrefundBalance</td>
+                    <td>@value.item.PreviousSettlementBalance</td>
+                    <td>@value.item.CurrentSettlementBalance</td>
+                    <td>@value.item.Remarks</td>
+                    <td>@value.item.NepalStandardDate</td>
+                    <td>@value.item.NepaliDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

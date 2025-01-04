@@ -1,0 +1,74 @@
+﻿@using Mpmt.Core.Dtos.Roles
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<PartnerRoleDetail>
+@{
+    int sn = 1;
+}
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+    <thead class="table-light">
+        <tr>
+            <th>SN</th>
+            <th>Role Name</th>
+            <th>Description</th>
+            <th>Is System Role</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@sn</td>
+                <td>@item.RoleName</td>
+                <td>@item.Description</td>
+                @if (item.IsSystemRole == true)
+                {
+                    <td><span class="badge bg-soft-success px-2">Yes</span></td>
+                }
+                else
+                {
+                    <td><span class="badge bg-soft-danger px-2">No</span></td>
+                }
+
+                @if (item.IsActive == true)
+                {
+                    <td><span class="badge bg-soft-success px-2">Active</span></td>
+                }
+                else
+                {
+                    <td><span class="badge bg-soft-danger px-2">InActive</span></td>
+                }
+                <td name="buttons">
+                    <div class=" float-center">
+                        <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2" title="Lock">
+                            <i class="dripicons-lock-open"></i>
+                        </button>
+                        @if (actors.FirstOrDefault(x => x.Action == "UpdateRole")?.Permission ?? false)
+                        {
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdateRole", "PartnerRoles", new { id = item.Id })', 'Update Role')" title="Update Role"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                        }
+                        @if (actors.FirstOrDefault(x => x.Action == "DeleteRole")?.Permission ?? false)
+                        {
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="ShowPopUp('@Url.Action("DeleteRole", "PartnerRoles", new { id = item.Id })', 'Remove Role','modal-dialog modal-md')" title="Delete Role"> <i class="dripicons-trash" aria-hidden="true"></i></a>
+                        }
+                        @if (actors.FirstOrDefault(x => x.Action == "UpdateMenuPermission")?.Permission ?? false)
+                        {
+
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-warning btn-circle" onclick="ShowPopUp('@Url.Action("UpdateMenuPermission", "PartnerRoles", new { RoleId = item.Id })', 'Menu Permission','modal-dialog modal-lg')" title="Permission"> <i class="dripicons-lock" aria-hidden="true"></i></a>
+                        }
+
+                        @*<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModalAccess" class="btn btn-sm btn-soft-info btn-circle" title="Broadcast">
+                            <i class="dripicons-broadcast" aria-hidden="true"></i>
+                        </button>*@
+                    </div>
+                </td>
+            </tr>
+            sn = sn + 1;
+        }
+    </tbody>
+</table>

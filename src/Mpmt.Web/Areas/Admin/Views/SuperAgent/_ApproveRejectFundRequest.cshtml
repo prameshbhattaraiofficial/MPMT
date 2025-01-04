@@ -1,0 +1,171 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@model AgentFundApproveRejectModel
+
+<form method="post" id="myForm" enctype="multipart/form-data" asp-controller="SuperAgent" asp-action="ApproveFundRequestByAgent">
+    <input asp-for="IsTxnCashRequested" class="form-check-input" type="checkbox" hidden>
+    <input asp-for="IsCommissionRequested" class="form-check-input" type="checkbox" hidden> 
+    <div class="mb-3  row">
+        <label for="example-search-input" class="col-sm-3 form-label align-self-center mb-lg-0">Payout From :</label>
+        <div class="col-sm-8">
+            <input type="hidden" name="RequestFundId" value="@Model.RequestFundId" id="RequestFundId" />
+            <input type="hidden" name="AgentCode" value="@Model.AgentCode" id="AgentCode" />
+            @if (Model.IsTxnCashRequested)
+            {
+                <div class="form-check form-check-inline">
+                    <input asp-for="IsTxnCashRequested" class="form-check-input" type="checkbox" id="chkReceivible" disabled>
+                    <label class="form-check-label" for="inlineCheckbox1">Net Receivable</label>
+                    <h6 class="text-danger text-end" id="errchkreceivable" style="display:none">Please check Receivable checkbox</h6>
+                </div>
+            }
+            else if (Model.IsCommissionRequested)
+            {
+                <div class="form-check form-check-inline">
+                    <input asp-for="IsCommissionRequested" class="form-check-input" type="checkbox" id="chkCashAmt" disabled>
+                    <label class="form-check-label" for="inlineCheckbox2">Net Commission</label>
+                    <h6 class="text-danger" id="errchkcommission" style="display:none">Please check Commission checkbox</h6>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="mb-3  row">
+        <label for="example-search-input" class="col-sm-3 form-label align-self-center mb-lg-0">Total Amount(NPR):</label>
+        <div class="col-sm-8">
+            <input asp-for="TotalAmount" class="form-control" value="@Model.TotalAmount" name="TotalAmount" id="TotalAmount" type="text" onkeypress="return isNumber(event)">
+        </div>
+        <h6 class="text-danger text-center" id="errTotalAmt" style="display:none">Total amount is required!</h6>
+        <span asp-validation-for="TotalAmount" class="text-danger"></span>
+    </div>
+    <div class="mb-3  row">
+        <label for="example-search-input" class="col-sm-3 form-label align-self-center mb-lg-0">Voucher No :</label>
+        <div class="col-sm-8">
+            <input asp-for="TransactionId" class="form-control" name="TransactionId" id="TransactionId" type="text" value="" id="example-search-input">
+        </div>
+        <h6 class="text-danger text-center" id="errTxnId" style="display:none">Voucher number is required!</h6>
+        <span asp-validation-for="TransactionId" class="text-danger"></span>
+    </div>
+    <div class="mb-3  row">
+        <label for="example-search-input" class="col-sm-3 form-label align-self-center mb-lg-0">Document :</label>
+        <div class="col-sm-8">
+            <input type="file" name="VoucherImagePath" onchange="return ValidateImage();" accept="image/png, image/jpg, image/jpeg" id="VoucherImagePath" class="form-control">
+        </div>
+        <h6 class="text-danger text-center" id="errImage" style="display:none">Voucher image is required!</h6>
+
+    </div>
+    <div class=" pt-0 pb-0">
+        <div class="form-floating">
+            <textarea class="form-control remarksclass" maxlength="250" name="Remarks" onkeypress="return isAlphabateOnly(event);" id="Remarks" placeholder="Leave a comment here" style="height: 70px"></textarea>
+            <label for="floatingTextarea2">Remarks</label>
+        </div>
+        <h6 class="text-danger text-center" id="errRemarks" style="display:none">Remarks is required!</h6>
+        <span asp-validation-for="Remarks" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-0 row mt-4">
+        <div class="col-12">
+            <button class="btn btn-primary w-100 waves-effect waves-light" id="confirmYes" type="button">Submit <i class="fas fa-paper-plane ms-1"></i></button>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    //alphabet and whitespace and dash
+    function isAlphabateOnly(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        console.log(charCode);
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode == 32) || (charCode == 45)) {
+            return true;
+        }
+        return false;
+    }
+
+
+    document.getElementById('confirmYes').addEventListener('click', function () {
+        debugger;
+        var valueTotalAmt = $('#TotalAmount').val();
+        var valueErrtxnid = $('#TransactionId').val();
+        var valueErrimage = $('#VoucherImagePath').val();
+        var valueErrRemarks = $('#Remarks').val();
+
+        var valuechkReceivible = $('#chkReceivible').prop('checked');
+        var valuechkCashAmt = $('#chkCashAmt').prop('checked');
+        var isTxnCashRequested = @Model.IsTxnCashRequested.ToString().ToLower();
+        var isCommissionRequested = @Model.IsCommissionRequested.ToString().ToLower();
+        debugger;
+        if (isTxnCashRequested) {
+            if (!valuechkReceivible) {
+                $('#errchkreceivable').css("display", "block");
+                return false;
+            }
+        }
+        if (isCommissionRequested) {
+            if (!valuechkCashAmt) {
+                $('#errchkcommission').css("display", "block");
+                return false;
+            }
+        }
+
+
+        if (valueTotalAmt == null || valueTotalAmt == '') {
+            $('#errTotalAmt').css("display", "block");
+            return false;
+        }
+        else if (valueErrtxnid == null || valueErrtxnid == '') {
+            $('#errTxnId').css("display", "block");
+            return false;
+        }
+        else if (valueErrimage == null || valueErrimage == '') {
+            $('#errImage').css("display", "block");
+            return false;
+        }
+        else if (valueErrRemarks == null || valueErrRemarks == '') {
+            $('#errRemarks').css("display", "block");
+            return false;
+        }
+        else {
+            document.getElementById('myForm').submit();
+        }
+
+    });
+    document.getElementById('confirmNo').addEventListener('click', function () {
+        document.getElementById('confirmation-overlay').style.display = 'none';
+        document.getElementById('confirmation-modal').style.display = 'none';
+    });
+
+    $(".remarksclass").on("keypress", function () {
+        debugger;
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        console.log(charCode);
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode == 32) || (charCode == 17)) {
+            return true;
+        }
+        return false;
+    });
+</script>
+<script type="text/javascript">
+    function ValidateImage() {
+        debugger;
+        var file = document.getElementById("VoucherImagePath");
+        var fileName = document.getElementById("VoucherImagePath").value;
+        var size = parseFloat(file.files[0].size);
+        var idxDot = fileName.lastIndexOf(".") + 1;
+        var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+        var maxSizeKB = 5120; //Size in KB.
+        var maxSize = maxSizeKB * 1024; //File size is returned in Bytes.
+        if (size > maxSize) {
+            alert("Max file size " + 5 + " MB Allowed!.");
+            file.value = "";
+            return false;
+        }
+        else if (extFile == "jpg" || extFile == "jpeg" || extFile == "png") {
+            return true;
+        }
+        else {
+            alert("Only jpg/jpeg and png files are allowed!");
+            file.value = "";
+            return false;
+        }
+    }
+</script>
+

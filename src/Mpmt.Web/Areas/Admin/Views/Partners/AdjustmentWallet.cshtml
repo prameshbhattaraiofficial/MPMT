@@ -1,0 +1,52 @@
+﻿@using Mpmt.Core.Dtos.Adjustment
+@model AdjustmentWallet
+
+<form id="walletadjustmentform" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <input name="PartnerCode" value="@Model.PartnerCode" hidden />
+    <input name="WalletCurrency" value="@Model.WalletCurrency" hidden />
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <div class="row">
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label">Amount</label>
+            <div class="input-group">
+                <input asp-for="Amount" type="number" class="form-control" required min="0.01" step="0.01">
+            </div>
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label">Type</label>
+            <select name="Type" class="form-select" required>
+                <option value="CR">Credit</option>>
+                <option value="DR">Debit</option>
+            </select>
+        </div>
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label">Remarks</label>
+            <div class="input-group">
+                <textarea asp-for="Remarks" type="text" class="form-control" rows="3" required maxlength="300"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit<i class="fas fa-paper-plane ms-1"></i></button>
+    </div>
+</form>
+
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AdjustmentWallet", "Partners")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#walletadjustmentform'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>

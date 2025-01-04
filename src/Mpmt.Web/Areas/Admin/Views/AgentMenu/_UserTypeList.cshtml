@@ -1,0 +1,32 @@
+﻿
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>User Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Agent</td>
+                <td name="buttons">
+                    <div class=" float-center">
+                        <button id="bEdit" style="cursor: pointer;" type="button" class="btn btn-sm btn-soft-warning btn-circle me-2" data-toggle="tooltip" title="Assign Permission" onclick="ShowPopUp('@Url.Action("UpdateMenuPermission", "AgentMenu", new { UserType = "Agent" })', 'Assign Permission')"><i class="dripicons-lock" aria-hidden="true"></i></button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Super Agent</td>
+                <td name="buttons">
+                    <div class=" float-center">
+                        <button id="bEdit" style="cursor: pointer;" type="button" class="btn btn-sm btn-soft-warning btn-circle me-2" data-toggle="tooltip" title="Assign Permission" onclick="ShowPopUp('@Url.Action("UpdateMenuPermission", "AgentMenu", new { UserType = "SuperAgent" })', 'Assign Permission')"><i class="dripicons-lock" aria-hidden="true"></i></button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

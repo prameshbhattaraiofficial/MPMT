@@ -1,0 +1,94 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+
+@model PagedList<CashAgentRegister>
+
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons78" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Registered Date</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Mobile No.</th>
+                <th>TemporaryLocked Till Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <style>
+                    tr.active {
+                        background: #ccc;
+                    }
+
+                    .tableFixHead {
+                        overflow-y: auto;
+                        height: 500px;
+                    }
+
+                        .tableFixHead thead th {
+                            position: sticky;
+                            top: 0px;
+                        }
+                </style>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.SN</td>
+                        <td> @item.RegisteredDate </td>
+                        <td> @item.FullName </td>
+                        <td> @item.Email </td>
+                        <td> @item.FullAddress </td>
+                        <td> @item.PhoneNumber </td>
+                        <td> @item.TemporaryLockedTillDate </td>
+                        <td> @item.IsActive </td>
+                        <td name="buttons">
+                            <div class=" float-center">
+                                <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <i class="dripicons-dots-3"></i></button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("CashAgentRegistrationDetails", "CashAgentRegistration", new  { Email = item.Email, phone = item.PhoneNumber})', 'Agent Registration Detail','modal-dialog modal-xl')"><i class="dripicons-preview"></i>&emsp;View Details</a>
+
+                                    <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("ApprovedCashAgentRegistration", "CashAgentRegistration", new { id = item.Id, email = item.Email })', 'Approve Agent Registration','modal-dialog modal-md')"><i class="dripicons-plus"></i>&emsp;Approve</a>
+
+                                    <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("RejectCashAgentRegistration", "CashAgentRegistration", new { id = item.Id, email = item.Email})', 'Reject Agent Registration','modal-dialog modal-md')"><i class="dripicons-cross"></i>&emsp;Reject</a>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

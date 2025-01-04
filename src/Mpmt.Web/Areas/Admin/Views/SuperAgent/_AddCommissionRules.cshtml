@@ -1,0 +1,126 @@
+﻿@using Mpmt.Core.ViewModel.SuperAgent
+
+@model AddOrUpdateCommissionVM
+
+<form id="AddCommissionForm" class="form-horizontal agent-from" method="post" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <div class="row">
+        @* <div class="col-md-3 mb-3 form-control-wrap focused">
+        <label class="form-label-outlined" for="inlineFormSelectPref"> Category</label>
+        <select class="form-select" id="validationTooltip04" required="">
+        <option>Select Category</option>
+        <option selected="">Gold</option>
+        <option>Platinum</option>
+        <option>Provisional</option>
+        </select>
+        </div> *@
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="card-title">Commission Slab</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body modal-overflow">
+                <input type="hidden" asp-for="@Model.AgentCode" />
+                <input type="hidden" asp-for="@Model.AgentType" />
+                <input type="hidden" asp-for="@Model.SuperAgentCode" />
+                <table id="tableCommissionRules" class="table table-bordered dt-responsive nowrap dataTable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                    <thead class="thead-light">
+                        <tr>
+                            <th width="10%">Min No. of TXN </th>
+                            <th width="10%">Max No. of TXN </th>
+                            <th width="10%">Commission</th>
+                            <th width="10%">Min Commission</th>
+                            <th width="10%">Max Commission</th>
+                            <th width="20%">From Date</th>
+                            <th width="20%">To Date</th>
+                            <th width="10%">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBodyCommissionRules">
+                        <!-- Existing rows will be added here -->
+                        @for (var i = 0; i < Model.CommissionRules.Count(); i++)
+                        {
+                            <tr>
+                                <td><input type="text" asp-for="@Model.CommissionRules[i].MinTxnCount" class="form-control" onkeypress="return isNumber(event)" placeholder="1" /></td>
+                                <td><input type="text" asp-for="@Model.CommissionRules[i].MaxTxnCount" class="form-control" onkeypress="return isNumber(event)" placeholder="99" /></td>
+                                <td><input type="text" asp-for="@Model.CommissionRules[i].Commission" class="form-control" onkeypress="return isNumber(event)" placeholder="5" /></td>
+                                <td><input type="text" asp-for="@Model.CommissionRules[i].MinCommission" class="form-control" onkeypress="return isNumber(event)" placeholder="50" /></td>
+                                <td><input type="text" asp-for="@Model.CommissionRules[i].MaxCommission" class="form-control" onkeypress="return isNumber(event)" placeholder="50" /></td>
+                                <td><input type="date" asp-for="@Model.CommissionRules[i].FromDate" class="form-control" placeholder="From"></td>
+                                <td><input type="date" asp-for="@Model.CommissionRules[i].ToDate" class="form-control" placeholder="To"></td>
+                                <td name="buttons">
+                                    <div class="float-center">
+                                        <button type="button" class="btn btn-sm btn-soft-danger btn-circle me-2 tbl-row-delete-btn"><i class="dripicons-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+                <!-- Add Row Button -->
+                <span class="float-right mt-2">
+                    <button id="but_add" type="button" class="btn btn-soft-primary btn-sm" onclick="addNewSlabRow()"> Create New Slab</button>
+                </span>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end mt-2">
+            <button id="btnSubmit" type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+    <script>
+        FormHandler.init({
+            method: 'POST',
+            actionUrl: '@Url.Action("AddCommissionRules", "SuperAgent")',
+            containerSelector: '#add-new .modal-body',
+            selector: '#AddCommissionForm'
+        }, function () {
+            $("#add-new .modal-body").html("");
+            $("#add-new .modal-title").html("");
+            $("#add-new").modal('hide');
+            // Pagination.getData();
+        });
+
+        $(document).ready(function () {
+            $('#tableCommissionRules').on('click', '.tbl-row-delete-btn', function () {
+                $(this).closest('tr').remove();
+            });
+        });
+
+        function addNewSlabRow() {
+            var dateToday = getTodayDate();
+            var index = $('#tableCommissionRules tbody tr').length;
+
+            var newRow = $('<tr>').append(
+                `<td><input type="text" name="CommissionRules[${index}].MinTxnCount" value="0" class="form-control" onkeypress="return isNumber(event)" placeholder="Min No. of TXN" /></td>`,
+                `<td><input type="text" name="CommissionRules[${index}].MaxTxnCount" value="0" class="form-control" onkeypress="return isNumber(event)" placeholder="Max No. of TXN" /></td>`,
+                `<td><input type="text" name="CommissionRules[${index}].Commission" value="0" class="form-control" onkeypress="return isNumber(event)" placeholder="Commission" /></td>`,
+                `<td><input type="text" name="CommissionRules[${index}].MinCommission" value="0" class="form-control" onkeypress="return isNumber(event)" placeholder="Min Commission" /></td>`,
+                `<td><input type="text" name="CommissionRules[${index}].MaxCommission" value="0" class="form-control" onkeypress="return isNumber(event)" placeholder="Max Commission" /></td>`,
+                `<td><input type="date" name="CommissionRules[${index}].FromDate" value="${dateToday}" class="form-control" placeholder="From" /></td>`,
+                `<td><input type="date" name="CommissionRules[${index}].ToDate" value="${dateToday}" class="form-control" placeholder="To" /></td>`,
+                `<td name="buttons"><div class="float-center"><button type="button" class="btn btn-sm btn-soft-danger btn-circle me-2 tbl-row-delete-btn")"><i class="dripicons-trash"></i></button></div></td>`
+            );
+
+            $('#tableCommissionRules tbody').append(newRow);
+        }
+
+        function getTodayDate() {
+            var dateToday = new Date();
+            var day = String(dateToday.getDate()).padStart(2, '0');
+            var month = String(dateToday.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var year = dateToday.getFullYear();
+
+            return year + '-' + month + '-' + day;
+        }
+    </script>
+</form>

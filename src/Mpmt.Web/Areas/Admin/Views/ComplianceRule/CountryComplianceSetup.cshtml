@@ -1,0 +1,83 @@
+﻿@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Models.RMP;
+@using Mpmt.Core.Dtos.ComplianceRule;
+@model CountryComplianceRuleTest
+@{
+
+    var data = ViewBag.CountryList;
+}
+@*
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+} *@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Compliance Rule</a></li>
+                            <li class="breadcrumb-item active">Country Setup</li>
+                        </ol>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h6 class="card-title">Compliance Country Setup</h6>
+                                        </div><br /><br />
+                                        <form id="formassignCountryCompliance" method="post" autocomplete="off">
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <h6 class="text-center"><b>All Country</b></h6>
+
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <h6 class="text-center"><b>Selected Country</b></h6>
+                                                </div>
+
+
+                                                <div class="col-sm-12 mb-5">
+                                                    <select multiple="multiple" id="my-select" asp-for="CountryCode" name="CountryCode" asp-items="ViewBag.CountryList">
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                @*<button type="submit" class="btn btn-sm btn-primary">Update</button>*@
+                                                <button type="submit" class="btn btn-sm btn-primary">Update<i class="fas fa-paper-plane ms-1"></i></button>
+
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/partner/assets/js/form-select-custom.js"></script>
+
+<script>
+    FormHandler.init({
+        debugger;
+        method: 'POST',
+        actionUrl: '@Url.Action("CountryComplianceSetup", "ComplianceRule")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#formassignCountryCompliance'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>

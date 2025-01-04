@@ -1,0 +1,133 @@
+﻿@using Mpmt.Core.Dtos.Transaction;
+@model TransactionDetailView
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+
+            <tbody>
+                <tr>
+                    <td><span>Transaction Id :</span></td>
+                    <td><span><strong style="color: #f98c45">#@Model.TransactionId</strong></span></td>
+                </tr>  
+                <tr>
+                    <td><span>Control Number (MTCN) :</span></td>
+                    <td><span><strong style="color: #f98c45">#@Model.TokenNumber</strong></span></td>
+                </tr>
+                <tr>
+                    <td><span>Sender Txn Date :</span></td>
+                    <td><span>@Model.SenderCreatedDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Reciver Txn Date :</span></td>
+                    <td><span>@Model.ReceiverCreatedDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Merchant Unique Id :</span></td>
+                    <td><span class="tb-lead">@Model.PartnerCode</span></td>
+                </tr>
+                <tr>
+                    <td><span>Agent Tracker Id :</span></td>
+                    <td><span>@Model.AgentTrackerId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Gateway Txn Id :</span></td>
+                    <td><span>@Model.GatewayTxnId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Partner Tracker Id :</span></td>
+                    <td><span>@Model.PartnerTransactionId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Merchant Name :</span></td>
+                    <td><span>@Model.PartnerName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Merchant Contact No. :</span></td>
+                    <td><span>9840516148</span></td>
+                </tr>
+                <tr>
+                    <td><span>Source Currency:</span></td>
+                    <td><span class="tb-lead">@Model.SourceCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Destination Currency:</span></td>
+                    <td><span class="tb-lead"> @Model.DestinationCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Sending Amount:</span></td>
+                    <td><span class="tb-lead">@Model.SendingAmount @Model.SourceCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Service Charge :</span></td>
+                    <td><span>@Model.ServiceCharge @Model.SourceCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Net Sending Amount :</span></td>
+                    <td><span>@Model.NetSendingAmount @Model.SourceCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Conversion Rate :</span></td>
+                    <td><span>@Model.ConversionRate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Receiving Amount:</span></td>
+                    <td><span class="tb-lead">@Model.NetReceivingAmount @Model.DestinationCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Sign : </span></td>
+                    <td><span class="tb-status text-success">@Model.Sign</span></td>
+                </tr>
+                <tr>
+                    <td><span>Admin Approval Required :</span></td>
+                    <td><span> @(Model.TransactionApproval == true ? "Yes" : "No")</span></td>
+                </tr>
+                <tr>
+                    <td><span>Beneficiary Account No. :</span></td>
+                    <td><span>@Model.AccountNumber</span></td>
+                </tr>
+                <tr>
+                    <td><span>Beneficiary Bank Name :</span></td>
+                    <td><span>@Model.BankName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Beneficiary Branch Name :</span></td>
+                    <td><span>@Model.Branch</span></td>
+                </tr>                                  
+                <tr>
+                    <td><span>Wallet Type :</span></td>
+                    <td><span>@Model.WalletType</span></td>
+                </tr>
+                <tr>
+                    <td><span>Type :</span></td>
+                    <td><span>@Model.PaymentType</span></td>
+                </tr>
+                <tr>
+                    <td><span>Remarks:</span></td>
+                    <td><span>@Model.Remarks</span></td>
+                </tr>
+                <tr>
+                    <td><span>Agent Status:</span></td>
+                    <td><span>@Model.AgentStatus</span></td>
+                </tr>
+                <tr>
+                    <td><span>Partner Status :</span></td>
+                    <td><span class="tb-status text-success">@Model.PartnerStatus</span></td>
+                </tr>
+                <tr>
+                    <td><span>Ip Address :</span></td>
+                    <td><span>@Model.IpAddress</span></td>
+                </tr>
+                <tr>
+                    <td><span>Compliance Status :</span></td>
+                    <td><span>@Model.ComplianceStatus</span></td>
+                </tr>
+            </tbody>
+        </table><!--end /table-->
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

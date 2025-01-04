@@ -1,0 +1,32 @@
+﻿@using Mpmt.Core.ViewModel.Action
+@model List<ActionModelView>
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Action</th>             
+                <th>Display Order</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@(value.index + 1)</td>
+                    <td>@value.item.Action</td>                  
+                    <td>@value.item.DisplayOrder</td>
+                    <td>@value.item.IsActive</td>
+                    <td name="buttons">
+                        <div class=" float-center">
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdateAction", "Action", new { actionId = value.item.Id })', 'Update Action')" title="Update Action"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="PopUPAjaxDelete('@Url.Action("DeleteAction", "Action", new { actionId = value.item.Id })', 'Remove Action')" title="Delete Action"> <i class="dripicons-trash" aria-hidden="true"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

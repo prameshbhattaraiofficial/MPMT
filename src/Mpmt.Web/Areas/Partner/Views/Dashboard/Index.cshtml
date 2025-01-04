@@ -1,0 +1,1119 @@
+﻿@using Mpmt.Core.Dtos.Partner
+@using Mpmt.Core.Models.RMP
+
+@model PartnerDashBoard
+
+@{
+    ViewData["Title"] = "Partner Dashboard";
+    var FA = ViewBag.FA;
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<style>
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 100%; /* Set a specific height or use height: 100% for full height */
+        margin-top: 10px;
+    }
+
+    .btn-group .btn.active {
+        background-color: #343a40;
+        color: white;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="row">
+                        <div class="col">
+
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Dashboard</li>
+                            </ol>
+                        </div>
+                        <div class="col-auto align-self-center">
+                            <div class="input-group input-group" style="font-family: monospace;">
+                                <span class="input-group-text" id="inputGroup-sizing">Today (NST)&emsp;&nbsp;</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" value="@DateTime.Now.ToString("yyyy-MM-dd hh:mm tt")" disabled>
+                            </div>
+                            <div class="input-group input-group" style="font-family: monospace;">
+                                <span class="input-group-text" id="inputGroup-sizing">Today (Local)</span>
+                                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" value="@Model.LocalDateTime.ToString("yyyy-MM-dd hh:mm tt")" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Transaction Volume</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-2">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-dark btn-sm active" id="btn-1M" onclick="filterData('1M')" title="Last one month">1M</button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-dark btn-sm" id="btn-6M" onclick="filterData('6M')" title="Last six month">6M</button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-dark btn-sm" id="btn-1Y" onclick="filterData('1Y')" title="Last one year">1Y</button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-dark btn-sm" id="btn-YTD" onclick="filterData('YTD')" title="Year till date">YTD</button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-outline-dark btn-sm" id="btn-ALL" onclick="filterData('ALL')" title="Yearwise">ALL</button>
+                                </div>
+                                <br>
+                                <div class="chart-container">
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="formTransferAmount" method="post">
+                            <div class="card report-card">
+                                <div class="card-header">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h4 class="card-title">Transfer Amount</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body converter">
+                                    <div class="row d-flex justify-content-center  ptb-10">
+                                        <div class="col">
+                                            <h5 id="errorListItem" class="text-danger" style="display: none;"></h5>
+                                            <div class="col-12 form-control-wrap focused">
+                                                <label class="form-label mb-0">From</label>
+                                                <div class="input-group has-validation row">
+                                                    <div class="col-9">
+                                                        <input id="sourceAmount" asp-for="@Model.SourceAmount" type="text" class="form-control  converter-text text-primary" value=1>
+                                                    </div>
+                                                    @* <span class="input-group-text  currency-switcher p-0" id="inputGroupPrepend">
+                                                    <select id="sourceCurrency" asp-for="@Model.SourceCurrency" class="form-select" asp-items="@ViewBag.SourceCurrency">
+                                                    </select>
+                                                    </span> *@
+                                                    <select style="font-size: 15px" id="sourceCurrency" asp-for="@Model.SourceCurrency" class="form-select" asp-items="@ViewBag.SourceCurrency">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row d-flex justify-content-center  ptb-10">
+                                        <div class="col">
+                                            <div class="col-12 form-control-wrap ">
+                                                <label class="form-label mb-0">To</label>
+                                                <div class="input-group has-validation row">
+                                                    <div class="col-9">
+                                                        <input id="destinationAmount" asp-for="@Model.DestinationAmount" type="text" class="form-control  converter-text text-success" readonly>
+                                                    </div>
+                                                    @* <span class="input-group-text  currency-switcher p-0" id="inputGroupPrepend">
+                                                    <select id="destinationCurrency" asp-for="@Model.DestinationCurrency" class="form-select" asp-items="@ViewBag.DestinationCurrency">
+                                                    </select>
+                                                    </span> *@
+                                                    <select style="font-size: 15px" id="destinationCurrency" asp-for="@Model.DestinationCurrency" class="form-select" asp-items="@ViewBag.DestinationCurrency">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col text-sm-left font-16 pt-2">
+                                            Conversion Rate:
+                                            <span>1</span>
+                                            <span id="sourceC">USD</span>
+                                            <span>=</span>
+                                            <span id="exchangeRate"></span>
+                                            <span id="destinationC">NPR</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group " style="margin-top: 0.35rem !important;margin-bottom: 0.35rem !important; ">
+                                        <div class="checkbox checkbox-primary">
+                                            <input id="checkbox5" type="checkbox" required>
+                                            <label for="checkbox5">
+                                                By clicking accept, you agree with our <a onclick="ShowPopUp('@Url.Action("TermsAndConditions","Dashboard")','Terms and Conditions','.modal-lg')" data-bs-toggle="modal" data-bs-target="#sender" title="Terms and Conditions" class="text-primary">Terms and Conditions</a>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <input id="remarks" asp-for="@Model.Remarks" class="form-control mb-2" placeholder="Remarks" required>
+                                    @*@if (((SelectList)ViewBag.SourceCurrency).Any())
+                                    {
+                                    <button class="btn btn-warning w-100 waves-effect waves-light  mtb-1" type="submit">Transfer Amount</button>
+                                    }
+                                    else
+                                    {
+                                    <button class="btn btn-warning w-100 waves-effect waves-light  mtb-1" disabled type="submit">Transfer Amount</button>
+                                    }*@
+                                    @if (((SelectList)ViewBag.SourceCurrency).Any())
+                                    {
+                                        <button id="transferBtn" class="btn btn-warning w-100 waves-effect waves-light mtb-1" type="submit" disabled>Transfer Amount</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-warning w-100 waves-effect waves-light  mtb-1" disabled>Transfer Amount</button>
+                                    }
+                                    @*<button id="transferBtn" class="btn btn-warning w-100 waves-effect waves-light mtb-1" type="submit" disabled>Transfer Amount</button>*@
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card ">
+                                    <div class="card-header">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <h4 class="card-title">API Key</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <div class="earning-data text-center">
+                                            <h4 class="m-0 fw-semibold text-muted font-15 mb-2  mt-2" id="invisible" hidden>
+                                                @Model.ApiKey
+                                            </h4>
+                                            <input id="apiCredentialsid" value="@Model.apiCredentialsid" type="hidden" />
+
+                                            <button class="btn btn-sm btn-outline-light d-none " id="copy-btn">
+                                                <span class="tooltiptext" id="myTooltip"></span>Copy
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-light d-none " id="hide-btn">
+                                                <span class="tooltiptext" id="myTooltip"></span>Hide
+                                            </button>
+
+                                            <button type="button" id="api-key-btn" class="btn btn-warning waves-effect waves-light mtb-1">Click Here</button>
+                                            <button type="button" class="btn btn-sm btn-danger   Hide">Reset Key </button>
+
+                                            <!-- <h3 class="m-0 fw-semibold text-muted font-14 mb-2  mt-2">API KEY </h3> -->
+                                            <!-- <h4 class="text-primary bg-soft-primary p-2 m-0 rounded" id="invisible"> ************* </h4> -->
+                                            @* <h4 class="p-1 m-0 rounded" id="invisible"> ************* </h4>
+                                            <div class="text-center my-2 ">
+                                            <button type="button" class="btn btn-md btn-outline-light d-none  " id="copy-btn">Copy</button>
+                                            <button type="button" id="api-key-btn" class="btn btn-md btn-warning ">Click Here </button>
+                                            <button type="button" class="btn btn-md btn-danger   Hide  ">Reset Key </button>
+                                            </div> *@
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card ">
+                                    <div class="card-header">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <h4 class="card-title">API Password</h4>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="card-body text-center">
+
+                                        <div class="earning-data text-center">
+                                            <h4 class="m-0 fw-semibold text-muted font-15" hidden id="invisible1">@Model.ApiPassword</h4>
+                                            <button class="btn btn-sm btn-outline-light d-none " id="copy-btn1">
+                                                <span class="tooltiptext" id="myTooltip"></span>Copy
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-light d-none " id="hide-btn1">
+                                                <span class="tooltiptext" id="myTooltip"></span>Hide
+                                            </button>
+                                            <button type="button" class="btn btn-warning waves-effect waves-light mtb-1" id="api-password-btn">
+                                                Click Here
+                                            </button>
+                                            @* <h4 class="p-1 m-0 rounded" id="invisible"> ************* </h4>
+                                            <div class="text-center my-2 ">
+                                            <button type="button" class="btn btn-md btn-outline-light d-none  " id="copy-btn">Copy</button>
+                                            <button type="button" id="api-key-btn" class="btn btn-md btn-warning ">Click Here </button>
+                                            <button type="button" class="btn btn-md btn-danger   Hide  ">Reset Key </button>
+                                            </div> *@
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Partner Balance</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-2">
+                                <div id="partnerBalanceContainer">
+                                    <partial name="_PartnerBalanceTableDashboard" model="@Model" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Approx Days / No. of Txn</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-2">
+                                <div class="table-responsive">
+                                    <table id="datatable-buttons156" class="table table-striped dataTable nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Partner Name</th>
+                                                <th>Approx No. of Txn</th>
+                                                <th>Approx Days</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.dashboardApproxDays)
+                                            {
+                                                <tr>
+                                                    <td>@item.PartnerName</td>
+                                                    <td>@item.ApproxNoOfTrans</td>
+                                                    <td>@item.ApproxNoOfDays</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header pb-0 pt-0">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Transaction Status</h4>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <div class="form-group m-2">
+                                            <select id="timeframe" class="form-control">
+                                                <option value="DAILY">Daily</option>
+                                                <option value="WEEKLY">Weekly</option>
+                                                <option value="MONTHLY">Monthly</option>
+                                                <option value="YTD">YTD</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-2 d-flex justify-content-center">
+                                @if (Model.dashboardTransactionStatus != null && Model.dashboardTransactionStatus.Count > 0)
+                                {
+                                    <div id="chartContainer" style="height: 270px;">
+                                        <canvas id="myDoughnutChart"></canvas>
+                                    </div>
+                                    <h5 id="noDataMessage" class="text-danger" style="display: none;">No Transaction data</h5>
+                                }
+                                else
+                                {
+                                    <div id="chartContainer" style="height: 270px; display: none;">
+                                        <canvas id="myDoughnutChart"></canvas>
+                                    </div>
+                                    <h5 id="noDataMessage" class="text-danger">No Transaction data</h5>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header pb-0 pt-0">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Top 10 Sender List</h4>
+                                    </div>
+                                    <div class="col-md-auto">
+                                        <div class="form-group m-2">
+                                            <select id="topSenderList" class="form-control">
+                                                <option value="DAILY">Daily</option>
+                                                <option value="WEEKLY">Weekly</option>
+                                                <option value="MONTHLY">Monthly</option>
+                                                <option value="YTD">YTD</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-2">
+                                <div id="topSenderListContainer">
+                                    <partial name="_PartnerSendersTable" model="@Model" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            @* <a href="#" data-bs-toggle="modal" data-bs-target="#adduserexcel">
+                                            <div class="media">
+                                            <i data-feather="users" class="align-self-center icon-md"></i>
+                                            <div class="media-body align-self-center ms-3">
+                                            <h5 class="text-muted mtb-0">Add Bulk Sender</h5>
+                                            </div>
+                                            </div>
+                                            </a> *@
+                                            <a onclick="ShowPopUp('@Url.Action("AddBulkSender", "Dashboard")', 'Add Bulk Sender')" title="Add Bulk Sender">
+                                                <div class="media">
+                                                    <i data-feather="users" class="align-self-center icon-md"></i>
+                                                    <div class="media-body align-self-center ms-3">
+                                                        <h5 class="text-muted mtb-0">Add Bulk Sender</h5>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <a asp-area="Partner" asp-controller="Reports" asp-action="transactionreportsindex">
+                                                <div class="media">
+                                                    <i data-feather="file-text" class="align-self-center icon-md"></i>
+                                                    <div class="media-body align-self-center ms-3">
+                                                        <h5 class="text-muted mtb-0">Transaction History</h5>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                @if (actors.FirstOrDefault(x => x.Action == "Index")?.Permission ?? false)
+                                {
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <a asp-area="Partner" asp-controller="SendTransactions" asp-action="Index">
+                                                    <div class="media">
+                                                        <i data-feather="file-text" class="align-self-center icon-md"></i>
+                                                        <div class="media-body align-self-center ms-3">
+                                                            <h5 class="text-muted mtb-0">Send Transaction</h5>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                @if (actors.FirstOrDefault(x => x.Action == "SendBulkTransaction")?.Permission ?? false)
+                                {
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <a onclick="ShowPopUp('@Url.Action("SendBulkTransaction", "SendTransactions")', 'Add Bulk Transaction')" title="Add Bulk Transaction">
+                                                    <div class="media">
+                                                        <i data-feather="file-text" class="align-self-center icon-md"></i>
+                                                        <div class="media-body align-self-center ms-3">
+                                                            <h5 class="text-muted mtb-0">Send Bulk Transaction</h5>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/partner/partner.sendtransactions.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/admin.users.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        function filterData(filterOption) {
+            // Remove active class from all buttons
+            var buttons = document.querySelectorAll('.btn-group .btn');
+            buttons.forEach(function (btn) {
+                btn.classList.remove('active');
+            });
+
+            // Add active class to the clicked button
+            var activeButton = document.getElementById('btn-' + filterOption);
+            activeButton.classList.add('active');
+
+            // Make an AJAX request to the Index action with the selected filter option
+            $.ajax({
+                url: '@Url.Action("Index", "Dashboard")',
+                type: 'POST',
+                data: { filterOption: filterOption },
+                success: function (response) {
+                    // Update the chart with the new data
+                    myChart.data.labels = response.labels;
+                    myChart.data.datasets[0].data = response.transactionData;
+                    myChart.data.datasets[1].data = response.volumeData;
+                    myChart.data.frequencies = response.frequency;
+                    myChart.update();
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors here
+                }
+            });
+        }
+    </script>
+
+    <script>
+        let myDoughnutChart;
+
+        // Function to initialize or update chart data
+        function updateChartData(newData) {
+            debugger;
+            const colorMappings = {
+                'Success': '#35e099',
+                'Initiated': '#FFC107',
+                'Cancelled': '#F44336'
+            };
+
+            const backgroundColours = newData.labels.map(label => colorMappings[label] || '#000000'); // Default to black if label not found
+
+            if (newData.labels.length === 0) {
+                // Hide chart and show message if there's no data
+                document.getElementById('chartContainer').style.display = 'none';
+                document.getElementById('noDataMessage').style.display = 'block';
+            } else {
+                // Show chart and hide message if data is available
+                document.getElementById('chartContainer').style.display = 'block';
+                document.getElementById('noDataMessage').style.display = 'none';
+
+                if (myDoughnutChart) {
+                    // Update the existing chart
+                    myDoughnutChart.data.labels = newData.labels;
+                    myDoughnutChart.data.datasets[0].data = newData.data;
+                    myDoughnutChart.data.datasets[0].backgroundColor = backgroundColours;
+                    myDoughnutChart.update();
+                } else {
+                    // Create a new chart
+                    const chartData = {
+                        labels: newData.labels,
+                        datasets: [{
+                            label: 'No. of Txn',
+                            data: newData.data,
+                            backgroundColor: backgroundColours
+                        }]
+                    };
+
+                    const config = {
+                        type: 'doughnut',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            cutout: '80%',
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        boxWidth: 22,
+                                        boxHeight: 6
+                                    }
+                                },
+                                title: {
+                                    display: false,
+                                    text: 'No. of Txn'
+                                }
+                            }
+                        }
+                    };
+
+                    myDoughnutChart = new Chart(
+                        document.getElementById('myDoughnutChart'),
+                        config
+                    );
+                }
+            }
+        }
+
+        // Event listener for dropdown change
+        $('#timeframe').on('change', function (event) {
+            const selectedTimeframe = $(this).val();
+            $.ajax({
+                url: '@Url.Action("TransactionStatus", "Dashboard")', // Change to your controller and action
+                type: 'POST',
+                data: { timeframe: selectedTimeframe },
+                success: function (result) {
+                    updateChartData(result);
+                },
+                error: function (err) {
+                    console.error('Error fetching chart data', err);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        // Create gradient for Transaction dataset
+        var gradientTransaction = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientTransaction.addColorStop(0, 'rgba(0, 143, 251, 0.5)');
+        gradientTransaction.addColorStop(1, 'rgba(0, 143, 251, 0)');
+
+        // Create gradient for Volume dataset
+        var gradientVolume = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientVolume.addColorStop(0, 'rgba(0, 227, 150, 0.5)');
+        gradientVolume.addColorStop(1, 'rgba(0, 227, 150, 0)');
+
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.Labels)),
+                frequencies: @Html.Raw(Json.Serialize(Model.Frequency)),
+                datasets: [{
+                    label: 'No. of Txn',
+                    yAxisID: 'y1',
+                    data: @Html.Raw(Json.Serialize(Model.TransactionData)),
+                    borderColor: 'rgba(0, 143, 251, 1)',
+                    backgroundColor: gradientTransaction,
+                    fill: true // Enable fill
+                }, {
+                    label: 'Txn. Volume',
+                    yAxisID: 'y2',
+                    data: @Html.Raw(Json.Serialize(Model.VolumeData)),
+                    borderColor: 'rgba(0, 227, 150, 1)',
+                    backgroundColor: gradientVolume,
+                    fill: true // Enable fill
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            min: 0
+                        },
+                        title: {
+                            display: true,
+                            text: 'Transaction'
+                        },
+                        grid: {
+                            display: false,
+                            drawOnChartArea: false
+                        }
+                    },
+                    y2: {
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            min: 100000
+                        },
+                        title: {
+                            display: true,
+                            text: 'Volume ( NPR )'
+                        },
+                        grid: {
+                            display: false,
+                            drawOnChartArea: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom', // Position the legend below the chart
+                        labels: {
+                            boxWidth: 18,
+                            boxHeight: 0,
+                            padding: 15,
+                            useBorderRadius: true,
+                            borderRadius: 0
+                        }
+                    }
+                },
+                onClick: function (event, elements) {
+                    if (elements.length > 0) {
+                        var freq = @Html.Raw(Json.Serialize(Model.Frequency));
+                        var index = elements[0].index;
+                        var label = myChart.data.labels[index];
+                        // var frequency = freq[index];
+                        var frequency = myChart.data.frequencies[index];
+                        var transactionValue = myChart.data.datasets[0].data[index];
+                        var volumeValue = myChart.data.datasets[1].data[index];
+
+                        // Make an AJAX request to another action
+                        $.ajax({
+                            url: '@Url.Action("TransactionReportsRedirection", "Dashboard")',
+                            type: 'POST',
+                            data: { label: label, transactionValue: transactionValue, volumeValue: volumeValue, StartDate: frequency },
+                            success: function (response) {
+                                if (response.redirectUrl) {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle errors here
+                            }
+                        });
+                    }
+                },
+                onHover: function (event, chartElement) {
+                    event.native.target.style.cursor = chartElement.length ? 'pointer' : 'default';
+                }
+            }
+        });
+    </script>
+
+    <script>
+        $('#topSenderList').on('change', function () {
+            debugger;
+            var selectedPeriod = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetTopSenderList", "Dashboard")', // Replace YourControllerName with the actual controller name
+                type: 'GET',
+                data: { period: selectedPeriod },
+                success: function (response) {
+                    $('#topSenderListContainer').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('An error occurred: ' + error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            const initialData = {
+                labels: @Html.Raw(Json.Serialize(Model.dashboardTransactionStatus.Select(s => s.StatusName))),
+                data: @Html.Raw(Json.Serialize(Model.dashboardTransactionStatus.Select(s => s.TotalTrans)))
+                                    };
+            updateChartData(initialData);
+
+            var showNotification = localStorage.getItem('showNotification');
+
+            // If state indicates to show notification
+            if (showNotification === 'true') {
+                new PNotify({
+                    text: 'Fund Transferred Successfully!',
+                    type: 'Success',
+                    animation: {
+                        effect_in: 'fade',
+                        effect_out: 'slide'
+                    }
+                });
+
+                // Reset notification state
+                localStorage.setItem('showNotification', 'false');
+            }
+            // Function to handle the AJAX call
+            // LoadDropdown();
+            var selectedCurrency = $('#sourceCurrency').val(); // get the selected source currency
+            manipulateDestinationCurrency(selectedCurrency);
+            getValuesAndCall();
+            function makeAjaxCall(sourceAmount, sourceCurrency, destinationCurrency) {
+                $.ajax({
+                    url: '/partner/Dashboard/GetTransferAmount',
+                    type: 'POST',
+                    data: {
+                        sourceAmount: sourceAmount,
+                        sourceCurrency: sourceCurrency,
+                        destinationCurrency: destinationCurrency
+                    },
+                    headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+
+                    // success: function (result) {
+                    //     var obj = JSON.parse(result);
+                    //     // Check if the exchange rate is not 0
+                    //     if (obj.CR != 0) {
+                    //         // Update the text of sourceC, destinationC, and exchangeRate
+                    //         $("#sourceC").text(obj.SC);
+                    //         $("#destinationC").text(obj.DC);
+                    //         $("#exchangeRate").text(obj.CR);
+                    //     }
+                    //     $("#destinationAmount").val(obj.amount);
+                    // },
+                    success: function (result) {
+                        var obj = JSON.parse(result);
+                        // Update the text of sourceC, destinationC, and exchangeRate
+                        $("#sourceC").text(obj.SC);
+                        $("#destinationC").text(obj.DC);
+                        $("#exchangeRate").text(obj.CR);
+                        $("#destinationAmount").val(obj.amount);
+                        $("#transferBtn").prop("disabled", true);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // Log any errors from the AJAX call
+                        console.log('AJAX call failed:', textStatus, errorThrown);
+                    }
+                });
+            }
+
+            $("#formTransferAmount").on('submit', function (event) {
+                debugger
+                // Prevent the form's default submission behavior
+                event.preventDefault();
+
+                // Get the form data
+                // var formData = $(this).serialize();
+
+                var sourceAmount = $("#sourceAmount").val();
+                var sourceCurrency = $("#sourceCurrency").val();
+                var destinationCurrency = $("#destinationCurrency").val();
+                var destinationAmount = $("#destinationAmount").val();
+                var remarks = $("#remarks").val();
+
+                if (remarks != "" && sourceAmount != "") {
+                    var data = {
+                        SourceAmount: sourceAmount,
+                        SourceCurrency: sourceCurrency,
+                        DestinationCurrency: destinationCurrency,
+                        DestinationAmount: destinationAmount,
+                        Remarks: remarks
+                    };
+
+                    // Make an AJAX call to your controller
+                    $.ajax({
+                        url: '/partner/Dashboard/SendTransferAmount',
+                        type: 'GET',
+                        data: data,
+                        success: function (result) {
+                            debugger
+                            // Handle the result of the AJAX call here
+                            // $("#sourceAmount").val(1);
+                            // $("#destinationAmount").val(1);
+                            // $("#remarks").val('');
+                            $("#checkbox5").prop("checked", false);
+                            $("#errorListItem").css('display', 'none');
+                            //aclass == null ? $("#add-new .modal-dialog").addClass("modal-lg") : $("#add-new .modal-dialog").removeClass().addClass('modal-dialog').addClass(aclass);
+                            $("#add-new .modal-body").html(result);
+                            $("#add-new .modal-body").append("<div id='modalloading'  class='loader'><center><span class='fa fa-spinner fa-spin fa-3x'></span></center></div >");
+                            $("#add-new .modal-title").html("Verify OTP");
+                            $("#add-new").modal({ backdrop: 'static', keyboard: false });
+                            $("#add-new").modal('show');
+
+                            console.log('AJAX call successful:', result);
+                        },
+                        beforeSend: function () {
+                            $('.loader').show();
+                        },
+                        complete: function () {
+                            $('.loader').hide();
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            // Log any errors from the AJAX call
+                            debugger
+                            console.log('AJAX call failed:', textStatus, errorThrown);
+                            var response = jqXHR.responseJSON;
+                            if (response && response.error) {
+                                // Log or display the error message
+                                console.log('Error message:', response.error);
+                                var errorListItem = document.getElementById('errorListItem');
+                                if (errorListItem) {
+                                    // Update content and make it visible
+                                    errorListItem.innerHTML = response.error;
+                                    errorListItem.style.display = 'block';
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Function to get the values and make the AJAX call
+            function getValuesAndCall() {
+                var sourceAmount = $("#sourceAmount").val();
+                var sourceCurrency = $("#sourceCurrency").val();
+                var destinationCurrency = $("#destinationCurrency").val();
+                var destinationAmount = $("#destinationAmount").val();
+                makeAjaxCall(sourceAmount, sourceCurrency, destinationCurrency);
+            }
+
+            function manipulateDestinationCurrency(selectedCurrency) {
+                $("#destinationCurrency option").show(); // show all options in the destination dropdown
+                $('#destinationCurrency option').each(function () {
+                    var optionValue = $(this).val();
+                    if (optionValue !== selectedCurrency + '-F' && optionValue !== 'NPR-W') {
+                        $(this).hide(); // hide the option if it's not the selected source currency with '-F' and not 'NPR-W'
+                    }
+                });
+                // set the selected value of the destinationCurrency dropdown to the selected source currency with '-F'
+                $('#destinationCurrency').val(selectedCurrency + '-F');
+            }
+
+            // Listen for input events on the input element
+            // $("#sourceAmount").on('input', getValuesAndCall);
+
+            // Listen for change events on the select elements
+            // $("#sourceCurrency, #destinationCurrency").on('change', getValuesAndCall);
+            $("#destinationCurrency").on('change', getValuesAndCall);
+
+            var txnChargeDelayTimer;
+            $('#sourceAmount').on('input', function () {
+                clearTimeout(txnChargeDelayTimer);
+
+                txnChargeDelayTimer = setTimeout(function () {
+                    getValuesAndCall();
+                }, 1000);
+            });
+
+            function LoadDropdown() {
+                var selectedCurrency = $(this).val(); // get the selected source currency
+                $("#destinationCurrency option").show(); // show all options in the destination dropdown
+                $('#destinationCurrency option').each(function () {
+                    var optionValue = $(this).val();
+                    if (optionValue !== selectedCurrency + '-F' && optionValue !== 'NPR-W') {
+                        $(this).hide(); // hide the option if it's not the selected source currency with '-F' and not 'NPR-W'
+                    }
+                });
+                // set the selected value of the destinationCurrency dropdown to the selected source currency with '-F'
+                // $("#destinationAmount").val('');
+                $('#destinationCurrency').val(selectedCurrency + '-F');
+            }
+
+            $('#sourceCurrency').change(function () {
+                debugger
+                var selectedCurrency = $(this).val(); // get the selected source currency
+                $("#destinationCurrency option").show(); // show all options in the destination dropdown
+                $('#destinationCurrency option').each(function () {
+                    var optionValue = $(this).val();
+                    if (optionValue !== selectedCurrency + '-F' && optionValue !== 'NPR-W') {
+                        $(this).hide(); // hide the option if it's not the selected source currency with '-F' and not 'NPR-W'
+                    }
+                });
+                // set the selected value of the destinationCurrency dropdown to the selected source currency with '-F'
+                // $("#destinationAmount").val('');
+                $('#destinationCurrency').val(selectedCurrency + '-F');
+                getValuesAndCall();
+            });
+
+
+        });
+    </script>
+
+    <script>
+        function ResetApiKey() {
+            debugger;
+            var CredentailsId = $("#apiCredentialsid").val();
+            var url = "/partner/Dashboard/ChangeApiKey" + '?' + "CredentailsId=" + CredentailsId;
+            var decodeurl = decodeURIComponent(url);
+            $.ajax({
+                type: "GET",
+                url: decodeurl,
+                success: function (res) {
+
+                    $("#invisible").html(res);
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+
+            })
+        };
+
+        function ResetApiPassword() {
+            debugger;
+            var CredentailsId = $("#apiCredentialsid").val();
+            var url = "/partner/Dashboard/ChangeApipassword" + '?' + "CredentailsId=" + CredentailsId;
+            var decodeurl = decodeURIComponent(url);
+            $.ajax({
+                type: "GET",
+                url: decodeurl,
+                success: function (res) {
+
+                    $("#invisible1").html(res);
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+
+            })
+        };
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var txnChargeDelayTimer;
+            var button = document.getElementById('btnShow');
+            $('#addTransactionForm #sourceAmount').on('input', function () {
+                clearTimeout(txnChargeDelayTimer);
+
+                txnChargeDelayTimer = setTimeout(function () {
+                    let data = getTxnChargeDetailsPayload();
+                    getSenderTxnChargeDetails('@Url.Action("GetConversionAmt", "SendTransactions")', data);
+                }, 400);
+            });
+
+            $('#addTransactionForm #paymentType').on('change', function () {
+                let currentVal = $(this).val();
+                handlePayoutTypeValueSync(currentVal);
+                handlePayoutType(currentVal);
+
+                let data = getTxnChargeDetailsPayload();
+                getSenderTxnChargeDetails('@Url.Action("GetConversionAmt", "SendTransactions")', data);
+            });
+
+            $('#addTransactionForm #destCurrency').on('change', function () {
+                let data = getTxnChargeDetailsPayload();
+                getSenderTxnChargeDetails('@Url.Action("GetConversionAmt", "SendTransactions")', data);
+            });
+
+            $('#addTransactionForm #sourceCurrency').on('change', function () {
+                let data = getTxnChargeDetailsPayload();
+                getSenderTxnChargeDetails('@Url.Action("GetConversionAmt", "SendTransactions")', data);
+            });
+
+            if (button) {
+                button.click();
+            }
+
+        });
+
+    </script>
+
+    <script>
+        // Get references to the checkbox and button elements
+        const checkbox = document.getElementById("checkbox5");
+        const remarksInput = document.getElementById("remarks");
+        const transferBtn = document.getElementById("transferBtn");
+
+        // Function to update button state based on checkbox and input
+        function updateButtonState() {
+            const isChecked = checkbox.checked;
+            const hasRemarks = remarksInput.value.trim() !== "";
+            transferBtn.disabled = !isChecked || !hasRemarks;
+        }
+
+        // Add event listeners for checkbox click and input change
+        checkbox.addEventListener("click", updateButtonState);
+        remarksInput.addEventListener("input", updateButtonState);
+
+        // Call updateButtonState initially to set the button state based on initial values
+        updateButtonState();
+    </script>
+
+    <script>
+        const showValuekey = document.querySelector('#invisible');
+        const showValuepass = document.querySelector('#invisible1');
+        const apiButton = document.querySelector('#api-key-btn');
+        const apipasswordButton = document.querySelector('#api-password-btn');
+        const copyButton = document.querySelector('#copy-btn');
+        const copyButton1 = document.querySelector('#copy-btn1');
+        const hideButton = document.querySelector('#hide-btn');
+        const hideButton1 = document.querySelector('#hide-btn1');
+        var apiButtonreset = document.getElementById('api-key-btn'); // Replace 'apipasswordButton' with the actual ID of your button
+        var apipasswordButtonreset = document.getElementById('api-password-btn'); // Replace 'apipasswordButton' with the actual ID of your button
+
+
+        apiButton.addEventListener('click', () => {
+            toggleText();
+        })
+        apipasswordButton.addEventListener('click', () => {
+            togglepasswordText();
+        })
+        copyButton.addEventListener('click', () => {
+            const copyText = showValuekey.textContent.trim();
+            navigator.clipboard.writeText(copyText);
+
+            copyButton.title = 'Copied';
+        })
+        hideButton.addEventListener('click', () => {
+            showValuekey.setAttribute("hidden", true);
+            copyButton.classList.add('d-none');
+            apiButton.textContent = 'Click Here';
+            apiButtonreset.removeAttribute('onclick', 'ResetApiKey()');
+            apiButton.classList.add('btn-primary');
+            apiButton.classList.remove('btn-danger');
+            hideButton.classList.add('d-none');
+        })
+        hideButton1.addEventListener('click', () => {
+            showValuepass.setAttribute("hidden", true);
+            copyButton1.classList.add('d-none');
+            apipasswordButton.textContent = 'Click Here';
+            apipasswordButtonreset.removeAttribute('onclick', 'ResetApiPassword()');
+
+            apipasswordButton.classList.add('btn-primary');
+            apipasswordButton.classList.remove('btn-danger');
+            hideButton1.classList.add('d-none');
+        })
+
+        copyButton1.addEventListener('click', () => {
+            const copyText = showValuepass.textContent.trim();
+            navigator.clipboard.writeText(copyText);
+
+            copyButton1.title = 'Copied';
+        })
+
+        function toggleText() {
+            showValuekey.removeAttribute("hidden");
+            //showValue.textContent = '02150215150';
+            hideButton.classList.remove('d-none');
+            copyButton.classList.remove('d-none');
+            apiButton.textContent = 'Reset';
+            apiButtonreset.setAttribute('onclick', 'ResetApiKey()');
+            apiButton.classList.remove('btn-primary');
+            apiButton.classList.add('btn-danger');
+            return;
+
+        }
+        function togglepasswordText() {
+            showValuepass.removeAttribute("hidden");
+            //showValue.textContent = '02150215150';
+            hideButton1.classList.remove('d-none');
+            copyButton1.classList.remove('d-none');
+            apipasswordButton.textContent = 'Reset';
+            apipasswordButtonreset.setAttribute('onclick', 'ResetApiPassword()');
+            apipasswordButton.classList.remove('btn-primary');
+            apipasswordButton.classList.add('btn-danger');
+            return;
+
+        }
+
+
+
+
+
+        // $('.Show').click(function() {
+        //     $('#target').show(200);
+        //     $('.Show').hide(0);
+        //     $('.Hide').show(0);
+        // });
+        // $('.Hide').click(function() {
+        //     $('#target').hide(500);
+        //     $('.Show').show(0);
+        //     $('.Hide').hide(0);
+        // });
+        // $('.toggle').click(function() {
+        //     $('#target').toggle('slow');
+        // });
+    </script>
+}
+

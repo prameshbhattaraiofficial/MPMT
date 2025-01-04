@@ -1,0 +1,116 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@model PagedList<AgentLedger>
+
+@{
+    int sn = 1;
+}
+
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Nepali Date</th>
+                <th>English Date</th>
+                <th>Particular</th>
+                <th>Entry Type</th>
+                <th>Debit Amount</th>
+                <th>Credit Amount</th>
+                <th>Total Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <style>
+                    tr.active {
+                        background: #ccc;
+                    }
+
+                    .tableFixHead {
+                        overflow-y: auto;
+                        height: 500px;
+                    }
+
+                        .tableFixHead thead th {
+                            position: sticky;
+                            top: 0px;
+                        }
+                </style>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@sn</td>
+                        <td>@item.NepaliDate</td>
+                        <td>@item.EnglishDate</td>
+                        <td>@item.Particular</td>
+                        <td>@item.EntryType</td>
+                        <td>@item.DebitAmount</td>
+                        <td>@item.CreditAmount</td>
+                        <td>@item.TotalBalance</td>
+                    </tr>
+                    sn = sn + 1;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />
+
+@* <div class="table-responsive tableFixHead">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Nepali Date</th>
+                <th>Agent Code</th>
+                <th>Particular</th>
+                <th>Entry Type</th>
+                <th>Debit Amount</th>
+                <th>Credit Amount</th>
+                <th>Total Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@(value.index + 1)</td>
+                    <td>@value.item.NepaliDate</td>
+                    <td>@ViewBag.AgentCode</td>
+                    <td>@value.item.Particular</td>
+                    <td>@value.item.EntryType</td>
+                    <td>@value.item.DebitAmount</td>
+                    <td>@value.item.CreditAmount</td>
+                    <td>@value.item.TotalBalance</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div> *@

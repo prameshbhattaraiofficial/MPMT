@@ -1,0 +1,34 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@model IEnumerable<AgentUnsettledAmount>
+
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>District</th>
+                <th>Agent Code</th>
+                <th>Agent</th>
+                <th>Contact Number</th>
+                <th>Commission Amount</th>
+                <th>Receivable Amount</th>
+                <th>Total Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@(value.index + 1)</td>
+                    <td>@value.item.District</td>
+                    <td>@value.item.AgentCode</td>
+                    <td>@value.item.Agent</td>
+                    <td>@value.item.ContactNumber</td>
+                    <td>@value.item.CommissionAmount</td>
+                    <td>@value.item.ReceivableAmount</td>
+                    <td>@value.item.TotalAmount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

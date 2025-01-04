@@ -1,0 +1,172 @@
+﻿@* <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+ *@
+
+ @using Mpmt.Core.Dtos.AdminUser
+@using Mpmt.Core.Dtos.CashAgent;
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP;
+
+@model PagedList<AgentDetail>
+
+
+<link href="~/css/select2.css" rel="stylesheet" />
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item "><a href="javascript:void(0);">Agent</a></li>
+                            <li class="breadcrumb-item active">Agent List</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="FormAgentfilter" class="row row-cols-lg-auto align-items-center">
+                                
+                                <div class="col-12">
+                                    <input type="hidden" name="SuperAgentCode" value="@ViewBag.SuperAgentCode" />
+@*                                     <input type="hidden" name="AGENT1843262117" value="@ViewBag.AgentCode" /> *@
+                                    <label class="form-label mb-0" for="">Agent Code</label>
+                                    <div class="input-group">
+                                        <input type="text" name="AgentCode" id="AgentCode" class="form-control" placeholder="Agent Code">
+                                    </div>
+                                </div>
+                                <div class="col-12 form-control-wrap focused">
+                                    <label class="form-label mb-0" for="">Full Name</label>
+                                    <div class="input-group">
+                                        <input type="text" name="FullName" id="FullName" class="form-control" placeholder="Full Name">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="">Email</label>
+                                    <div class="input-group">
+                                        <input type="text" name="Email" id="Email" class="form-control" placeholder="Email">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 form-control-wrap focused">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">District</label>
+                                    <div class="input-group">
+                                        <select class="form-select js-example-basic-single" style="font-size: 0.8125rem;font-weight: 400" id="DistrictCode" name="DistrictCode" asp-items="@ViewBag.DistrictDdl">
+                                            <option value="" selected>--Select District--</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-12 form-control-wrap focused">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">User Status</label>
+                                    <div class="input-group">
+                                        <select class="form-select" id="UserStatus" name="UserStatus">
+                                            <option value="" selected>All</option>
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-12">
+                                    <button id="btnformAgentfilter" class="btn btn-primary mt-3"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row--><!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Agent List <a href="@Url.Action("Index","SuperAgent")"><span class="text-danger" style="font-size:0.9rem"><u>@ViewBag.FullName</u></span></a></h4>
+                        </div>
+                        <!--end col-->
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                <a onclick="ShowPopUp('@Url.Action("AddAgent","SuperAgent")','Add Agent')" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">
+                                    <i class="las la-plus ms-1"></i> Add Agent
+                                </a>
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="AgentTableWrapper" class="table-responsive12">
+                        <partial name="_AgentListBySuperAgentUserList" model="@Model" />
+                    </div>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div><!-- container -->
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script src="~/js/admin/admin.partners.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+            // Initialize pagination settings object
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("AgentListBySuperAgent", "SuperAgent")',
+                selector: '#AgentTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#FormAgentfilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#FormAgentfilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnformAgentfilter').on('click', function (e) {
+                    debugger;
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+
+
+
+}

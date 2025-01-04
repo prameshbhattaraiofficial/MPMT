@@ -1,0 +1,371 @@
+﻿@using Mpmt.Core.Dtos.PartnerSignUp;
+@{
+    Layout = null;
+}
+
+@model Otpvalidatiom
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8" />
+    <title>MyPay Remit Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/assets/images/logo-sm.png">
+
+    <!-- App css -->
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/style.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="account-body accountbg">
+
+    <!-- Log In page -->
+    <div class="container">
+        <div class="row vh-100 d-flex justify-content-center">
+            <div class="col-12 align-self-center">
+                <div class="row">
+                    <div class="col-lg-4 mx-auto">
+                        <div class="card">
+                            <div class="card-body p-0 ">
+                                <div class="text-center p-3">
+                                    <a href="index.php" class="logo logo-admin">
+                                        <img src="~/assets/images/logo.png" height="80" alt="logo" class="auth-logo">
+                                    </a>
+                                    @* <p class="text-muted  mb-0">Check your email for OTP Verification</p>
+                                    <p class="text-muted  mb-0">OTP code was sent to your email @Model.Email</p> *@
+                                    <p>OTP has been sent to your email @Model.Email. Please verify!</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+
+                                <div class="p-3">
+                                    <form class="form-horizontal auth-form" asp-action="verifyotp" asp-controller="Registration">
+                                        <input asp-for="Email" hidden readonly />
+                                        @*
+                                        <div class="col-md-6 mb-2 text-start">
+                                        <label asp-for="Password" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                        <input asp-for="Password" type="password" class="form-control" id="id_confirm_password"> &ensp;
+                                        <i id="togglePasswordConfirm" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+                                        </div>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div> *@
+
+                                        @*     <div class="col-md-12 mb-2 form-control-wrap focused">
+                                        <label class="form-label" for="newPassword">Password<span style="color:firebrick">*</span></label>
+                                        <div class="input-group">
+                                        <span class="input-group-text"><i class="mdi mdi-lock"></i></span>
+                                        <input asp-for="Password" id="newPassword" type="password" class="form-control" placeholder="Password">
+                                        <!-- Eye icon toggle -->
+                                        <span class="input-group-text toggle-password" onclick="togglePassword('newPassword', 'eyeToggleNew')">
+                                        <i class="mdi mdi-eye-off-outline" id="eyeToggleNew"></i>
+                                        </span>
+                                        </div>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div> *@
+
+                                        @* <div class="col-md-12 mb-2 text-start">
+                                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                        <input asp-for="ConfirmPassword" type="password" class="form-control" id="id_confirm_password"> &ensp;
+                                        <i id="togglePasswordConfirm" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+                                        </div>
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                        </div>
+
+                                        *@
+                                        @*     <div class="col-md-12 mb-2 form-control-wrap focused">
+                                        <label class="form-label" for="confirmPassword">Confirm Password<span style="color:firebrick">*</span></label>
+                                        <div class="input-group">
+                                        <span class="input-group-text"><i class="mdi mdi-lock"></i></span>
+                                        <input asp-for="ConfirmPassword" id="confirmPassword"  type="password" class="form-control" placeholder="Password">
+                                        <!-- Eye icon toggle -->
+                                        <span class="input-group-text toggle-password" onclick="togglePassword('confirmPassword', 'eyeToggleConfirm')">
+                                        <i class="mdi mdi-eye-off-outline" id="eyeToggleConfirm"></i>
+                                        </span>
+                                        </div>
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                        </div> *@
+                                        @**@
+
+                                        <div class="form-group mb-2 text-start">
+                                            <label class="form-label">OTP <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input type="text" asp-for="Otp" onkeypress="return onlyNumberKey(event)" class="form-control" name="Otp" id="otpInput" placeholder="Enter OTP">
+                                            </div>
+                                            <span asp-validation-for="Otp" class="text-danger"></span>
+                                        </div><!--end form-group-->
+
+                                        <p class="text-center mb-0" id="timerDisplay">Did not receive the OTP? Please resend!</p>
+
+
+                                        <div class="form-group mb-0 row mt-0">
+                                            <div class="col-12">
+                                                <a class="btn b w-100 waves-effect waves-light border-none " id="startTimerButton" onclick="ChangePagesize2('@Url.Action("Resendotp","Registration")','@Model.Email')" >Resend</a>
+                                            </div><!--end col-->
+
+                                           @*  <p class="text-end"><span id="otp-timer">02:00</span></p> *@
+
+                                            <div class="col-6 mt-2">
+                                                <button id="verifyBtn" @* onclick="enableVerifyButton()" *@ class="btn btn-primary w-100" type="submit" disabled>Verify</button>
+                                            </div>
+
+                                            <div class="col-6 mt-2">
+                                                <button asp-controller="Registration" asp-action="Signup" class="btn btn-primary w-100 " type="submit">Back</button>
+                                            </div><!--end col-->
+
+
+                                        </div> <!--end form-group-->
+                                    </form><!--end form-->
+
+
+                                </div>
+                            </div><!--end card-body-->
+                            <div class="card-body bg-light-alt text-center border-top">
+                                <span class="text-muted d-none d-sm-inline-block">
+                                    MyPay Remit © <script>
+                                                      document.write(new Date().getFullYear())
+                                    </script>
+                                </span>
+                            </div>
+                        </div><!--end card-->
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end col-->
+        </div><!--end row-->
+    </div><!--end container-->
+    <!-- End Log In page -->
+    <!-- jQuery  -->
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/waves.js"></script>
+    <script src="~/assets/js/feather.min.js"></script>
+    <script src="~/assets/js/simplebar.min.js"></script>
+    @await Component.InvokeAsync("Notyf")
+    <script>
+
+        function togglePassword(inputId, eyeIconId) {
+            debugger;
+            var passwordInput = document.getElementById(inputId);
+            var eyeIcon = document.getElementById(eyeIconId);
+
+            if (passwordInput && eyeIcon) {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    eyeIcon.classList.remove('mdi-eye-off-outline');
+                    eyeIcon.classList.add('mdi-eye-outline');
+                } else {
+                    passwordInput.type = "password";
+                    eyeIcon.classList.remove('mdi-eye-outline');
+                    eyeIcon.classList.add('mdi-eye-off-outline');
+                }
+            } else {
+                console.error('Element with ID', inputId, 'or', eyeIconId, 'not found.');
+            }
+        }
+
+
+
+        $(document).ready(function () {
+            $('#resendBtn').prop('disabled', true);
+
+            $('#verifyBtn').prop('disabled', true);
+            $('#otpInput').on('input', function () {
+                var otpValue = $(this).val().trim();
+                if (otpValue.length > 0) {
+                    $('#verifyBtn').prop('disabled', false);
+                } else {
+                    $('#verifyBtn').prop('disabled', true);
+                }
+            });
+
+
+
+
+
+            // Get references to HTML elements
+            var startTimerButton = document.getElementById("startTimerButton");
+            var timerDisplay = document.getElementById("timerDisplay");
+
+            var timer;
+            var countdown = 120; // Initial countdown time in seconds
+
+
+            // function enableVerifyButton() {
+            //     debugger;
+            //     var otpInput = document.getElementById('otpInput').value;
+            //     var verifyButton = document.getElementById('verifyBtn');
+            //     if (otpInput.trim() !== "") {
+            //         verifyButton.disabled = false;
+            //     } else {
+            //         verifyButton.disabled = true;
+            //     }
+            // }
+
+
+            function isValidExpiry(documentType, expiryDate) {
+                debugger;
+                var currentDate = new Date();
+                var maxExpiryDate;
+
+                switch (documentType) {
+                    case 'passport':
+                        maxExpiryDate = new Date(currentDate.getFullYear() + 10, currentDate.getMonth(), currentDate.getDate());
+                        break;
+                    case 'driverLicense':
+                        maxExpiryDate = new Date(currentDate.getFullYear() + 5, currentDate.getMonth(), currentDate.getDate());
+                        break;
+                    case 'NationalIdCard':
+                        maxExpiryDate = new Date(currentDate.getFullYear() + 5, currentDate.getMonth(), currentDate.getDate());
+                        break;
+                    case 'Citizenship':
+                        maxExpiryDate = new Date(currentDate.getFullYear() + 5, currentDate.getMonth(), currentDate.getDate());
+                        break;
+                    default:
+                        maxExpiryDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+                        break;
+                }
+                return expiryDate <= maxExpiryDate;
+            }
+        });
+
+        // Function to start the countdown
+        function startCountdown() {
+            debugger;
+            countdown = 120;
+            startTimerButton.style.visibility = 'hidden'; // Disable the button
+            
+            timer = setInterval(function () {
+                countdown--;
+                if (countdown <= 0) {
+                    clearInterval(timer); // Stop the timer
+                    startTimerButton.style.visibility = 'visible'; // Enable the button
+                    timerDisplay.textContent = "You can  resend OTP Now";
+                } else {
+                    timerDisplay.textContent = "You can  resend OTP in " + countdown + " seconds ";
+                }
+            }, 1000); // 1000 milliseconds = 1 second
+
+
+            if (countdown == 0) {
+                startTimerButton.style.visibility = "hide";
+            }
+
+
+        }
+
+        // Add a click event listener to the button
+        startTimerButton.addEventListener("click", startCountdown);
+        startCountdown();
+
+    </script>
+    <script>
+
+
+
+
+        // $(document).ready(function () {
+        //     debugger;
+        //     $('#verifyBtn').prop('disabled', true);
+        //     $('#otpInput').on('input', function () {
+        //         var otpValue = $(this).val().trim();
+        //         if (otpValue.length > 0) {
+        //             $('#verifyBtn').prop('disabled', false);
+        //         } else {
+        //             $('#verifyBtn').prop('disabled', true);
+        //         }
+        //     });
+        // });
+
+
+        ChangePagesize2 = (url, data) => {
+            debugger;
+            var FilteDetails = {
+                Email: data,
+            };
+            var Url = url + "?Email=" + data;
+            var jsonData = JSON.stringify(FilteDetails);
+            $.ajax({
+                type: "POST",
+                url: Url,
+                data: jsonData,
+                contentType: "application/json",
+
+                success: function (result) {
+                    console.log(result);
+
+
+                },
+                error: function (result) {
+                    console.log(result)
+                }
+
+            });
+            return false;
+        }
+        function onlyNumberKey(evt) {
+
+            // Only ASCII character in that range allowed
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+
+        function startOtpTimer(duration, display) {
+            debugger;
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    timer = duration;
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            debugger;
+            var otpDuration = 120; // OTP duration in seconds (5 minutes)
+            var display = document.querySelector('#otp-timer');
+
+            startOtpTimer(otpDuration, display);
+
+            $("resendbtn").click(function () {
+                startOtpTimer(otpDuration, display);
+            });
+            
+        };
+
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+            $("button").click(function () {
+                $("p").slideToggle();
+            });
+        });
+
+    </script>
+
+</body>
+
+
+</html>

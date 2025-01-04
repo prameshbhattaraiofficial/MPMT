@@ -1,0 +1,88 @@
+﻿@using Mpmt.Core.Dtos.PrefundRequest
+@using Mpmt.Core.Models.RMP;
+@model PreFundRequest
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered mb-0">
+
+            <tbody>
+
+                <tr>
+                    <td><span>Fund Type :</span></td>
+                    <td><span>@Model.FundType</span></td>
+                </tr>
+                <tr>
+                    <td><span>Partner Id :</span></td>
+                    <td><span><strong style="color: #f98c45">@Model.PartnerCode</strong></span></td>
+                </tr>
+                <tr>
+                    <td><span>Full Name :</span></td>
+                    <td><span>@Model.Username</span></td>
+                </tr>
+                <tr>
+                    <td><span>Source Currency :</span></td>
+                    <td><span>@Model.SourceCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Destination Currency :</span></td>
+                    <td><span>@Model.DestinationCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Organization Name :</span></td>
+                    <td><span>Xpressewa pvt ltd</span></td>
+                </tr>
+                <tr>
+                    <td><span>Request Status :</span></td>
+                    <td><span>@Model.RequestStatus</span></td>
+                </tr>
+                <tr>
+                    <td><span>Req Amount :</span></td>
+                    <td><span>Rs.@Model.Amount</span></td>
+                </tr>
+                <tr>
+                    <td><span>Currency :</span></td>
+                    <td><span class="tb-status text-orange">NPR</span></td>
+                </tr>
+                <tr>
+                    <td><span>Txn Id :</span></td>
+                    <td><span>@Model.TransactionId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Remarks:</span></td>
+                    <td><span>@Model.Remarks</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vocher Image :</span></td>
+                    <td>
+                        <a href="@Model.VoucherImgPath" target="_blank">
+                    <img src="@Model.VoucherImgPath" alt="" class="img-fluid height-150">
+                    </a>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table><!--end /table-->
+        <div class="d-flex justify-content-end mt-2">
+            @if (Model.RequestStatusCode is not null && Model.RequestStatusCode.Equals("PENDING", StringComparison.OrdinalIgnoreCase)
+            && (actors.FirstOrDefault(x => x.Action == "RejectPreFundRequest")?.Permission ?? false))
+            {
+                <button type="button" onclick="PopUPAjaxDeleteOverlay('@Url.Action("RejectPreFundRequest", "PreFundRequest", new { Id = Model.Id })', 'Reject PreFund Request Details')" class="btn btn-danger me-2">Reject</button>
+            }
+
+            @if (Model.RequestStatusCode is not null && Model.RequestStatusCode.Equals("PENDING", StringComparison.OrdinalIgnoreCase)
+            && (actors.FirstOrDefault(x => x.Action == "ApprovedPreFundRequest")?.Permission ?? false))
+            {
+                <button type="button" onclick="PopUPAjaxDeleteOverlay('@Url.Action("ApprovedPreFundRequest", "PreFundRequest", new { Id = Model.Id })', 'Approved PreFund Request')" class="btn btn-primary">Approve</button>
+            }
+        </div>
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+<!--end card-body-->

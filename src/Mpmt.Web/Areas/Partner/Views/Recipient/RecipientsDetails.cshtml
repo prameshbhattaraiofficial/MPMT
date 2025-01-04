@@ -1,0 +1,93 @@
+﻿@using Mpmt.Web.Areas.Partner.ViewModels
+@model RecipientsAddUpdateVm
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+
+            <tbody>
+                <tr>
+                    <td><span>User ID :</span></td>
+                    <td><span>#@Model.SenderId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Full Name :</span></td>
+                    <td><span class="tb-lead">@Model.FirstName @Model.SurName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Contact :</span></td>
+                    <td><span class="tb-lead">@Model.MobileNumber</span></td>
+                </tr>
+                <tr>
+                    <td><span>DOB :</span></td>
+                    <td><span>@Model.DateOfBirth</span></td>
+                </tr>
+                <tr>
+                    <td><span>Country :</span></td>
+                    <td><span>@Model.CountryCode</span></td>
+                </tr>
+
+                <tr>
+                    <td><span>State:</span></td>
+                    <td><span>@Model.ProvinceCode</span></td>
+                </tr>
+
+                <tr>
+                    <td><span>City :</span></td>
+                    <td><span>@Model.City</span></td>
+                </tr>
+
+                <tr>
+                    <td><span>Zip Code :</span></td>
+                    <td><span>@Model.Zipcode</span></td>
+                </tr>
+
+                <tr>
+                    <td><span>Source Symbol :</span></td>
+                    <td><span>@Model.SourceCurrency</span></td>
+                </tr>
+
+                <tr>
+                    <td><span>Destination Symbol :</span></td>
+                    <td><span>@Model.DestinationCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Relation:</span></td>
+                    <td><span>@Model.RelationshipId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Payment Type:</span></td>
+                    <td><span>@Model.PayoutTypeId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Bank Name:</span></td>
+                    <td><span>@Model.BankName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Branch:</span></td>
+                    <td><span>@Model.Branch</span></td>
+                </tr>
+                <tr>
+                    <td><span>Bank Code:</span></td>
+                    <td><span>@Model.BankCode</span></td>
+                </tr>
+                <tr>
+                    <td><span>A/c holder Name:</span></td>
+                    <td><span>@Model.AccountHolderName</span></td>
+                </tr>
+                <tr>
+                    <td><span>A/c Number:</span></td>
+                    <td><span>@Model.AccountNumber</span></td>
+                </tr>
+
+
+            </tbody>
+        </table><!--end /table-->
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+
+           

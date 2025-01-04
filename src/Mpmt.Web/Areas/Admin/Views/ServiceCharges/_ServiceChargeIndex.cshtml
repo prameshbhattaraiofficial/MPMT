@@ -1,0 +1,51 @@
+﻿@using Mpmt.Core.Dtos.ServiceCharge
+@using Mpmt.Core.Models.RMP;
+@model List<ServiceChargeDetails>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN </th>
+                <th>Created Date</th>
+                <th>Updated Date</th>
+                <th>Service Category</th>
+                <th>Source Currency</th>
+                <th>Destinaton Currency</th>
+                <th>Payment Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count != 0)
+            {
+                @foreach (var value in Model.Select((item, index) => new { item, index }))
+                {
+                    <tr>
+                        <td>@(value.index + 1)</td>
+                        <td>@value.item.CreatedDate</td>
+                        <td>@value.item.RegisteredDate</td>
+                        <td>@value.item.ServiceCategory</td>
+                        <td>@value.item.SourceCurrency</td>
+                        <td>@value.item.DestinationCurrency</td>
+                        <td>@value.item.PaymentType</td>
+                        <td name="buttons">
+                            <div class=" float-center">
+                                @if (actors.FirstOrDefault(x => x.Action == "UpdateServiceCharge")?.Permission ?? false)
+                                {
+                                    <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdateServiceCharge", "ServiceCharges", new { CategoryId = value.item.ChargeCategoryId, SourceCurrency = value.item.SourceCurrency, DestinationCurrency = value.item.DestinationCurrency, PaymentTypeId = value.item.PaymentTypeId })', 'Update Service Charge','modal-dialog modal-xl')" title="Update Service Charge"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                                }
+                                @if (actors.FirstOrDefault(x => x.Action == "DeleteServiceCharge")?.Permission ?? false)
+                                {
+                                    <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="ShowPopUp('@Url.Action("DeleteServiceCharge", "ServiceCharges", new { CategoryId = value.item.ChargeCategoryId, SourceCurrency = value.item.SourceCurrency, DestinationCurrency = value.item.DestinationCurrency, PaymentTypeId = value.item.PaymentTypeId })', 'Remove Service Charge','modal-dialog modal-md')" title="Delete Service Charge"> <i class="dripicons-trash" aria-hidden="true"></i></a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

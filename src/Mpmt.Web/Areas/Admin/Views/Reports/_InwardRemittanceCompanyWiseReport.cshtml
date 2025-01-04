@@ -1,0 +1,79 @@
+﻿@using Mpmt.Core.Dtos.InwardRemitanceReport
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@model PagedList<InwardRemitanceCompanyWiseDto>
+@{
+    Mpmt.Core.Dtos.InwardRemitanceReport.SumofTransaction DataList;
+    DataList = ViewData["grid"] as Mpmt.Core.Dtos.InwardRemitanceReport.SumofTransaction;
+}
+
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Name</th>
+                <th>Country</th>
+                <th>Principal or Agent or Branch</th>
+                <th>No of Transaction</th>
+                <th>Amount(Equivalent in USD)</th>
+                <th>Amount(Equivalent in NPR)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <link href="~/css/customfixedheader.css" rel="stylesheet" />
+                @foreach (var value in Model.Items.Select((item, index) => new { item, index }))
+                {
+                    <tr>
+                        @* <td>@(value.index + 1)</td> *@
+                        <td>@value.item.SN</td>
+                        <td>@value.item.PartnerOrgName</td>
+                        <td>@value.item.CountryName</td>
+                        <td>@value.item.PrincipalOrBranch</td>
+                        <td>@value.item.NoOfTransaction</td>
+                        <td>@value.item.TotalAmountUsd</td>
+                        <td>@value.item.TotalAmountNpr</td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <thead class="table-warning">
+            <tr>
+                <th>Total :</th>
+                <th></th>
+                <th></th>
+                <th>@DataList.GrandTotalCountry</th>
+                <th>@DataList.GrandTotalTxn</th>
+                <th>@DataList.GrandTotalAmountUSD</th>
+                <th>@DataList.GrandTotalAmountNPR</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

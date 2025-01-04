@@ -1,0 +1,125 @@
+﻿@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Dtos.Transaction;
+@using Mpmt.Core.Models.RMP;
+@model PagedList<RemitTransactionList>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                @* <div class="row">
+                <div class="col">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item "><a href="javascript:void(0);">Reports</a></li>
+                <li class="breadcrumb-item active">Transaction Report</li>
+                </ol>
+                </div><!--end col-->
+                <div class="col-auto">
+                </div>
+                </div>*@
+                <div class="row mt-4">
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <partial name="_SendTransactionFilter" />
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div>
+            <!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row--><!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Send Transaction </h4>
+                        </div>
+                        <!--end col-->
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                @if (actors.FirstOrDefault(x => x.Action == "AddTransaction")?.Permission ?? false)
+                            {
+                                <a onclick="ShowPopUp('@Url.Action("AddTransaction","SendTransactions")','Add Transaction')" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addnew">
+                                    <i class="las la-plus ms-1"></i> Add Transaction
+                                </a>
+
+                            }
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="SendTransactionTableWrapper" class="table-responsive12">
+                        <partial name="_SendTransactionTable" model="@Model" />
+                    </div>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+</div><!-- container -->
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+
+    @*<script src="~/js/admin.users.js" asp-append-version="true"></script>*@
+    <script src="~/js/app.formstepper.js" asp-append-version="true"></script>
+
+    <script src="~/js/partner/partner.sendtransactions.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            // Initialize pagination settings object
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("Index", "SendTransactions")',
+                selector: '#SendTransactionTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#sendTransactionFilete').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#sendTransactionFilete').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnSendTransactionFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+
+}
+
+

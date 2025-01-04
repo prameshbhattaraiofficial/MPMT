@@ -1,0 +1,79 @@
+﻿namespace Mpmt.Core.Domain.Partners.SendTransactions
+{
+    public class AddTransactionDto
+    {
+        public string PartnerCode { get; set; }
+        public string ProcessId { get; set; }
+        public string SourceCurrency { get; set; }
+        public string DestinationCurrency { get; set; }
+        public decimal SendingAmount { get; set; }
+        public string PaymentType { get; set; }
+        //public decimal ServiceCharge { get; set; }
+        //public decimal NetSendingAmount { get; set; }
+        //public decimal ConversionRate { get; set; }
+        //public decimal NetRecievingAmountNPR { get; set; }
+        //public decimal PartnerServiceCharge { get; set; }
+        public string TransactionType { get; set; }
+        public bool ExistingSender { get; set; }
+        public string MemberId { get; set; }
+        public string SenderFirstName { get; set; }
+        public bool NoSenderFirstName { get; set; }
+        public string SenderLastName { get; set; }
+        //public bool IsSenderSurnamePresent { get; set; }
+        public string SenderContactNumber { get; set; }
+        public string SenderEmail { get; set; }
+        public string SenderCountryCode { get; set; }
+        public string SenderProvince { get; set; }
+        public string SenderCity { get; set; }
+        public string SenderZipcode { get; set; }
+        public string SenderAddress { get; set; }
+        public string SenderRelationshipId { get; set; }
+        //public string SenderRelationship { get; set; }
+        public string SenderIdProofImgPath1 { get; set; }
+        public string SenderIdProofImgPath2 { get; set; }
+        public string SenderPurposeId { get; set; }
+        public string SenderRemarks { get; set; }
+        public bool ExistingRecipient { get; set; }
+        public string RecipientId { get; set; }
+        public string RecipientType { get; set; }
+        public string RecipientFirstName { get; set; }
+        public bool NoRecipientFirstName { get; set; }
+        public string RecipientLastName { get; set; }
+        //public bool IsRecipientSurnamePresent { get; set; }
+        public string JointAccountFirstName { get; set; }
+        public bool NoJointAccountFirstName { get; set; }
+        public string JointAccountLastName { get; set; }
+        //public bool IsJointAccountSurnamePresent { get; set; }
+        public string BusinessName { get; set; }
+        public string RecipientContactNumber { get; set; }
+        public string RecipientEmail { get; set; }
+        public DateTime? RecipientDateOfBirth { get; set; }
+        public string RecipientCountryCode { get; set; }
+        public string RecipientProvinceCode { get; set; }
+        public string RecipientDistrictCode { get; set; }
+        public string RecipientLocalBodyCode { get; set; }
+        public string RecipientCity { get; set; }
+        public string RecipientZipcode { get; set; }
+        public string RecipientAddress { get; set; }
+        public string RecipientRelationshipId { get; set; }
+        public string BankName { get; set; }
+        public string BankCode { get; set; }
+        public string Branch { get; set; }
+        public string AccountHolderName { get; set; }
+        public string AccountNumber { get; set; }
+        public string WalletCode { get; set; }
+        public string WalletName { get; set; }
+        public string WalletNumber { get; set; }
+        public string WalletHolderName { get; set; }
+        public string DocumentType { get; set; }
+        public string DocumentNumber { get; set; }
+        public string SenderOccupation { get; set; }
+        public string SourceOfIncome { get; set; }
+        public string IpAddress { get; set; }
+        public string DeviceId { get; set; }
+        public string LoggedInUser { get; set; }
+        public string UserType { get; set; }
+        public string TransactionId { get; set; }
+        public bool ComplianceFlag { get;set; }
+    }
+}

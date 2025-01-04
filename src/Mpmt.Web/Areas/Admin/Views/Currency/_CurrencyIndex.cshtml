@@ -1,0 +1,69 @@
+﻿@using Mpmt.Core.Dtos.Currency
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<CurrencyDetails>
+@{
+    int sn = 1;
+}
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+    <thead class="table-light">
+        <tr>
+            <th>Sn</th>
+            <th>Country</th>
+            <th>Currency Name</th>
+            <th>Currency Image</th>
+            <th>Short Name</th>
+            <th>Symbol</th>
+            <th>Status</th>
+            <th>CreatedBy</th>
+            <th>UpdatedBy</th>
+            <th>Action</th>
+
+        </tr>
+    </thead>
+
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+
+            <tr>
+                <td>@sn</td>
+                <td>@item.CountryCode</td>
+                <td>@item.CurrencyName</td>
+                <td><img src="@item.CurrencyImagePath" height="50" width="50"></td>
+                <td>@item.ShortName</td>
+                <td>@item.Symbol</td>
+               
+                @if (item.IsActive == true)
+                {
+                    <td><span class="badge bg-soft-success px-2">Active</span></td>
+                }
+                else
+                {
+                    <td><span class="badge bg-soft-danger px-2">InActive</span></td>
+                }
+
+
+                <td>@item.CreatedBy</td>
+                <td>@item.UpdatedBy</td>
+                <td name="buttons">
+                    <div class=" float-center">
+                        @if (actors.FirstOrDefault(x => x.Action == "UpdateCurrency")?.Permission ?? false)
+                        {
+                     <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdateCurrency", "Currency", new { id = item.Id })', 'Update Currency')" title="Update Currency"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                        }
+                        @if (actors.FirstOrDefault(x => x.Action == "DeleteCurrency")?.Permission ?? false)
+                        {
+                     <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="PopUPAjaxDelete('@Url.Action("DeleteCurrency", "Currency", new { id = item.Id })', 'Remove Currency')" title="Delete Currency"> <i class="dripicons-trash" aria-hidden="true"></i></a> 
+                        }
+                     </div>
+                </td>
+            </tr>
+             sn = sn + 1;
+        }
+    </tbody>
+</table>

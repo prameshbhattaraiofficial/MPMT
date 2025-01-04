@@ -1,0 +1,319 @@
+﻿@using Mpmt.Core.Dtos.Partner
+@model WalletCurrency
+
+<div class="page-content">
+    <div class="container-fluid">
+        <!-- Page-Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="page-title">Wallet Currency</h4>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="javascript:void(0);">Partners</a></li>
+                                <li class="breadcrumb-item active">Wallet Currency</li>
+                            </ol>
+                        </div><!--end col-->
+
+                    </div><!--end row-->
+                </div><!--end page-title-box-->
+            </div><!--end col-->
+        </div><!--end row-->
+        <!-- end page title end breadcrumb -->
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+
+                    <div class="card-body">
+                        <div class="dastone-profile">
+                            <div class="row">
+                                <div class="col-lg-4 align-self-center mb-3 mb-lg-0">
+                                    <div class="dastone-profile-main">
+                                        <div class="dastone-profile-main-pic">
+                                            <img src="~/assets/images/player.png" alt="" height="110" class="rounded-circle shadow-sm">
+
+                                        </div>
+                                        <div class="dastone-profile_user-detail">
+                                            <h5 class="dastone-user-name">@Model.apppartner.UserName</h5>
+                                            @* <p class="mb-0 dastone-user-name-post">Administrator</p> *@
+                                        </div>
+                                    </div>
+                                </div><!--end col-->
+
+                                <div class="col-lg-4 ms-auto align-self-center">
+                                    <ul class="list-unstyled personal-detail mb-0">
+                                        @* <li class=""><span class="text-secondary font-14 align-middle">Merchant ID</span> : 5498515</li> *@
+                                        <li class=""><span class="text-secondary font-14 align-middle">Partner Code</span> : @Model.apppartner.PartnerCode</li>
+                                        <li class=""><span class="text-secondary font-14 align-middle">Contact </span> : @Model.apppartner.MobileNumber</li>
+                                        <li class=""><span class="text-secondary font-14 align-middle">Email </span> : : @Model.apppartner.Email</li>
+                                        <li class=""><span class="text-secondary font-14 align-middle">Post </span> : : @Model.apppartner.Post</li>
+                                        @* <li class=""><span class="text-secondary font-14 align-middle">Address </span> : : @Model.apppartner.Address</li> *@
+                                    </ul>
+
+                                </div><!--end col-->
+
+                            </div><!--end row-->
+                        </div><!--end f_profile-->
+                    </div><!--end card-body-->
+                </div> <!--end card-->
+            </div><!--end col-->
+
+            <div class="col-12">
+                <!--end card-->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Wallet Currencies</h4>
+                            </div>
+                            <!--end col-->
+                            <div class="col-auto">
+                                <form id="formpartnertype">
+                                    <input type="hidden" name="partnerId" value="@Model.apppartner.Id" />
+                                </form>
+                            </div>
+                            <!--end col-->
+
+                        </div>
+                        <!--end row-->
+                    </div>
+                    <!--end card-header-->
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card report-card">
+                                    <div class="card-header">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <h4 class="card-title">Wallet Currency List</h4>
+                                            </div>
+
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+                                    <div class="card-body overflow-x-auto">
+                                            <div id="WalletCurrencyTableWrapper" class="table-responsive">
+                                                <partial name="_WalletCurrencyList" model="@Model" />
+                                            </div>
+@*                                        <ul class="list-group custom-list-group mb-n1">
+                                        </ul>*@
+
+                                    </div><!--end card-body-->
+                                    @*<div class="card-body text-center">
+                                    <a class="text-primary bg-soft-primary p-2 m-0 font-16 rounded" onclick="ShowPopUp('@Url.Action("AddWalletCurrency","Wallets", new { PartnerCode = Model.apppartner.PartnerCode })','Add New Wallet')">
+                                    <i class="mdi mdi-plus font-16"> </i> Add Wallet
+                                    </a>
+
+                                    </div>*@
+                                </div><!--end card-->
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form id="addTransactionForm" method="post" class="form-horizontal form-wizard-wrapper">
+
+                                    <fieldset>
+                                        <div>
+                                            <div class="card report-card">
+                                                <div class="card-header">
+                                                    <div class="row align-items-center">
+                                                        <div class="col">
+                                                            <h4 class="card-title">Convert Amount</h4>
+                                                        </div>
+                                                    </div>
+                                                    <!--end row-->
+                                                </div>
+                                                <ul id="formErrorsWrapper">
+                                                    @if (ViewBag.Error is not null)
+                                                    {
+                                                        <li class="text-danger">@ViewBag.Error</li>
+                                                    }
+                                                </ul>
+                                                <div class="card-body">
+                                                    <div class="align-self-center mb-2">
+                                                        <label class="form-label">Payment Type</label>
+                                                        <select id="paymentType" value="Bank" class="form-select form-select-md" asp-items="@ViewBag.PaymentTypeDdl"></select>
+                                                    </div>
+                                                    <div class="row d-flex justify-content-center bg-soft-primary ptb-10">
+                                                        <div class="col">
+                                                            <p class="text-dark mb-0 fw-semibold">
+                                                                You send
+                                                                <input id="sourceAmount" type="number" class="form-control w-50">
+
+
+                                                            </p>
+
+                                                        </div>
+                                                        <div class="col-auto align-self-center">
+                                                            <select id="sourceCurrency" name="sourceCurrency" asp-items="@ViewBag.SourceCurrencyDdl" class="form-select form-select-md"></select>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="help-activity-height" data-simplebar="init" style="height: 200px;">
+                                                        <div class="simplebar-wrapper" style="margin: 0px;">
+                                                            <div class="simplebar-height-auto-observer-wrapper">
+                                                                <div class="simplebar-height-auto-observer"></div>
+                                                            </div>
+                                                            <div class="simplebar-mask">
+                                                                <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                                                                    <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden;">
+                                                                        <div class="simplebar-content" style="padding: 0px;">
+                                                                            <div class="activity">
+                                                                                <div class="activity-info">
+                                                                                    <div class="icon-info-activity">
+                                                                                        <i class="las la-dot-circle bg-soft-primary"></i>
+                                                                                    </div>
+                                                                                    <div class="activity-info-text">
+                                                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                                            <h5 class="text-muted mb-0 font-13 "><span id="totalFees">0.0 AUD</span></h5>
+                                                                                            <span class="text-muted font-14">Total fees</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="activity-info">
+                                                                                    <div class="icon-info-activity">
+                                                                                        <i class="las la-dot-circle bg-soft-primary"></i>
+                                                                                    </div>
+                                                                                    <div class="activity-info-text">
+                                                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                                            <h5 class="text-muted mb-0 font-13 "><span id="netSendingAmount">0.0 AUD</span></h5>
+                                                                                            <span class="text-muted font-14">Amount we'll convert</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="activity-info">
+                                                                                    <div class="icon-info-activity">
+                                                                                        <i class="las la-dot-circle bg-soft-primary"></i>
+                                                                                    </div>
+                                                                                    <div class="activity-info-text">
+                                                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                                            <h5 class="text-muted mb-0 font-13 "><span id="conversionRate">0.0 AUD</span></h5>
+                                                                                            <span class="text-muted font-14">Conversion rate</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div><!--end analytics-dash-activity-->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="simplebar-placeholder" style="width: auto; height: 135px;"></div>
+                                                        </div>
+                                                        <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+                                                            <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
+                                                        </div>
+                                                        <div class="simplebar-track simplebar-vertical" style="visibility: hidden;">
+                                                            <div class="simplebar-scrollbar" style="height: 0px; display: none;"></div>
+                                                        </div>
+                                                    </div><!--end card-body-->
+
+                                                    <div class="row d-flex justify-content-center bg-soft-primary ptb-10">
+                                                        <div class="col">
+                                                            <p class="text-dark mb-0 fw-semibold">Recipient gets</p>
+                                                            <h3 id="receivingAmount" class="m-0"></h3>
+                                                        </div>
+                                                        <div class="col-auto align-self-center">
+                                                            <select id="destinationCurrency" name="destinationCurrency" asp-items="@ViewBag.destinationCurrencyDdl" class="form-select form-select-md align-middle"></select>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row d-flex justify-content-center bg-soft-primary ptb-10">
+                                                        <input type="hidden" id="hfNetSendingAmount" />
+                                                        <input type="hidden" id="hfServiceCharge" />
+                                                        <input type="hidden" id="hfPartnerServiceCharge" />
+                                                        <input type="hidden" id="hfConversionRate" />
+                                                        <input type="hidden" id="hfNetRecievingAmountNPR" />
+                                                    </div>
+
+                                                </div><!--end card-->
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!--end card-body-->
+                    </div>
+                    <!--end card-->
+                </div>
+
+            </div><!--end row-->
+        </div><!-- container -->
+
+
+    </div>
+</div>
+
+
+
+
+
+
+<!-- end page content -->
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script src="~/js/partner/partner.sendtransactions.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function() {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("Index", "Walltes")',
+                selector: '#WalletCurrencyTableWrapper'
+            });
+            $(Pagination).on('before', function(e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formpartnertype').serializeArray();
+                $.each(usersFilterFormValues, function(i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+            });
+            addPaginationHandlers();
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            var txnChargeDelayTimer;
+            $('#addTransactionForm #sourceAmount').on('input', function() {
+                clearTimeout(txnChargeDelayTimer);
+
+                txnChargeDelayTimer = setTimeout(function() {
+                    let data = getTxnChargeDetailsPayload();
+                    getSenderTxnChargeDetails('@Url.Action("GetConversionAmt", "SendTransactions")', data);
+                }, 400);
+            });
+
+            $('#addTransactionForm #paymentType').on('change', function() {
+                let currentVal = $(this).val();
+                handlePayoutTypeValueSync(currentVal);
+                handlePayoutType(currentVal);
+
+                let data = getTxnChargeDetailsPayload();
+                getSenderTxnChargeDetails('@Url.Action("GetConversionAmt", "SendTransactions")', data);
+            });
+
+            $('#addTransactionForm #destCurrency').on('change', function() {
+                let data = getTxnChargeDetailsPayload();
+                getSenderTxnChargeDetails('@Url.Action("GetConversionAmt", "SendTransactions")', data);
+            });
+
+            $('#addTransactionForm #sourceCurrency').on('change', function() {
+                let data = getTxnChargeDetailsPayload();
+                getSenderTxnChargeDetails('@Url.Action("GetConversionAmt", "SendTransactions")', data);
+            });
+
+
+        });
+
+    </script>
+}

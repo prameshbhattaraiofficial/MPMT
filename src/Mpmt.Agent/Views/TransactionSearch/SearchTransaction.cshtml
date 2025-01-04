@@ -1,0 +1,67 @@
+﻿@using Mpmt.Agent.Models.TransactionSearch;
+@model TransactionDetailsSearchByMTCN
+
+
+@* <link href="http://nepalidatepicker.sajanmaharjan.com.np/nepali.datepicker/css/nepali.datepicker.v4.0.1.min.css" rel="stylesheet" type="text/css" /> *@
+
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="row">
+                        <div class="col">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item "><a href="javascript:void(0);">Reports</a></li>
+                                <li class="breadcrumb-item active">Transaction Search</li>
+                            </ol>
+                        </div>
+                        <div class="col-auto">
+                        </div>
+                    </div>
+                    <div id="warpper" class="row mt-4">
+                        <form  method="post" enctype="multipart/form-data" asp-controller="TransactionSearch" asp-action="SearchTransaction">
+                           
+                            <div class="row">
+                                <label class="form-label" for="userpassword">Control Number <span class="text-danger">*</span></label>
+                                <div class="col-md-3  form-group mb-2">
+                                    <div class="input-group">
+                                        <input type="text" id="ControlNumber" pattern="[A-Za-z0-9]+" asp-for="ControlNumber" class="form-control" placeholder="Control Number">
+                                    </div>
+                                    <span asp-validation-for="ControlNumber" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <div class="input-group">
+                                        <button type="submit" id="btnSubmit" class="btn btn-primary w-100 waves-effect waves-light" value=""><i class="fas fa-paper-plane ms-1"> Submit </i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#ControlNumber').on('keypress', function (e) {
+        debugger;
+        var keyCode = e.which;
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)) {
+            return true;
+        }
+        return false;
+    });
+</script>
+
+
+
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.users.js"></script>
+    <script src="~/js/admin.pagination.js"></script>
+}

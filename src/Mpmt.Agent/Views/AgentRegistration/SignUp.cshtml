@@ -1,0 +1,196 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@model SignUpAgent
+
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>MyPay Remit - Agent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link rel="shortcut icon" href="~/assets/images/logo-sm.png">
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link rel="~/stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css">
+    <link href="~/assets/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="account-body accountbg">
+    <div class="container">
+        <div class="row vh-100 d-flex justify-content-center">
+            <div class="col-12 align-self-center">
+                <div class="row">
+                    <div class="col-lg-6 mx-auto">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="text-center p-3">
+                                    <a href="index.php" class="logo logo-admin">
+                                        <img src="~/assets/images/logo.png" height="50" alt="logo" class="auth-logo">
+                                    </a>
+                                    <p class="text-muted  mb-0">Sign in to continue to MyPay Remit</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="p-3">
+                                    <form class="form-horizontal auth-form" method="post" asp-action="SignUp" asp-controller="AgentRegistration">
+                                        <div class="row">
+                                            @if (ViewBag.Error is not null)
+                                            {
+                                                <li class="text-danger">@ViewBag.Error</li>
+                                            }
+                                            <div class="col-md-4 mb-2 mb-2 text-start">
+                                                <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                                <input asp-for="FirstName" type="text" class="form-control">
+                                                <div class="form-check">
+                                                    <input asp-for="WithoutFirstName" class="form-check-input" onchange="Namechange()" type="checkbox" id="ContinueWithoutUserFirstss">
+                                                    <label class="form-check-label" for="ContinueWithoutFirstName">
+                                                        Continue without First Name
+                                                    </label>
+                                                </div>
+                                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-4 mb-2 mb-2 text-start">
+                                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                                <input type="text" asp-for="LastName" class="form-control">
+                                                <span asp-validation-for="LastName" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-4 mb-2 text-start">
+                                                @* <label for="validationCustomUsername" class="form-label">Username <span class="text-danger">*</span></label>
+                                                <div class="input-group has-validation">
+                                                <input type="text" asp-for="UserName" class="form-control">
+                                                </div>
+                                                <span asp-validation-for="UserName" class="text-danger"></span> *@
+                                                <label asp-for="UserName" class="form-label">UserName <span class="text-danger">*</span></label>
+                                                <input asp-for="UserName" type="text" required class="form-control">
+                                                <span asp-validation-for="UserName" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6 mb-2 text-start">
+                                                <label for="validationCustomUsername" class="form-label">Email <span class="text-danger">*</span></label>
+                                                <div class="input-group has-validation">
+                                                    <input type="email" asp-for="Email" class="form-control">
+                                                </div>
+                                                <span asp-validation-for="Email" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6 mb-2 text-start">
+                                                <label for="validationCustomUsername" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                                <div class="row">
+                                                    @* <div class="col-md-6">
+                                                    <select class="form-select" asp-for="CallingCode" asp-items="@ViewBag.CallingCode">
+                                                    </select>
+                                                    </div> *@
+                                                    <div class="col-md-4">
+                                                        <input asp-for="CallingCode" value="+977" class="form-control" readonly />
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input asp-for="PhoneNumber" onkeypress="return onlyNumberKey(event)" type="text" maxlength="10" class="form-control">
+                                                    </div>
+                                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            @* <div class="col-md-6 mb-2 text-start">
+                                            <label class="form-label">Password <span class="text-danger">*</span></label>
+                                            <input type="password" asp-for="Password" class="form-control">
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6 mb-2 text-start">
+                                            <label class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                            <input type="password" asp-for="ConfirmPassword" class="form-control">
+                                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                            </div> *@
+                                            <div class="col-md-6 mb-2 text-start">
+                                                <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input asp-for="Password" type="password" maxlength="50" class="form-control" id="id_password"> &ensp;
+                                                    <i id="togglePassword" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+                                                </div>
+                                                <span asp-validation-for="Password" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6 mb-2 text-start">
+                                                <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input asp-for="ConfirmPassword" type="password" class="form-control" id="id_confirm_password"> &ensp;
+                                                    <i id="togglePasswordConfirm" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+                                                </div>
+                                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <button class="btn btn-primary" type="submit">Continue </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card-body bg-light-alt text-center border-top">
+                                <span class="text-muted d-none d-sm-inline-block">
+                                    MyPay Remit © <script>
+                                                      document.write(new Date().getFullYear())
+                                    </script>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/waves.js"></script>
+    <script src="~/assets/js/feather.min.js"></script>
+    <script src="~/assets/js/simplebar.min.js"></script>
+    <script src="~/js/ValidationScript.js"></script>
+    <script>
+        $(document).ready(function () {
+            setupToggleButtons();
+        });
+
+        function setupToggleButtons() {
+            const togglePass = document.querySelector('#togglePassword');
+            const togglePassConfirm = document.querySelector('#togglePasswordConfirm');
+            const pass = document.querySelector('#id_password');
+            const passConfirm = document.querySelector('#id_confirm_password');
+
+            togglePass.addEventListener('click', function (e) {
+                const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+                pass.setAttribute('type', type);
+                togglePass.classList.toggle('mdi-eye');
+                togglePass.classList.toggle('mdi-eye-off');
+            });
+
+            togglePassConfirm.addEventListener('click', function (e) {
+                const type = passConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
+                passConfirm.setAttribute('type', type);
+                togglePassConfirm.classList.toggle('mdi-eye');
+                togglePassConfirm.classList.toggle('mdi-eye-off');
+            });
+        }
+    </script>
+    <script>
+        function Namechange() {
+            debugger
+            var data = $('#ContinueWithoutUserFirstss').is(":checked");
+            if (data) {
+                $('#FirstName').val('');
+                $('#FirstName').attr('disabled', 'disabled');
+            } else {
+                $('#FirstName').val('');
+                $('#FirstName').removeAttr('disabled');
+            }
+        }
+        function onlyNumberKey(evt) {
+            var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+            if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+                return false;
+            return true;
+        }
+    </script>
+</body>
+</html>

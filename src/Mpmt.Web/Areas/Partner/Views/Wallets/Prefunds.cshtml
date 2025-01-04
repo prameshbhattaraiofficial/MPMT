@@ -1,0 +1,284 @@
+﻿<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item "><a href="javascript:void(0);">Global Setting</a></li>
+                            <li class="breadcrumb-item active">Prefund request </li>
+                        </ol>
+                    </div><!--end col-->
+                    <!--end col-->
+                    <!--end col-->
+                </div>
+
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row--><!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Prefund Request List</h4>
+                        </div>
+                        <!--end col-->
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addfund">
+                                    <i class="las la-plus ms-1"></i> Add Fund
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body overflow-x-auto">
+                    <table id="datatable-buttons"  class="table table-striped dataTable nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Created Date</th>
+                                <th>Updated Date</th>
+                                <th>Partner ID</th>
+                                <th>Full Name</th>
+                                <th>Organizzation Name</th>
+                                <th>Requested Amount </th>
+                                <th>Currency</th>
+                                <th>Txn Id</th>
+                                <th>Voucher Image</th>
+                                <th>Remarks</th>
+                                <th>Action</th>
+
+
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+
+                            <tr>
+                                <td> 03-Jan-2023 03:08:12 PM </td>
+                                <td> 03-Jan-2023 03:08:12 PM </td>
+                                <td>REM97761971</td>
+
+                                <td>Sarita Baidhya </td>
+                                <td>cff Pvt Ltd</td>
+                                <td> 1500</td>
+                                <td> NPR</td>
+                                <td> 2201202306140214208736616198</td>
+
+                                <td>
+                                    <a data-bs-toggle="modal" data-bs-target="#fullimage">
+                                        <img src="~/partner/assets/images/small/img-1.jpg" alt="" class="thumb-xs me-1">
+                                    </a>
+                                </td>
+                                <td><span class="badge bg-soft--danger px-2">pending</span></td>
+                                <td name="buttons">
+                                    <div class=" float-center">
+
+
+                                        <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <i class="dripicons-dots-3"></i></button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#viewdetails"><i class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i> View Details</a>
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+</div><!-- container -->
+
+
+<div class="modal fade bd-example-modal-sm" id="confirm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="mb-1">Are you sure?</h3>
+                <p class="mb-0 text-muted">You won't be able to revert this!</p>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="viewdetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalDefaultLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">Prefund Details</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+                <div class="card-body p-0 auth-header-box mb-3">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered mb-0">
+
+                            <tbody>
+                                <tr>
+                                    <td><span>Created Date :</span></td>
+                                    <td><span>03-Jan-2023 03:08:12 PM </span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Updated Date :</span></td>
+                                    <td><span>03-Jan-2023 03:08:12 PM </span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Partner Id :</span></td>
+                                    <td><span><strong style="color: #f98c45">#2650619977255</strong></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Full Name :</span></td>
+                                    <td><span>Sash Thapa</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Organization Name :</span></td>
+                                    <td><span>Xpressewa pvt ltd</span></td>
+                                </tr>
+
+                                <tr>
+                                    <td><span>Req Amount :</span></td>
+                                    <td><span>Rs.10000</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Currency :</span></td>
+                                    <td><span class="tb-status text-orange">NPR</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Txn Id :</span></td>
+                                    <td><span>YjApSFtbI236-elxkS7H4AycB8l2X-4thd1fJ4kJ-NQ</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Vocher Image :</span></td>
+                                    <td><img src="~/partner/assets/images/small/img-1.jpg" alt="" class="img-fluid height-150 "></td>
+                                </tr>
+
+                            </tbody>
+                        </table><!--end /table-->
+                    </div>
+                    <div class="mt-4">
+                        <div class="button-items">
+                            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--end card-body-->
+    </div><!--end modal-body-->
+</div>
+<!--modal-->
+
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="fullimage" tabindex="-1" role="dialog" aria-labelledby="exampleModalDefaultLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <img src="~/partner/assets/images/small/img-1.jpg" alt="" class="img-thumbnail">
+
+
+            </div>
+
+        </div><!--end modal-content-->
+    </div><!--end modal-dialog-->
+</div><!--end modal-->
+
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="addfund" tabindex="-1" role="dialog" aria-labelledby="addfund" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">Add Fund </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+
+                <div class="card-body p-0">
+
+                    <form class="form-horizontal auth-form" action="">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="exampleFormControlSelect1">Choose Wallet</label>
+                                <select class="form-select" id="exampleFormControlSelect1">
+                                    <option>AUD</option>
+                                    <option>NPR</option>
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 form-group mb-2">
+                                <label class="form-label" for="userpassword">Type</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Prefund">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label" for="exampleFormControlSelect1">Select Sign</label>
+                                <select class="form-select" id="exampleFormControlSelect1">
+                                    <option>Debit</option>
+                                    <option>Credit</option>
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 form-group mb-2">
+                                <label class="form-label" for="userpassword">Amount</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Enter Amount">
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group mb-2">
+                                <label class="form-label" for="userpassword">TXn Id</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Enter Txn Id">
+                                </div>
+                            </div>
+                            <div class="col-md-12 form-group mb-2">
+                                <label class="form-label" for="userpassword">Remarks</label>
+                                <textarea name="" id="" cols="30" rows="3" class="form-control"></textarea>
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <label for="validationCustom05" class="form-label">Upload receipt </label>
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" id="inputGroupFile01">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group mb-0 row mt-4">
+                                <div class="button-items">
+                                    <button type="button" class="btn btn-primary " data-bs-dismiss="modal">Submit</button>
+                                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

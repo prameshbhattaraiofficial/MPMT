@@ -1,0 +1,175 @@
+﻿@using Humanizer;
+@using Mpmt.Services.Services.Notification;
+@inject INotificationService _notify
+
+<style>
+    .media-body {
+        white-space: normal; /* Allow the text to wrap */
+        overflow: visible; /* Ensure the overflowing text is visible */
+        text-overflow: clip; /* No truncation with ellipsis */
+    }
+</style>
+
+@{
+    var count = await _notify.GetPartnerNotificationCountAsync();
+}
+
+<div class="topbar">
+    <nav class="navbar-custom">
+        <ul class="list-unstyled topbar-nav float-end mb-0">
+            <li class="dropdown notification-list" onclick="ShowPartnerNotification(event)">
+                <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect text-primary" data-bs-toggle="dropdown" href="#" role="button"
+                   aria-haspopup="false" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell align-self-center topbar-icon">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span id="partnerNotificationCount" class="badge bg-soft-danger rounded-pill noti-icon-badge">@count</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-lg pt-0">
+                    <h6 class="dropdown-item-text font-15 m-0 py-3 border-bottom d-flex justify-content-between align-items-center">
+                        Notifications <span class="badge bg-primary rounded-pill">@count</span>
+                    </h6>
+                    <div class="notification-menu data-simplebar">
+                        <div class="notification-menu" data-simplebar="init">
+                            <div class="simplebar-wrapper" style="margin: 0px;">
+                                <div class="simplebar-height-auto-observer-wrapper">
+                                    <div class="simplebar-height-auto-observer"></div>
+                                </div>
+                                <div class="simplebar-mask">
+                                    <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                                        <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden scroll;">
+                                            <div id="partnernotificationList" class="simplebar-content" style="padding: 0px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="simplebar-placeholder" style="width: auto; height: 340px;"></div>
+                            </div>
+                            <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+                                <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
+                            </div><div class="simplebar-track simplebar-vertical" style="visibility: visible;">
+                                <div class="simplebar-scrollbar" style="height: 142px; display: block; transform: translate3d(0px, 0px, 0px);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <a asp-area="partner" asp-controller="Dashboard" asp-action="notifications" class="dropdown-item text-center text-primary">
+                        View all <i class="fi-arrow-right"></i>
+                    </a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                    <img src="~/partner/assets/images/player.png" alt="profile-user" class="rounded-circle thumb-xs" /><span class="fas fa-angle-down mx-1"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <a class="dropdown-item" asp-area="partner" asp-controller="Profile" asp-action="Index"><i data-feather="user" class="align-self-center icon-xs icon-dual me-1"></i> Profile</a>
+                    <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("ChangePassword","Dashboard")','Change Password','modal-dialog modal-md')">
+                        <i data-feather="lock" class="align-self-center icon-xs icon-dual me-1"></i> Change Password
+                    </a>
+                    <div class="dropdown-divider mb-0"></div>
+                    <a class="dropdown-item" onclick="logoutsignalR()" asp-area="partner" asp-controller="Login" asp-action="Logout"><i data-feather="power" class="align-self-center icon-xs icon-dual me-1"></i> Logout</a>
+                </div>
+            </li>
+        </ul>
+        <ul class="list-unstyled topbar-nav mb-0">
+            <li>
+                <button class="nav-link button-menu-mobile">
+                    <i data-feather="menu" class="align-self-center topbar-icon"></i>
+                </button>
+            </li>
+            <li>
+                <span class="nav-link text-primary">Welcome : <strong>@ViewBag.PartnerName</strong></span>
+            </li>
+
+        </ul>
+    </nav>
+</div>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/hubs/partnernotificationcount.js"></script>
+<script src="~/partner/assets/js/moment.js"></script>
+<script>
+    function ShowPartnerNotification(event) {
+        let texta = "";
+
+        var decodeurl = decodeURIComponent('/partner/dashboard/Getnotification');
+        $.ajax({
+            type: "GET",
+            url: decodeurl,
+            success: function (res) {
+                console.log(res);
+                for (let i = 0; i < res.length; i++) {
+                    let humanizedDate = humanizeUTCDate(res[i].createdDate);
+                    let readClass = res[i].isReadByPartner ? '' : ' fw-bold';
+
+                    texta += `
+                            <a href="${res[i].partnerLink}" class="dropdown-item py-3 px-2 notification-link${readClass}" data-id="${res[i].notifyId}">
+                                <small class="float-end text-muted ps-2${readClass}">${humanizedDate}</small>
+                                <div class="media">
+                                    <div class="media-body align-self-center ms-2">
+                                        <h6 class="my-0 fw-normal text-dark${readClass}">${res[i].message}</h6>
+                                    </div>
+                                    <!--end media-body-->
+                                </div>
+                                <!--end media-->
+                            </a>`;
+                }
+                $("#partnernotificationList").html(texta);
+
+                // Attach the click event to the notification links
+                $(".notification-link").on("click", function (e) {
+                    e.preventDefault();
+                    let link = $(this).attr("href");
+                    let notificationId = $(this).data("id");
+
+                    // Call the function that makes the AJAX POST request
+                    markNotificationAsRead(notificationId, link);
+                });
+            }
+        });
+        event.stopPropagation();
+    }
+
+    function markNotificationAsRead(notificationId, link) {
+        $.ajax({
+            type: "POST",
+            url: '/partner/dashboard/MarkAsRead',
+            data: { id: notificationId },
+            success: function () {
+                // After the POST request is successful, navigate to the original link
+                window.location.href = link;
+            }
+        });
+    }
+
+    function humanizeUTCDate(utcDateString) {
+        const utcDate = moment.utc(utcDateString); // Convert to Moment.js UTC object
+        const localDate = utcDate.local(); // Convert to local time
+
+        const now = moment(); // Current time in local time zone
+        const diffInSeconds = now.diff(localDate, 'seconds'); // Get difference in seconds
+
+        const seconds = Math.floor(diffInSeconds);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const months = Math.floor(days / 30); // Approximation, not precise
+        const years = Math.floor(months / 12); // Approximation, not precise
+
+        if (seconds < 60) {
+            return seconds + (seconds === 1 ? ' second ago' : ' seconds ago');
+        } else if (minutes < 60) {
+            return minutes + (minutes === 1 ? ' minute ago' : ' minutes ago');
+        } else if (hours < 24) {
+            return hours + (hours === 1 ? ' hour ago' : ' hours ago');
+        } else if (days < 30) {
+            return days + (days === 1 ? ' day ago' : ' days ago');
+        } else if (months < 12) {
+            return months + (months === 1 ? ' month ago' : ' months ago');
+        } else {
+            return years + (years === 1 ? ' year ago' : ' years ago');
+        }
+    }
+</script>
+

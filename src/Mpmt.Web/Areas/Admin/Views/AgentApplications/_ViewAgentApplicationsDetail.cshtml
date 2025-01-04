@@ -1,0 +1,57 @@
+﻿@using Mpmt.Core.Dtos.AgentApplications;
+@model AgentApplicationsModel
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+
+            <tbody>
+                <tr>
+                    <td><span>Agent Id:</span></td>
+                    <td><span><strong style="color: #f98c45">#@Model.AgentId</strong></span></td>
+                </tr>
+                <tr>
+                    <td><span>Created Date:</span></td>
+                    <td><span class="tb-lead">@Model.CreatedLocalDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Full Name:</span></td>
+                    <td><span>@Model.FullName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Contact Number:</span></td>
+                    <td><span>@Model.ContactNumber</span></td>
+                </tr>
+                <tr>
+                    <td><span>District:</span></td>
+                    <td><span>@Model.District</span></td>
+                </tr>
+                <tr>
+                    <td><span>Address:</span></td>
+                    <td><span>@Model.Address</span></td>
+                </tr>
+                <tr>
+                    <td><span>Type of Business:</span></td>
+                    <td><span>@Model.TypeOfBusiness</span></td>
+                </tr>
+                <tr>
+                    <td><span>Ip Address:</span></td>
+                    <td><span class="tb-lead"> @Model.IpAddress</span></td>
+                </tr>
+                <tr>
+                    <td><span>Is Reviewed:</span></td>
+                    <td><span class="tb-lead">@Model.IsReviewed</span></td>
+                </tr>
+                <tr>
+                    <td><span>Message:</span></td>
+                    <td><span>@Model.Message</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

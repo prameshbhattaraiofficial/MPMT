@@ -1,0 +1,89 @@
+﻿@using Mpmt.Core.Dtos.PrefundRequest
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP;
+@model PagedList<FundRequestApprovedList>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive">
+    <table id="datatable-buttons78" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Updated Date</th>
+                <th>Partner Code</th>
+                <th>Partner Organization</th>
+                <th>FundType</th>
+                <th>Wallet Currency</th>
+                @* <th>Destination Currency</th> *@
+                <th>Requested Amount </th>
+
+                @*<th>Txn Id</th>*@
+                @*<th>Voucher Image</th>*@
+                <th>Remarks</th>
+                <th>Status</th>
+                <th>Exchange Rate</th>
+                @*<th>Requested Status Code</th>*@
+                @* <th>Requested User Type</th>*@
+                <th>Fund Requested Date</th>
+                <th>Fund Requested By</th>
+                <th>Fund Updated Date</th>
+                <th>Fund Updated By</th>
+                <th>Updated User Type</th>
+                <th>Action</th>
+
+
+            </tr>
+        </thead>
+
+
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td> @item.Sn </td>
+                    <td> @item.UpdatedDate </td>
+                    <td> @item.PartnerCode </td>
+                    <td> @item.OrganizationName </td>
+                    <td> @item.FundType </td>
+                    <td> @item.SourceCurrency </td>
+                    @* <td> @item.DestinationCurrency </td> *@
+                    <td> @item.Amount </td>
+                    @* <td>
+                <a href="@item.VoucherImgPath" target="_blank">
+                <img src="@item.VoucherImgPath" alt="" class="thumb-xs me-1">
+                </a>
+                </td>*@
+                    <td> @item.Remarks </td>
+                    <td> @item.RequestStatus </td>
+                    <td>@item.ExchangeRate</td>
+                    @*<td>@item.RequestStatusCode</td>*@
+                    @*<td>@item.RequestedUserType</td>*@
+                    <td>@item.FundRequestedDate</td>
+                    <td>@item.FundRequestedBy</td>
+                    <td>@item.FundUpdatedDate</td>
+                    <td>@item.FundUpdatedBy</td>
+                    <td>@item.UpdatedUserType</td>
+
+                    @* <td><span class="badge bg-soft--danger px-2">pending</span></td>*@
+                    <td name="buttons">
+                        <div class=" float-center">
+                            @if (actors.FirstOrDefault(x => x.Action == "PreFundRequestApprovedDetails")?.Permission ?? false)
+                            {
+
+                                <a class="btn btn-sm btn-soft-warning btn-circle me-2 dropdown-toggle" onclick="ShowPopUp('@Url.Action("PreFundRequestApprovedDetails", "PreFundRequest", new { Id = item.Id })', 'Pre Fund Request Details')"><i class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i></a>
+                            }
+                        </div>
+                    </td>
+
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

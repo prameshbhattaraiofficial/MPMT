@@ -1,0 +1,54 @@
+﻿@using Mpmt.Core.Dtos.Transaction;
+@model IEnumerable<TransactionSender>
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+
+            <tbody>
+                @foreach(var data in Model)
+                {
+                    @* <tr>
+                        <td><span>User ID :</span></td>
+                        <td><span>#@data.MemberId</span></td>
+                    </tr> *@
+                    <tr>
+                        <td><span>Full Name :</span></td>
+                        <td><span class="tb-lead">@data.SenderName</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Country :</span></td>
+                        <td><span class="tb-lead">@data.CountryName</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Number :</span></td>
+                        <td><span><strong style="color: #f98c45">@data.ContactNumber</strong></span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Email :</span></td>
+                        <td><span>@data.Email</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Payment Description :</span></td>
+                        <td><span>@data.Remarks</span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Sending Amount:</span></td>
+                        <td><span>@data.SendingAmount<span></td>
+                    </tr>
+                    <tr>
+                        <td><span>Relation:</span></td>
+                        <td><span>@data.Relationship</span></td>
+                    </tr>
+                   
+                }
+               
+            </tbody>
+        </table><!--end /table-->
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

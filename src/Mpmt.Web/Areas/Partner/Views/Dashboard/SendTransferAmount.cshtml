@@ -1,0 +1,61 @@
+﻿@using Mpmt.Web.Areas.Partner.Models.TransferAmount;
+@model GetConvertedTransferAmount
+
+<form id="VerifyOTPForm"  class="form-horizontal auth-form" method="post" autocomplete="off">
+
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <input asp-for="SourceCurrency" readonly hidden />
+    <input asp-for="DestinationCurrency" readonly hidden />
+    <input asp-for="AccountType" readonly hidden />
+    <input asp-for="Remarks" readonly hidden />
+
+    <input asp-for="SourceAmount" readonly hidden />
+    <input asp-for="DestinationAmount" readonly hidden />
+    <div class="col-md-12 form-group mb-2">
+        <label class="form-label">Verify OTP</label>
+        <div class="input-group">
+            <input asp-for="OTP" type="text" class="form-control">
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button onclick="submitform(this)" class="btn btn-sm btn-primary">Submit<i class="fas fa-paper-plane ms-1"></i></button>
+    </div>
+</form>
+ <script>
+     function submitform() {
+       
+        FormHandler.init({
+
+            method: 'POST',
+            actionUrl: '@Url.Action("SendTransferAmount", "Dashboard")',
+            containerSelector: '#add-new .modal-body',
+            selector: '#VerifyOTPForm'
+        }, function () {
+            debugger
+            $("#add-new .modal-body").html("");
+            $("#add-new .modal-title").html("");
+            $("#add-new").modal('hide');
+            
+            // new PNotify({
+            //     // title: 'Success ',
+            //     text: 'Fund Transferred Successfully!',
+            //     type: 'Success',
+
+            //     animation: {
+            //         effect_in: 'fade',
+            //         effect_out: 'slide'
+            //     }
+            // });
+            localStorage.setItem('showNotification', 'true');
+            window.location.reload();
+        });
+        }
+</script> 
+<script src="~/js/admin.users.js"></script>

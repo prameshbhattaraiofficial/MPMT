@@ -1,0 +1,58 @@
+﻿@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Models.CashAgent;
+@model PagedList<FundRequest>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="card-title">List of Fund Request</h4>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-body overflow-x-auto">
+                <table id="datatable-buttons" class="table table-striped  nowrap">
+                    <thead class="table-light">
+                        <tr>
+                            <th>S.N</th>
+                            <th>Agent Name</th>
+                            <th>Net Receivable(NPR)</th>
+                            <th>Net Commission(NPR)</th>
+                            <th>Total Balance(NPR)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items.Select((x, i) => new { Data = x, Index = i + 1 }))
+                        {
+                            <tr>
+                                <td>@item.Index</td>
+                                <td><a href="#" data-bs-toggle="modal" data-bs-target="#details" class="text-primary">@item.Data.AgentName</a> </td>
+                                <td>@Math.Round(item.Data.TxnCashAmount, 2)</td>
+                                <td>@Math.Round(item.Data.CommissionAmount, 2)</td>
+                                <td>@Math.Round(item.Data.TotalAmount, 2)</td>
+                                <td>
+                                    @if (item.Data.StatusCode.ToUpper() == "PENDING")
+                                    {
+                                        <span class="badge rounded-pill bg-warning">PENDING</span>
+                                    }
+                                    else if (item.Data.StatusCode.ToUpper() == "APPROVED")
+                                    {
+                                        <span class="badge rounded-pill bg-success">APPROVED</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge rounded-pill bg-danger">REJECTED</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>                 
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

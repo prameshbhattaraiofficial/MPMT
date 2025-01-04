@@ -1,0 +1,329 @@
+﻿@using Mpmt.Web.Areas.Admin.ViewModels.Paetner;
+@model PartnerVM
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-0">
+                <div id="user_map" class="pro-map" style="height: 120px;background:#ed1b2d;">
+                </div>
+            </div><!--end card-body-->
+            <div class="card-body">
+                <div class="dastone-profile">
+                    <div class="row">
+                        <div class="col-lg-4 align-self-center mb-3 mb-lg-0">
+                            <div class="dastone-profile-main">
+                                <div class="dastone-profile-main-pic">
+                                    <img src="@Model.CompanyLogoImgPath" alt="" height="110" class="rounded-circle">
+                                    <span class="dastone-profile_main-pic-change">
+                                        <i class="fas fa-camera"></i>
+                                    </span>
+                                </div>
+                                <div class="dastone-profile_user-detail">
+                                    <h5 class="dastone-user-name">@Model.FirstName @Model.SurName</h5>
+                                    <p class="mb-0 dastone-user-name-post">@Model.Post</p>
+                                </div>
+                            </div>
+                        </div><!--end col-->
+
+                        <div class="col-lg-4 ms-auto align-self-center">
+                            <ul class="list-unstyled personal-detail mb-0">
+                                <li class=""><i class="ti ti-mobile me-2 text-secondary font-16 align-middle"></i> :@Model.MobileNumber</li>
+                                <li class="mt-2"><i class="ti ti-email text-secondary font-16 align-middle me-2"></i> : @Model.Email</li>
+                                <li class="mt-2">
+                                    <i class="ti-location-pin text-secondary font-16 align-middle me-2"></i> :
+                                    @Model.FullAddress
+                                </li>
+                            </ul>
+
+                        </div><!--end col-->
+                        <div class="col-lg-4 align-self-center">
+                            <div class="row">
+                                <div class="col-auto text-end border-end">
+                                    <button type="button" class="btn btn-soft-success btn-icon-circle btn-icon-circle-sm mb-2">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <p class="mb-0 fw-semibold">Status</p>
+                                    <h4 class="m-0 fw-bold">@(Model.IsActive ? "Active": "InActive")</h4>
+                                </div><!--end col-->
+
+                            </div><!--end row-->
+                        </div><!--end col-->
+                    </div><!--end row-->
+                </div><!--end f_profile-->
+            </div><!--end card-body-->
+        </div> <!--end card-->
+    </div><!--end col-->
+
+
+
+</div><!--end row-->
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Company Details</h4>
+                <p class="text-muted mb-0">
+                    @Model.OrganizationName
+
+                </p>
+            </div><!--end card-header-->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <label class="form-label">Organization Name</label>
+                        <input disabled type="text" class="form-control" value="@Model.OrganizationName">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Registration number</label>
+                        <input disabled type="text" class="form-control" value="@Model.RegistrationNumber">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label for="validationCustomUsername" class="form-label">Email</label>
+                        <div class="input-group has-validation">
+                            <input disabled type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" value="@Model.OrgEmail">
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Country</label>
+                        @* <select class="form-select" id="validationTooltip04">
+                             <option selected="" disabled="" value="">Choose...</option>
+                            <option selected>@Model.CountryCode</option>
+                        </select> *@
+                        <input disabled type="text" class="form-control" value="@Model.CountryName">
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">City</label>
+                        <input disabled type="text" class="form-control" value="@Model.City">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Full Address</label>
+                        <input disabled type="text" class="form-control" value="@Model.FullAddress">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">GMT Time Zone</label>
+                        <input disabled type="text" class="form-control" value="@Model.GMTTimeZone">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Local (Source) Currency</label>
+                        <input disabled type="text" class="form-control" value="@Model.SourceCurrency">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">IP Address</label>
+                        <input disabled type="text" class="form-control" value="@Model.IpAddress">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Company Logo</label>
+                        @if (!string.IsNullOrEmpty(@Model.LicensedocImgPath))
+                        {
+                            <div class="dropify-wrapper has-preview">
+                                <div class="dropify-preview" style="display: block;">
+                                    <span class="dropify-render">
+                                        <a href="@Model.CompanyLogoImgPath" target="_blank">
+                                            <img src="@Model.CompanyLogoImgPath" height="250" width="160">
+                                        </a>
+
+                                    </span>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">License Document</label>
+                        @if (!string.IsNullOrEmpty(@Model.LicensedocImgPath))
+                        {
+                            <div class="dropify-wrapper has-preview">
+
+                                <div class="dropify-preview" style="display: block;">
+                                    <span class="dropify-render">
+                                        <a href="@Model.LicensedocImgPath" target="_blank">
+                                            <img src="@Model.LicensedocImgPath" height="250" width="160">
+                                        </a>
+
+                                    </span>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+
+
+                </div>
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div><!--end col-->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Settlement Details</h4>
+                @* <p class="text-muted mb-0">
+                    Custom feedback styles apply custom colors, borders, focus styles, and background
+                </p> *@
+            </div><!--end card-header-->
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label"> Service</label>
+                        @* <select class="form-select" id="validationTooltip04" disabled>
+                            <option selected="" disabled="" value="">Select Service Charge Category ...</option>
+                            <option>Silver</option>
+                            <option selected>Gold</option>
+                            <option>Diamond</option>
+                            <option>Platinum</option>
+                            <option>Provisional</option>
+                        </select> *@
+                        <input disabled type="text" class="form-control" value="@ViewBag.ChargeCategoryType">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label"> Balance Type</label>
+                        @* <select class="form-select" id="validationTooltip04" disabled>
+                            <option selected>Prefunding</option>
+                            <option>Consumption</option>
+                        </select> *@
+                        <input disabled type="text" class="form-control" value="@ViewBag.FundType">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Credit Send Transaction Limit</label>
+                        <input disabled type="text" class="form-control" value="@Model.CreditSendTxnLimit">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Send Transaction Limit(Cash Payout)</label>
+                        <input disabled type="text" class="form-control" value="@Model.CashPayoutSendTxnLimit">
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Send Transaction Limit(Wallet)</label>
+                        <input disabled type="text" class="form-control" value="@Model.WalletSendTxnLimit">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Send Transaction Limit(Bank)</label>
+                        <input disabled type="text" class="form-control" value="@Model.BankSendTxnLimit">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Notification Balance limit</label>
+                        <input disabled type="text" class="form-control" value="@Model.NotificationBalanceLimit">
+                    </div>
+                    <div class="col-md-6 position-relative mb-2">
+                        <label class="form-label">Transaction Approve</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" disabled checked ="@Model.TransactionApproval">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Is Active</label>
+                        </div>
+                    </div>
+
+                </div>
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div><!--end col-->
+
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Document Details</h4>
+                @* <p class="text-muted mb-0">
+                    Custom feedback styles apply custom colors, borders, focus styles, and background
+                </p> *@
+            </div><!--end card-header-->
+            <div class="card-body">
+                <div class="row ">
+                    <div class="col-md-3 position-relative mb-2">
+                        <label class="form-label">Document Type</label>
+                        @* <select class="form-select" id="validationTooltip04" disabled>
+                            <option selected="" disabled="" value="">Choose...</option>
+                            <option>Driving License</option>
+                            <option selected>Voter ID</option>
+                            <option>National Id Card</option>
+                            <option>Passport</option>
+                        </select> *@
+                        <input disabled type="text" class="form-control" value="@ViewBag.DocumentType">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Document Number</label>
+                        <input disabled type="text" class="form-control" value="@Model.DocumentNumber">
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        @if (Model.DocumentTypeId == 1 || Model.DocumentTypeId == 6)
+                        {
+                            <label class="form-label">Issue date</label>
+                            <input disabled type="text" class="form-control" value="@Model.IssueDate?.ToString("yyyy-MM-dd")">
+                        } else
+                        {
+                            <label class="form-label">Expiry date</label>
+                            <input disabled type="text" class="form-control" value="@Model.ExpiryDate?.ToString("yyyy-MM-dd")">
+                        }
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">ID Front </label>
+                        @if (!string.IsNullOrEmpty(@Model.IdFrontImgPath))
+                        {
+                            <div class="dropify-wrapper has-preview">
+
+                                <div class="dropify-preview" style="display: block;">
+                                    <span class="dropify-render">
+                                        <a href="@Model.IdFrontImgPath" target="_blank">
+                                            <img src="@Model.IdFrontImgPath" height="250" width="160">
+                                        </a>
+                                    </span>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">ID Back </label>
+                        @if (!string.IsNullOrEmpty(@Model.IdBackImgPath))
+                        {
+                            <div class="dropify-wrapper has-preview">
+
+                                <div class="dropify-preview" style="display: block;">
+                                    <span class="dropify-render">
+                                        <a href="@Model.IdBackImgPath" target="_blank">
+                                            <img src="@Model.IdBackImgPath" height="250" width="160">
+                                        </a>
+                                    </span>
+
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="col-md-3 position-relative mb-2">
+                        <label class="form-label">Address Prof Type</label>
+                        @* <select class="form-select" id="validationTooltip04">
+                            <option selected="" disabled="" value="">Choose...</option>
+                            <option>Bank Statement</option>
+                            <option selected>Drving License</option>
+                            <option>Other</option>
+                            <option>Passport</option>
+                        </select> *@
+                        <input disabled type="text" class="form-control" value="@ViewBag.Addressproof">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Address Prof Image </label>
+                        @if (!string.IsNullOrEmpty(@Model.AddressProofImgPath))
+                        {
+                            <div class="dropify-wrapper has-preview">
+                                <div class="dropify-preview" style="display: block;">
+                                    <span class="dropify-render">
+                                        <a href="@Model.AddressProofImgPath" target="_blank">
+                                            <img src="@Model.AddressProofImgPath" height="250" width="160">
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </div><!--end card-body-->
+        </div><!--end card-->
+
+    </div><!--end col-->
+
+</div><!--end row-->

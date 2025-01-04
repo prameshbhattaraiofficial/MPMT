@@ -1,0 +1,80 @@
+﻿@using Mpmt.Web.Areas.Admin.ViewModels.Paetner
+@using Mpmt.Core.Dtos.Partner
+@model AddUpdateFundRequestVm
+@{
+    var walletcurrency = ViewBag.WalletcurrencyDetails as WalletCurrencyDetails;
+}
+
+<form id="FormAddFundRequest" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <input type="hidden" asp-for="PartnerCode" value="@walletcurrency.PartnerCode" />
+    <input type="hidden" asp-for="WalletId" value="@walletcurrency.Id" />
+    <div class="row">
+
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Select Fund Type</label>
+            <div class="input-group">
+                <select asp-for="FundTypeId" type="text" class="form-select" asp-items="ViewBag.FundTypeddl"></select>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="exampleFormControlSelect1">Select Sign</label>
+            <select asp-for="Sign" class="form-select" id="exampleFormControlSelect1">
+                <option value="DR" >Debit</option>
+                <option value="CR" selected>Credit</option>
+
+            </select>
+        </div>
+
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Amount</label>
+            <div class="input-group">
+                <input asp-for="Amount" type="text" class="form-control" onkeypress="return isNumber(event)" placeholder="Enter Amount">
+            </div>
+        </div>
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Txn Id</label>
+            <div class="input-group">
+                <input asp-for="TransactionId" type="text" class="form-control" placeholder="Enter Txn Id">
+            </div>
+        </div>
+
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label" for="userpassword">Remarks</label>
+            <textarea name="Remarks" id="Remarks" cols="30" rows="3" maxlength="80" class="form-control"></textarea>
+        </div>
+        <div class="col-md-12 mb-2">
+            <label for="validationCustom05" class="form-label">Upload receipt </label>
+            <div class="input-group mb-3">
+                <input asp-for="VoucherImg" type="file" accept=".jpg,.jpeg,.png" class="form-control" id="inputGroupFile01">
+            </div>
+        </div>
+
+
+        <div class="form-group mb-0 row mt-4">
+            <div class="button-items">
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+
+        </div>
+    </div>
+</form>
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddFundRequest", "Partners")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#FormAddFundRequest'
+    }, function() {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>

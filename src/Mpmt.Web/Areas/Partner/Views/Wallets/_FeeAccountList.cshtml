@@ -1,0 +1,41 @@
+﻿@using Mpmt.Core.Dtos.FeeFundRequest;
+@model IEnumerable<FeeAccount>
+
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Partner Code</th>
+                <th>Source Currency</th>
+                <th>Balance</th>
+                <th>Credit Limit</th>
+                <th>Ledger</th>              
+                <th>Created Date</th>
+                <th>Updated Date</th>
+                <th>Fee Account Statement</th>
+                @* <th>Fund</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@value.item.SN</td>
+                    <td>@value.item.PartnerCode</td>
+                    <td>@value.item.SourceCurrency</td>
+                    <td>@value.item.Balance</td>
+                    <td>@value.item.CreditLimit</td>
+                    <td>@value.item.Ledger</td>
+                    <td>@value.item.CreatedDate</td>
+                    <td>@value.item.UpdatedDate</td>
+                    <td name="button">
+                        <div class=" float-center">
+                            <a class="btn btn-sm btn-soft-success btn-circle me-2" href="@Url.Action("PartnerFeeAccountStatement","Wallets", new { WalletCurrency = value.item.SourceCurrency })"><i class="dripicons-preview"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,369 @@
+﻿@using Mpmt.Core.Dtos.Partner;
+@model AppPartner
+
+<style>
+    .fit-image {
+        width: 100%;
+        object-fit: cover;
+        height: 150px;
+        margin-bottom: 2%;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-0">
+                <div id="user_map" class="pro-map" style="height: 120px; background: linear-gradient(to right, #0646a8, #f68f1c);">
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="dastone-profile">
+                    <div class="row">
+                        <div class="col-lg-4 align-self-center mb-3 mb-lg-0">
+                            <div class="dastone-profile-main">
+                                <div class="dastone-profile-main-pic">
+                                    <img src="@Model.CompanyLogoImgPath" alt="" height="90" width="120" class="square" style="object-fit: cover;">
+                                </div>
+                                <div class="dastone-profile_user-detail">
+                                    <h5 class="dastone-user-name">@Model.FirstName </h5>
+                                    <p class="mb-0 dastone-user-name-post">@Model.Post</p>
+                                    <strong>@Model.PartnerCode</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 ms-auto align-self-center">
+                            <ul class="list-unstyled personal-detail mb-0">
+                                <li class=""><i class="ti ti-mobile me-2 text-secondary font-16 align-middle"></i> :@Model.MobileNumber</li>
+                                <li class="mt-2"><i class="ti ti-email text-secondary font-16 align-middle me-2"></i> :@Model.Email</li>
+                                <li class="mt-2">
+                                    <i class="ti-location-pin text-secondary font-16 align-middle me-2"></i> :
+                                    Kathmandu ,Nepal
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 align-self-center">
+                            <div class="row">
+                                @if (@Model.IsActive)
+                                {
+                                    <div class="col-auto text-end border-end">
+                                        <button type="button" class="btn btn-soft-success btn-icon-circle btn-icon-circle-sm mb-2">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <p class="mb-0 fw-semibold">Status</p>
+                                        <h4 class="m-0 fw-bold">
+                                            Active
+                                            <span class="text-muted font-12 fw-normal"> User</span>
+                                        </h4>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-auto text-end border-end">
+                                        <button type="button" class="btn btn-soft-danger btn-icon-circle btn-icon-circle-sm mb-2">
+                                            <i class="fas fa-danger"></i>
+                                        </button>
+                                        <p class="mb-0 fw-semibold">Status</p>
+                                        <h4 class="m-0 fw-bold">
+
+                                            <span class="text-muted font-12 fw-normal"> User</span>
+                                        </h4>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-secondary" role="alert">
+            Please be advised that all details provided below are entered by authorised administrators of the company. If you encounter any discrepancies or issues with the information presented, kindly reach out to our administrative team for assistance <a href="mailto:info@mypaymt.com" class="text-primary">"info@mypaymt.com"</a>. Your cooperation is appreciated.
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Company Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 mb-2">
+                        <label class="form-label">Organization Name</label>
+                        <input disabled type="text" class="form-control" value="@Model.OrganizationName">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Company registration number</label>
+                        <input disabled type="text" class="form-control" value="@Model.RegistrationNumber">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label for="validationCustomUsername" class="form-label">Email</label>
+                        <div class="input-group has-validation">
+                            <input disabled type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" value="@Model.OrgEmail">
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Country</label>
+                        <input class="form-control" asp-for="@Model.CountryName" disabled readonly />
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">City</label>
+                        <input disabled type="text" class="form-control" value="@Model.City"/>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Full Address</label>
+                        <textarea disabled class="form-control" maxlength="2">@Model.FullAddress</textarea>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">GMT Time Zone</label>
+                        <input disabled type="text" class="form-control" value="@Model.GMTTimeZone">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Local (Source) Currency</label>
+                        <input disabled type="number" class="form-control" value="@Model.SourceCurrency">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">IP Address</label>
+                        <input disabled type="text" class="form-control" value="@Model.IpAddress">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Company Logo</label>
+                        <div class="has-preview">
+                            @if (!string.IsNullOrEmpty(@Model.CompanyLogoImgPath))
+                            {
+                                <a href="@Model.CompanyLogoImgPath" target="_blank">
+                                    <img src="@Model.CompanyLogoImgPath" alt="Company Logo" height="180" width="240" />
+                                </a>
+                            }
+                            else
+                            {
+                                <img src="~/images/staticimage/imagenotfound.png" alt="Address Prof Image" height="180" width="240" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Settlement Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label"> Service</label>
+                        <input class="form-control" asp-for="@Model.CategoryName" disabled readonly />
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label"> Balance Type</label>
+                        <input class="form-control" asp-for="@Model.FundType" disabled readonly />
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Credit Send Transaction Limit</label>
+                        <input disabled type="text" class="form-control" value="@Model.CreditSendTxnLimit">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Send Transaction Limit(Cash Payout)</label>
+                        <input disabled type="text" class="form-control" value="@Model.CashPayoutSendTxnLimit">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Send Transaction Limit(Wallet)</label>
+                        <input disabled type="text" class="form-control" value="@Model.WalletSendTxnLimit">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Send Transaction Limit(Bank)</label>
+                        <input disabled type="text" class="form-control" value="@Model.BankSendTxnLimit">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Notification Balance limit</label>
+                        <input disabled type="text" class="form-control" value="@Model.NotificationBalanceLimit">
+                    </div>
+                    <div class="col-md-6 position-relative mb-2">
+                        <label class="form-label">Transaction Approve</label>
+                        <div class="form-check form-switch">
+                            <input disabled class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" value="@Model.TransactionApproval">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Is Active</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mt-3">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-10">
+                    <h4 class="card-title">License Document</h4>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @if (Model.LicensedocImgPath != null && Model.LicensedocImgPath.Count > 0)
+                {
+                    foreach (var image in Model.LicensedocImgPath)
+                    {
+                        <div class="col-3">
+                            <img src="@image" alt="" height="180" width="240" style="object-fit: cover;" />
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Director Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row ">
+                    <div class="col-12">
+                        @{
+                            var snn = 1;
+                        }
+                        <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>SN</th>
+                                    <th>Full Name</th>
+                                    <th>Contact Number</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Directors)
+                                {
+                                    <tr>
+                                        <td>@snn</td>
+                                        <td>@item.FirstName</td>
+                                        <td>@item.ContactNumber</td>
+                                        <td>@item.Email</td>
+                                    </tr>
+                                    snn -= -1;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Assigned Roles</h4>
+            </div>
+            <div class="card-body">
+                <div class="row ">
+                    <div class="col-12">
+                        @{
+                            var sn = 1;
+                        }
+                        <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>SN</th>
+                                    <th>Role Name</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PartnerRoles)
+                                {
+                                    <tr>
+                                        <td>@sn</td>
+                                        <td>@item.RoleName</td>
+                                        <td>@item.Description</td>
+                                    </tr>
+                                    sn -= -1;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Document Details</h4>
+                <br />
+                <div class="alert alert-secondary" role="alert">
+                    Please be advised that all details provided below are entered by authorised administrators of the company. If you encounter any discrepancies or issues with the information presented, kindly reach out to our administrative team for assistance <a href="mailto:info@mypaymt.com" class="text-primary">"info@mypaymt.com"</a>. Your cooperation is appreciated.
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row ">
+                    <div class="col-md-3 position-relative mb-2">
+                        <label class="form-label">Document Type</label>
+                        <input class="form-control" asp-for="@Model.DocumentType" disabled readonly />
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Document Number</label>
+                        <input disabled type="text" class="form-control" value="@Model.DocumentNumber">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Expiry date</label>
+                        <input disabled type="text" class="form-control" value="@Model.ExpiryDate">
+                    </div>
+                    <div class="col-md-3 position-relative mb-2">
+                        <label class="form-label">Address Prof Type</label>
+                        <input class="form-control" asp-for="@Model.AddressProofName" disabled readonly />
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">ID Front </label>
+                        <div class=" has-preview">
+                            @if (!string.IsNullOrEmpty(@Model.IdFrontImgPath))
+                            {
+                                <a href="@Model.IdFrontImgPath" target="_blank">
+                                    <img src="@Model.IdFrontImgPath" alt="ID Front" height="180" width="240" style="object-fit: cover;" />
+                                </a>
+                            }
+                            else
+                            {
+                                <img src="~/images/staticimage/imagenotfound.png" alt="Address Prof Image" height="180" width="240" />
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">ID Back </label>
+                        <div class="has-preview">
+                            @if (!string.IsNullOrEmpty(@Model.IdBackImgPath))
+                            {
+                                <a href="@Model.IdBackImgPath" target="_blank">
+                                    <img src="@Model.IdBackImgPath" alt="ID Back" height="180" width="240" style="object-fit: cover;" />
+                                </a>
+                            }
+                            else
+                            {
+                                <img src="~/images/staticimage/imagenotfound.png" alt="Address Prof Image" height="180" width="240" />
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Address Prof Image </label>
+                        <div class=" has-preview">
+                            @if (!string.IsNullOrEmpty(@Model.AddressProofImgPath))
+                            {
+                                <a href="@Model.AddressProofImgPath" target="_blank">
+                                    <img src="@Model.AddressProofImgPath" alt="Address Prof Image" height="180" width="240" style="object-fit: cover;" />
+                                </a>
+                            }
+                            else
+                            {
+                                <img src="~/images/staticimage/imagenotfound.png" alt="Address Prof Image" height="180" width="240" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

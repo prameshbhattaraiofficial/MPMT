@@ -1,0 +1,61 @@
+﻿@using Mpmt.Core.Dtos.ActivityLog;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@model PagedList<VendorApiLogReport>
+
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Transaction Date</th>
+                <th>Tracker Id</th>
+                <th>Log Id</th>
+                <th>Response Output</th>
+                <th>Response Http Status</th>
+                <th>Request Url</th>
+                <th>Device Code</th>
+                <th>Partner Code</th>
+                <th>IP Address</th>
+                <th>Machine Name</th>
+                <th>Environment</th>
+                <th>Created Date</th>
+                <th>Updated Date</th>
+                <th>Txn Log</th>
+                <th>Validation Log</th>
+                <th>Payout Log</th>
+                <th>Txn Status Log</th>
+                <th>API Log</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.SN</td>
+                    <td>@item.TransactionDate</td>
+                    <td>@item.TrackerId</td>
+                    <td>@item.LogId</td>
+                    <td>@item.ResponseOutput</td>
+                    <td>@item.ResponseHttpStatus</td>
+                    <td>@item.RequestUrl</td>
+                    <td>@item.DeviceCode</td>
+                    <td>@item.PartnerCode</td>
+                    <td>@item.IpAddress</td>
+                    <td>@item.MachineName</td>
+                    <td>@item.Environment</td>
+                    <td>@item.CreatedDate</td>
+                    <td>@item.UpdatedDate</td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("GetRequestResponseApiLog", "LogManagement", new { logId = item.LogId })', 'Transaction Log')">View</a></td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("GetVendorRequestResponseApiLog", "LogManagement", new { logId = item.LogId })', 'Validation Log')">View</a></td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("GetVendorRequestResponseApiLog2", "LogManagement", new { logId = item.LogId })', 'Payout Log')">View</a></td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("GetVendorRequestResponseApiLog3", "LogManagement", new { logId = item.LogId })', 'Transaction Status Log')">View</a></td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("GetVendorApiLogById", "LogManagement", new { logId = item.LogId })', 'API Log')">View</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

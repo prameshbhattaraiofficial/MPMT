@@ -1,0 +1,44 @@
+﻿@using Mpmt.Core.Dtos.ActivityLog;
+@model VendorApiLogDetail
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+            <tbody>
+                <tr>
+                    <td><span>Log ID :</span></td>
+                    <td><span>#@Model.LogId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Transaction Id :</span></td>
+                    <td><span>#@Model.TransactionId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Tracker Id :</span></td>
+                    <td><span>#@Model.TrackerId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Request Input :</span></td>
+                    <td><span>#@Model.RequestInput</span></td>
+                </tr>
+                <tr>
+                    <td><span>Response Http Status :</span></td>
+                    <td><span>@Model.ResponseHttpStatus</span></td>
+                </tr>
+                <tr>
+                    <td><span>Request Url :</span></td>
+                    <td><span>@Model.RequestUrl</span></td>
+                </tr>
+                <tr>
+                    <td><span>Request Headers :</span></td>
+                    <td><span>@Model.RequestHeaders</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

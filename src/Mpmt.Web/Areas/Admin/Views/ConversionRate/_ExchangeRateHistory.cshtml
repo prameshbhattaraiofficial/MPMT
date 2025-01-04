@@ -1,0 +1,100 @@
+﻿@using Mpmt.Core.Dtos.ConversionRateHistory
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP
+@model PagedList<ExchangeRateHistoryDetails>
+
+@{
+    int sn = 1;
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<style>
+    tr.active {
+        background: #ccc;
+    }
+
+    .tableFixHead {
+        overflow-y: auto;
+        height: 500px;
+    }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0px;
+        }
+</style>
+
+<div class="table-responsive">
+    <table id="datatable-buttons78" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Wallet</th>
+                <th>Unit Value</th>
+                <th>Buying Rate</th>
+                <th>Selling Rate</th>
+                <th>Current Rate</th>
+                <th>Added By</th>
+                <th>Added Date</th>
+                <th>Added Date NST</th>
+                <th>Updated By</th>
+                <th>Updated Date</th>
+                <th>Updated Date NST</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.SN</td>
+                        <td>@item.Wallet</td>
+                        <td>@item.UnitValue</td>
+                        <td>@item.BuyingRate</td>
+                        <td>@item.SellingRate</td>
+                        <td>@item.CurrentRate</td>
+                        <td>@item.AddedBy</td>
+                        <td>@item.AddedDate</td>
+                        <td>@item.AddedDateNST</td>
+                        <td>@item.UpdatedBy</td>
+                        <td>@item.UpdatedDate</td>
+                        <td>@item.UpdatedDateNST</td>
+                    </tr>
+                    sn = sn + 1;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

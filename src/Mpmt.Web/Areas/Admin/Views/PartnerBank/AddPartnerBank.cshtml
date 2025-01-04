@@ -1,0 +1,65 @@
+﻿@using Mpmt.Core.ViewModel.PartnerBank
+@model AddPartnerBankVm
+
+<form id="PartnerBankAddForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <div class="row">
+        @* <div class="col-md-12 form-group mb-2">
+        <label class="form-label">Partner Code</label>
+        <div class="input-group">
+        <input asp-for="PartnerCode" type="text" class="form-control">
+        </div>
+        </div> *@
+        @* <div class="col-md-12 form-group mb-2">
+        <label class="form-label">Bank Code</label>
+        <div class="input-group">
+        <input asp-for="BankCode" type="text" class="form-control">
+        </div>
+        </div> *@
+        <input asp-for="PartnerCode" value="@ViewBag.PartnerCode" type="hidden"/>
+        <div class="col-md-12 form-group mb-2">
+            <label for="SourceCurrency" class="form-label">Bank Name</label>
+            <select asp-for="BankCode" class="form-select" asp-items="ViewBag.BankName" required>
+            </select>
+        </div>
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label">Account Number</label>
+            <div class="input-group">
+                <input asp-for="AccountNumber" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label">Account Name</label>
+            <div class="input-group">
+                <input asp-for="AccountName" type="text" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="form-check form-switch mb-2">
+        <input asp-for="IsActive" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Is Active</label>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <a class="btn btn-sm btn-info" asp-controller="PartnerBank" asp-action="PartnerBankIndex">View List</a>
+        <button type="submit" class="btn btn-sm btn-primary">Submit<i class="fas fa-paper-plane ms-1"></i></button>
+    </div>
+</form>
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddPartnerBank", "PartnerBank")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#PartnerBankAddForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>

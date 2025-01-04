@@ -1,0 +1,76 @@
+﻿@using Mpmt.Core.Dtos.ActivityLog;
+@model VendorApiLogDetail;
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+            <tbody>
+                <tr>
+                    <td><span>Log ID :</span></td>
+                    <td><span>#@Model.LogId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Id 3 :</span></td>
+                    <td><span>#@Model.VendorId3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Type 3 :</span></td>
+                    <td><span>@Model.VendorType3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Transaction Id 3 :</span></td>
+                    <td><span>#@Model.VendorTransactionId3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Tracker Id 3 :</span></td>
+                    <td><span>#@Model.VendorTrackerId3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Request Input 3 :</span></td>
+                    <td><span>@Model.VendorRequestInput3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Response Output 3 :</span></td>
+                    <td><span>@Model.VendorResponseOutput3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Request Url 3 :</span></td>
+                    <td><span>@Model.VendorRequestURL3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Request Headers 3 :</span></td>
+                    <td><span>@Model.VendorRequestHeaders3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Response Http Status 3 :</span></td>
+                    <td><span>@Model.VendorResponseHttpStatus3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Response Status 3 :</span></td>
+                    <td><span>@Model.VendorResponseState3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Response State 3 :</span></td>
+                    <td><span>@Model.VendorResponseState3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Response Message 3 :</span></td>
+                    <td><span>@Model.VendorResponseMessage3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Exception 3 :</span></td>
+                    <td><span>@Model.VendorException3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Exception Stack Trace 3 :</span></td>
+                    <td><span>@Model.VendorExceptionStackTrace3</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+﻿@using Mpmt.Core.ViewModel.Menu;
+@model List<PartnerMenuWithPermission>
+<link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+<div class="left-sidenav theme-2">
+    <div class="brand">
+        <a asp-area="partner" asp-controller="Dashboard" asp-action="Index" class="logo">
+            <span>
+                <img src="~/partner/assets/images/logo-dark.png" alt="logo-large" class="logo-lg logo-light">
+                <img src="~/partner/assets/images/logo-dark.png" alt="logo-large" class="logo-lg logo-dark">
+            </span>
+        </a>
+    </div>
+    <div class="menu-content h-100" data-simplebar>
+        <ul class="metismenu left-sidenav-menu">
+            <li class="menu-label my-2">Components</li>
+
+            @foreach (var menu in Model.OrderBy(m => m.DisplayOrder))
+            {
+                @if (menu.ParentId == 0)
+                {
+                    <li>
+
+                        @if (menu.child.Count > 0)
+                        {
+                            <a href="javascript: void(0);"><i class="@menu.ImagePath"></i><span>@menu.Title</span><span class="menu-arrow"><i class="mdi mdi-chevron-right"></i></span></a>
+                            <ul class="nav-second-level" aria-expanded="true">
+                                @foreach (var submenu in menu.child.OrderBy(m => m.DisplayOrder))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                           asp-area="@submenu.Area"
+                                           asp-controller="@submenu.Controller"
+                                           asp-action="@submenu.Action">
+                                            <i class="ti-control-record"></i>@submenu.Title
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else if (menu.child.Count == 0 && menu.Permission)
+                        {
+                            <a asp-area="@menu.Area" asp-controller="@menu.Controller" asp-action="@menu.Action"><i class="@menu.ImagePath"></i><span>@menu.Title</span></a>
+                        }
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+<script src="~/assets/js/jquery.min.js"></script>
+<script src="~/assets/js/metismenu.min.js"></script>
+<script src="~/assets/js/app.js"></script>

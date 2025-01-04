@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no" />
+    <title>@ViewData["Title"]</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/partner/assets/images/logo.png">
+    <!-- jvectormap -->
+    @* <link href="~/assets/plugins/jvectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet">*@
+    <!-- App css -->
+    @*    <link rel="stylesheet" href="~/assets/plugins/jquery-steps/jquery.steps.css">*@
+    <link href="~/partner/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/partner/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/pnotify/css/pnotify.custom.min.css" rel="stylesheet" />
+    <link href="~/partner/assets/css/metisMenu.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/partner/assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
+    <link href="~/partner/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    @*    <link href="~/assets/plugins/dropify/css/dropify.min.css" rel="stylesheet">*@
+    <!-- DataTables -->
+    @*    <link href="~/assets/plugins/datatables/dataTables.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/plugins/datatables/buttons.bootstrap5.min.css" rel="stylesheet" type="text/css" />
+    <!-- Responsive datatable examples -->
+    <link href="~/assets/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />*@
+
+    <!-- X-editable css -->
+    @*    <link type="text/css" href="~/assets/plugins/x-editable/css/bootstrap-editable.css" rel="stylesheet">*@
+
+    <!-- select2 css -->
+    <link rel="stylesheet" href="~/partner/assets/plugins/select2/css/select2.min.css">
+    <!-- multi-select css -->
+    <link rel="stylesheet" href="~/partner/assets/plugins/multi-select/css/multi-select.css">
+
+
+
+
+    <link href="~/css/site.css" asp-append-version="true" rel="stylesheet" type="text/css" />
+    <link href="~/partner/assets/multi-select/css/multi-select.css" rel="stylesheet" />
+    <link href="~/partner/assets/css/style.css" rel="stylesheet" type="text/css" />
+
+
+</head>
+<body>
+    <!-- Loader Animation Start -->
+    <div class="ajax-loading-busy lds-dual-ring display-none loader-animation-overlay"></div>
+    <!-- Loader Animation End -->
+    <!-- Left Sidenav -->
+    @await Component.InvokeAsync("PartnerSideNavigation")
+    <!-- end left-sidenav-->
+    <div class="page-wrapper">
+        <!-- Top Bar Start -->
+        @await Component.InvokeAsync("PartnerTopMenuBar")
+        <!-- Top Bar End -->
+
+        <div class="page-content">
+            @RenderBody()
+        </div>
+    </div>
+
+    <div id="add-new" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title m-0" id="myLargeModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body test-class">
+
+
+                    <!-- [ Model Body ] -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- end page-wrapper -->
+    <!-- jQuery  -->
+    <script src="~/partner/assets/js/jquery.min.js"></script>
+    <script src="~/partner/assets/js/bootstrap.bundle.min.js"></script>
+    @*  <script src="~/partner/assets/js/metismenu.min.js"></script>*@
+    <script src="~/partner/assets/js/waves.js"></script>
+    <script src="~/partner/assets/js/feather.min.js"></script>
+    <script src="~/partner/assets/js/simplebar.min.js"></script>
+    <script src="~/partner/assets/js/moment.js"></script>
+    <script src="~/pnotify/js/notify-event.js"></script>
+    <script src="~/pnotify/js/pnotify.custom.min.js"></script>
+    <script src="~/partner/assets/plugins/daterangepicker/daterangepicker.js"></script>
+    @*  <script src="~/assets/plugins/apex-charts/apexcharts.min.js"></script>*@
+    @*    <script src="~/assets/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
+    <script src="~/assets/plugins/jvectormap/jquery-jvectormap-us-aea-en.js"></script>*@
+    @* <script src="~/partner/assets/pages/jquery.analytics_dashboard.init.js"></script>*@
+
+    <!-- Plugins js -->
+    @*    <script src="~/assets/plugins/huebee/huebee.pkgd.min.js"></script>*@
+    @*    <script src="~/assets/plugins/select2/select2.min.js"></script>
+    <script src="~/assets/plugins/timepicker/bootstrap-material-datetimepicker.js"></script>
+    <script src="~/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+    <script src="~/assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js"></script>*@
+
+    @*    <script src="~/partner/assets/pages/jquery.forms-advanced.js"></script>*@
+
+    <!-- XEditable Plugin -->
+    @*<script src="~/assets/plugins/x-editable/js/bootstrap-editable.min.js"></script>*@
+    @*  <script src="~/partner/assets/pages/jquery.form-xeditable.init.js"></script>*@
+    <!-- App js -->
+    <script src="~/partner/assets/js/app.js"></script>
+    @*    <script src="~/assets/plugins/select2/select2.min.js"></script>*@
+    @*    <script src="~/partner/assets/pages/jquery.forms-advanced.js"></script>*@
+    @*    <script src="~/assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/assets/plugins/dropify/js/dropify.min.js"></script>*@
+    @*    <script src="~/partner/assets/pages/jquery.form-upload.init.js"></script>*@
+    @*    <script src="~/assets/plugins/tippy/tippy.all.min.js"></script>*@
+    <!-- App js -->
+    @*    <script src="~/partner/assets/js/jquery.core.js"></script>
+    *@    <!-- Required datatable js -->
+    @*    <script src="~/assets/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatables/dataTables.bootstrap5.min.js"></script>*@
+    <!-- Buttons examples -->
+    @*
+    <script src="~/assets/plugins/datatables/dataTables.buttons.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.bootstrap5.min.js"></script>
+    <script src="~/assets/plugins/datatables/jszip.min.js"></script>
+    <script src="~/assets/plugins/datatables/pdfmake.min.js"></script>
+    <script src="~/assets/plugins/datatables/vfs_fonts.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.html5.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.print.min.js"></script>
+    <script src="~/assets/plugins/datatables/buttons.colVis.min.js"></script>
+    <!-- Responsive examples -->
+    <script src="~/assets/plugins/datatables/dataTables.responsive.min.js"></script>
+    <script src="~/assets/plugins/datatables/responsive.bootstrap4.min.js"></script>*@
+    @*    <script src="~/partner/assets/pages/jquery.datatable.init.js"></script>*@
+    @*    <script src="~/partner/assets/pages/jquery.sales_dashboard.init.js"></script>*@
+
+    @*    <script src="~/assets/plugins/jquery-steps/jquery.steps.min.js"></script>*@
+    @*    <script src="~/partner/assets/pages/jquery.form-wizard.init.js"></script>*@
+
+    @*    <script>
+    tippy('.tippy-btn');
+    tippy('#myElement', {
+    html: document.querySelector('#feature__html'), // DIRECT ELEMENT option
+    arrow: true,
+    animation: 'fade'
+    });
+    </script*@
+
+
+    <!-- select2 Js -->
+    <script src="~/partner/assets/plugins/select2/js/select2.full.min.js"></script>
+    <!-- multi-select Js -->
+    <script src="~/partner/assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+
+
+
+
+
+
+    <script src="~/partner/assets/multi-select/js/jquery.quicksearch.js"></script>
+
+    <script src="~/partner/assets/multi-select/js/jquery.multi-select.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await Component.InvokeAsync("Notyf")
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            if (feather)
+                feather.replace();
+        })
+    </script>
+</body>
+</html>

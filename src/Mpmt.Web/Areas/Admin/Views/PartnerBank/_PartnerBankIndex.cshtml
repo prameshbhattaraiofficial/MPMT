@@ -1,0 +1,46 @@
+﻿@using Mpmt.Core.Dtos.PartnerBank
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<PartnerBankDetails>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Partner Code</th>
+                <th>Bank Code</th>
+                <th>Account Number</th>
+                <th>Account Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@(value.index + 1)</td>
+                    <td>@value.item.PartnerCode</td>
+                    <td>@value.item.BankCode</td>
+                    <td>@value.item.AccountNumber</td>
+                    <td>@value.item.AccountName</td>
+                    <td name="buttons">
+                        <div class=" float-center">
+                            @if (actors.FirstOrDefault(x => x.Action == "UpdatePartnerBank")?.Permission ?? false)
+                            {
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdatePartnerBank", "PartnerBank", new { partnerId = value.item.Id })', 'Update Partner Bank')" title="Update Partner Bank"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                            }
+                            @if (actors.FirstOrDefault(x => x.Action == "DeletePartnerBank")?.Permission ?? false)
+                            {
+                                <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="PopUPAjaxDelete('@Url.Action("DeletePartnerBank", "PartnerBank", new { partnerId = value.item.Id })', 'Remove Partner Bank')" title="Delete Partner Bank"> <i class="dripicons-trash" aria-hidden="true"></i></a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

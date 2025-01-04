@@ -1,0 +1,45 @@
+﻿@using Mpmt.Core.ViewModel.ConversionRate
+@using Mpmt.Core.Dtos.ConversionRate
+@model List<AddPartnerConversionRateVm>
+
+
+  <div class="card-body modal-overflow">
+        <table  class="table table-striped dataTable nowrap">
+            <thead class="table-light">
+                <tr>
+                    <th>Min Slab</th>
+                    <th>Max Slab</th>
+                    <th>Conversion Rate</th>
+                    <th>Charge (%)</th>
+                    <th>Charge (Fixed)</th>
+                    <th>Min Charge</th>
+                    <th>Max Charge</th>
+                    <th>Commission (%)</th>
+                    <th>Commission Fixed</th>
+                    <th>Min Commission</th>
+                    <th>Max Commission</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            <td><input class="form-control" asp-for="@Model[i].MinAmountSlab" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MaxAmountSlab" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].ConversionRate" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].ServiceChargePercent" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].ServiceChargeFixed" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MinServiceCharge" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MaxServiceCharge" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].CommissionPercent" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].CommissionFixed" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MinCommission" type="text" readonly /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MaxCommission" type="text" readonly /></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>

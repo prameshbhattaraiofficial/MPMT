@@ -1,0 +1,45 @@
+﻿@using Mpmt.Core.Dtos.BulkAgent
+@model BulkAgent
+
+<form id="formBulkAgent" class="form-horizontal auth-form" method="post" onsubmit="btnSubmit.disabled = true; return true;" asp-controller="SuperAgent" asp-action="UploadBulkAgent" enctype="multipart/form-data" autocomplete="off">
+    <div class="form-group mb-2">
+        <p>Simply upload file here</p>
+        <p>Get Template before your easy.</p>
+        <p><a href="~/images/SendBulk_Sample.csv"><u>Click here to download sample File</u></a></p>
+        <label class="form-label">Choose File</label>
+        <div class="input-group">
+            <input type="file" asp-for="UploadBulkAgentFile" id="fileupload" class="form-control" accept=".xls, .xlsx, .xlsm ,.csv" onchange="checkfile(this);">
+        </div>
+        <h6 class="text-danger" id="showmessage" style="display:none;">Invalid file selected, valid files are of .xlsx,.xls,.csv,.xlsm types</h6>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-sm btn-primary" name="btnSubmit" id="btnSubmit" type="submit">Submit</button>
+    </div>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" language="javascript">
+    function checkfile(sender) {
+        var validExts = new Array(".xlsx", ".xls", ".csv", ".xlsm");
+        var fileExt = sender.value;
+        fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
+        if (validExts.indexOf(fileExt) < 0) {
+            $("#showmessage").css("display", "block");
+            $("#fileupload").val('');
+            return false;
+        }
+        else {
+            $("#showmessage").css("display", "none");
+            return true;
+        }
+    }
+    $(document).ready(function () {
+        $("#formBulkAgent").on("submit", function () {
+            $('.loader').show();
+        });
+    });
+
+</script>
+

@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = "Role Permissions";
+}
+
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Role</a></li>
+                            <li class="breadcrumb-item active">Role Assign</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto">
+                    </div>
+
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form class="row row-cols-lg-auto align-items-center">
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">Parent Menu</label>
+                                    <select class="form-select" id="validationTooltip04" required>
+                                        <option>Select Parent Menu</option>
+                                        <option>Dashboard</option>
+                                        <option>Partners</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">Role</label>
+                                    <select class="form-select" id="validationTooltip04" required>
+                                        <option>Select Role</option>
+                                        <option>Admin</option>
+                                        <option>Employee </option>
+                                    </select>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Menu Name">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <button type="buton" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Role Assign</h4>
+                        </div>
+                        <!--end col-->
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">
+                                    <i class="las la-plus ms-1"></i> Add Role
+                                </a>
+
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body">
+                    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                        <thead class="table-light">
+                            <tr>
+                                <th>SrNo</th>
+                                <th>Menu Title</th>
+                                <th>Parent Menu</th>
+                                <th>URL</th>
+                                <th>Inner URL</th>
+                                <th>Status</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Partner List</td>
+                                <td>Partner</td>
+                                <td>/menu/roleassignmypay	</td>
+                                <td>NO</td>
+                                <td>
+                                    <div class="form-check form-switch form-switch-success">
+                                        <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                                    </div>
+                                </td>
+                                <td name="buttons">
+                                    <div class=" float-center">
+
+                                        <button type="button" class="btn btn-sm btn-soft-success btn-circle me-2" title="Edit Role">
+                                            <i class="dripicons-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-soft-danger btn-circle" title="Delete Role">
+                                            <i class="dripicons-trash" aria-hidden="true"></i>
+                                        </button>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div><!-- container -->

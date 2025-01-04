@@ -1,0 +1,61 @@
+﻿<link href="~/nepali.datepicker.v3/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/nepali.datepicker.v3/css/nepali.datepicker.v3.min.css" rel="stylesheet" />
+
+
+<input type="text" name="Id_IssuedDateBS" id="IssueDateBS" class="form-control">
+
+
+<script src="~/nepali.datepicker.v3/jquery-ui.min.js"></script>
+<script src="~/nepali.datepicker.v3/js/nepali.datepicker.v3.min.js"></script>
+
+<script>
+    var yearRangeDOB = "1944:-10"; //"1944:+0";
+    var yearRangeIssue = "1944:-0";
+    var yearRangeExpire = "1944:+10"; //"1944:+20";
+    var minimum = "[1943, 04, 14]";
+    var dateFormat = "yy-mm-dd";
+    var today = new Date();
+    var startDate = today.getFullYear() - 10 + '-' + today.getMonth() + '-01';
+    var nepaliDOB = NepaliFunctions.ConvertDateFormat({ year: NepaliFunctions.GetCurrentBsYear() - 9, month: 1, day: 1 }, "YYYY-MM-DD");
+    var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+
+
+    $('#IssueDateAD').change(function () {
+        var dateObj = NepaliFunctions.ConvertToDateObject($('#IssueDateAD').val(), "YYYY-MM-DD");
+        $('#IssueDateBS').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+        $('#IssueDateAD').removeClass("input-validation-error");
+        if ($('#IssueDateAD-error').length > 0) {
+            $('#IssueDateAD-error').html("");
+        }
+        $('#IssueDateBS').removeClass("input-validation-error");
+        if ($('#IssueDateBS-error').length > 0) {
+            $('#IssueDateBS-error').html("");
+        }
+    });
+    $('#IssueDateBS').nepaliDatePicker({
+        ndpYear: true,
+        ndpMonth: true,
+        readOnlyInput: true,
+        ndpEnglishInput: 'IssueDateAD',
+        disableAfter: NepalDateToday
+    });
+
+    // $('#IssueDateBS').nepaliDatePicker({
+    //     ndpYear: true,
+    //     ndpMonth: true,
+    //     readOnlyInput: true,
+    //     defaultDate: NepalDateToday,
+    //     ndpEnglishInput: 'IssueDateAD',
+    //     disableAfter: NepalDateToday,
+    //     onChange: function () {
+    //         $('#IssueDateBS').removeClass("input-validation-error");
+    //         if ($('#IssueDateBS-error').length > 0) {
+    //             $('#IssueDateBS-error').html("");
+    //         };
+    //         $('#IssueDateAD').removeClass("input-validation-error");
+    //         if ($('#IssueDateAD-error').length > 0) {
+    //             $('#IssueDateAD-error').html("");
+    //         }
+    //     }
+    // });
+</script>

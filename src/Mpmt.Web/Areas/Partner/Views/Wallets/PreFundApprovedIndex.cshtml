@@ -1,0 +1,126 @@
+﻿@using Mpmt.Core.Dtos.PrefundRequest
+@using Mpmt.Core.Dtos.Paging
+@model PagedList<FundRequestApprovedList>
+
+<div class="page-content">
+    <div class="container-fluid">
+        <!-- Page-Title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="row">
+                        <div class="col">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item "><a href="javascript:void(0);">Global Setting</a></li>
+                                <li class="breadcrumb-item active">Prefund request Approved </li>
+                            </ol>
+                        </div><!--end col-->
+                        <div class="col-auto">
+                            <form id="formfundRequestApprovedfilter" class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" name="StartDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" name="EndDate" class="form-control">
+                                </div>
+                                 <div class="col-12">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">Transactions Id</label>
+                                    <div class="input-group">
+                                        <input type="text" name="TxnId" class="form-control" id="inlineFormInputGroupUsername" placeholder="Transaction id">
+                                    </div>
+                                </div> 
+
+                                <div class="col-12">
+                                    <button id="btnfundrequestApprovedfilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div><!--end page-title-box-->
+            </div><!--end col-->
+        </div><!--end row--><!-- end page title end breadcrumb -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Prefund Request Approved List</h4>
+                            </div>
+                            <!--end col-->
+                            <!--end col-->
+                        </div>
+                        <!--end row-->
+                    </div>
+                    <!--end card-header-->
+                    <div class="card-body overflow-x-auto">
+                        <partial name="_PaginationHeader" />
+                        <div id="PreFundRequestApprovedTableWrapper" class="table-responsive">
+                            <partial name="_PreFundApprovedList" model="@Model" />
+                        </div>
+                    </div>
+                    <!--end card-body-->
+                </div>
+                <!--end card-->
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+
+
+
+
+    </div><!-- container -->
+
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize pagination settings object
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("PreFundApprovedIndex", "Wallets")',
+                selector: '#PreFundRequestApprovedTableWrapper'
+            });
+
+            $(Pagination).on('before', function(e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formfundRequestApprovedfilter').serializeArray();
+                $.each(usersFilterFormValues, function(i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#formfundRequestApprovedfilter').on('submit', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnfundrequestApprovedfilter').on('click', function(e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+
+
+}

@@ -1,0 +1,121 @@
+﻿@using Mpmt.Core.Dtos.ServiceChargeCategory
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<ServiceCategoryDetails>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Setting</a></li>
+                            <li class="breadcrumb-item active">Service Category List</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                        <form id="formServiceCategoryfilter" class="row row-cols-lg-auto align-items-end">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input name="CategoryName" type="text" class="form-control" placeholder="Category Name">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input name="CategoryCode" type="text" class="form-control" placeholder="Category Code">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 form-control-wrap focused">
+                                <label class="form-label mb-0" for="inlineFormSelectPref">Status</label>
+                                <select name="Status" class="form-select" id="validationTooltip04" required>
+                                    <option value="0" selected>All</option>>
+                                    <option value="1">Active</option>>
+                                    <option value="2">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <button id="btnServiceCategoryfilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Service Category List</h4>
+                        </div>
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                @if (actors.FirstOrDefault(x => x.Action == "AddServiceCategory")?.Permission ?? false)
+{
+                                <a onclick="ShowPopUp('@Url.Action("AddServiceCategory","ServiceCategory")','Add Service Category')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                    <i class="las la-plus ms-1"></i> Add Service Category
+                                </a>
+}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="ServiceCategoryTableWrapper" class="table-responsive">
+                        <partial name="_ServiceCategoryIndex" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("ServiceCategoryIndex", "ServiceCategory")',
+                selector: '#ServiceCategoryTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formServiceCategoryfilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+                $('#formServiceCategoryfilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnServiceCategoryfilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}

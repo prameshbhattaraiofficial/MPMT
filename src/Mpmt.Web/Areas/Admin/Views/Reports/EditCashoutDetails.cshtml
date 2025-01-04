@@ -1,0 +1,80 @@
+﻿@using Mpmt.Core.Dtos.Transaction;
+@using Mpmt.Core.ViewModel.AdminReport;
+@model ReceiverAccountDetailsCashoutVM
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <form id="UpdateReceiverDetails" class="form-horizontal auth-form" method="post" autocomplete="off">
+        <input asp-for="TransactionId" hidden readonly />
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+        <div id="ReceiverDetails">
+            <h3>Receiver Details</h3>
+            <fieldset>
+                <div class="row">
+                    <div id="CashoutDetails" class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="ReceiverName">Receiver Name *</label>
+                            <div class="input-group">
+                                <input type="text" asp-for="ReceiverName" class="form-control" placeholder="Receiver Full Name" required>
+                            </div>
+                            <span asp-validation-for="ReceiverName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="ContactNumber">Contact Number *</label>
+                            <div class="input-group">
+                                <input type="text" asp-for="ContactNumber" class="form-control" placeholder="Receiver Contact Number" required>
+                            </div>
+                            <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                        </div>
+                        @* <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="DistrictCode">District</label>
+                            <select asp-for="DistrictCode" class="form-select" asp-items="@ViewBag.Districtddl">
+                            </select>
+                            <span asp-validation-for="DistrictCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="FullAddress" for="accountdetails">Address *</label>
+                            <div class="input-group">
+                                <input type="text" asp-for="FullAddress" class="form-control" placeholder="Full Address">
+                            </div>
+                            <span asp-validation-for="FullAddress" class="text-danger"></span>
+                        <div class="col-md-12 mb-2">
+                            <label class="form-label" asp-for="Remarks">Remarks</label>
+                            <textarea asp-for="Remarks" required></textarea>
+                            <span asp-validation-for="Remarks" class="text-danger"></span>
+                        </div>
+                        </div> *@
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="Remarks">Remarks *</label>
+                            <div class="input-group">
+                                <textarea name="Remarks" class="form-control" asp-for="Remarks" data-val-required="The remarks field is required." data-val-maxlength-max="300" data-val="true"></textarea>
+                            </div>
+                            <span asp-validation-for="Remarks" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary ms-2" id="btnSubmit" type="submit">Submit</button>
+                    <button type="button" class="btn btn-danger ms-2" data-bs-dismiss="modal">Close</button>
+                </div>
+            </fieldset>
+        </div>
+    </form>
+</div>
+
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("EditCashoutDetails", "Reports")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#UpdateReceiverDetails'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>
+

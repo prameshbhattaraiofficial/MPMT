@@ -1,0 +1,57 @@
+﻿@using Mpmt.Core.Dtos.PartnerEmployee;
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<PartnerEmployeeList>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Full Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Post</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@(value.index + 1)</td>
+                    <td>@(value.item.FirstName + " " + value.item.SurName)</td>
+                    <td>@value.item.UserName</td>
+                    <td>@value.item.Email</td>
+                    <td>@value.item.Post</td>
+                    @if (value.item.IsActive == true)
+                    {
+                        <td><span class="badge bg-soft-success px-2">Active</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="badge bg-soft-danger px-2">InActive</span></td>
+                    }
+                    <td name="buttons">
+                        <div class=" float-center">
+                                @if (actors.FirstOrDefault(x => x.Action == "UpdatePartnerEmployee")?.Permission ?? false)
+                                {
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdatePartnerEmployee", "Employees", new { id = value.item.Id })', 'Update Employee')" title="Update Employee"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                                }
+                            @if (actors.FirstOrDefault(x => x.Action == "DeletePartnerEmployee")?.Permission ?? false)
+                                {
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="ShowPopUp('@Url.Action("DeletePartnerEmployee", "Employees", new { id = value.item.Id })', 'Remove Employee','')" title="Delete Employee"> <i class="dripicons-trash" aria-hidden="true"></i></a>
+                                }
+                                @if (actors.FirstOrDefault(x => x.Action == "AssignUserToRole")?.Permission ?? false)
+                                {
+                                <a style="cursor:pointer" class="btn btn-sm btn-soft-info btn-circle" onclick="ShowPopUp('@Url.Action("AssignUserToRole", "Employees", new { id = value.item.Id })', 'Assign Roles','')" title="Assign Roles"> <i class="dripicons-swap" aria-hidden="true"></i></a>
+                                }
+                            </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

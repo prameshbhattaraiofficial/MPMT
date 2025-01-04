@@ -1,0 +1,72 @@
+﻿@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Dtos.PartnerReport;
+@model RemitTxnReport
+@if (Model is not null)
+{
+    <form id="formCancelTransaction" asp-controller="Reports" asp-action="CancelTransaction" method="post" autocomplete="off" class="text-center">
+        <input type="hidden" asp-for="TransactionId" />
+        <i class="fa fa-circle-xmark text-danger fa-5x mb-20 m-t-15 "></i>
+        <h3 class="m-t-25">Are you sure?</h3>
+        <p class="m-t-25 m-b-15">
+            You want to cancel this transaction ?<br>
+        </p>
+        <textarea name="Remarks" placeholder="Enter cancel reason for cancel transaction" id="Remarks" class="form-control"></textarea>
+        <h5 class="text-danger" id="errormsg" style="display:none;">Cancel reason is required!!!</h5>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-sm btn-primary"> Submit </button>
+        </div>
+    </form>
+}
+else
+{
+    <i class="fa fa-circle-xmark text-danger fa-5x mb-20 m-t-15 "></i>
+    <h3 class="m-t-25">Opps!!</h3>
+    <p class="m-t-25 m-b-15">
+        We could not find Detail.<br>
+        SomeThing went wrong!
+    </p>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+    </div>
+}
+<script>
+    // FormHandler.init({
+
+    //     method: 'POST',
+    //     actionUrl: '@Url.Action("CancelTransaction", "Reports")',
+    //     containerSelector: '#add-new .modal-body',
+    //     selector: '#formCancelTransaction'
+    // }, function () {
+
+    //     $("#add-new .modal-body").html("");
+    //     $("#add-new .modal-title").html("");
+    //     $("#add-new").modal('hide');
+    //     Pagination.getData();
+    // });
+
+    function isCacelReason() {
+        debugger;
+        var errorMessage = document.getElementById('Remarks').value
+        if (errorMessage == null || errorMessage == '' || errorMessage == undefined) {
+            document.getElementById("errormsg").style.display = "block";
+            return false;
+        }
+        else {
+            document.getElementById("errormsg").style.display = "none";
+            return true;
+        }
+    }
+</script>
+
+<script>
+    document.getElementById('formCancelTransaction').addEventListener('submit', function (event) {
+        var textAreaContent = document.getElementById('Remarks').value;
+        if (!textAreaContent.trim()) {
+            document.getElementById('errormsg').style.display = 'block';
+            event.preventDefault();
+            return false;
+        }
+    });
+</script>

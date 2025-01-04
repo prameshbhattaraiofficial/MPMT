@@ -1,0 +1,107 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@using Mpmt.Core.Dtos.Paging;
+@model PagedList<CashAgentRegister>
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="row">
+                        <div class="col">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item "><a href="javascript:void(0);">Global Setting</a></li>
+                                <li class="breadcrumb-item active">Cash Agent Register List</li>
+                            </ol>
+                        </div>
+                        <div class="col-auto">
+                            <form id="formRemitPartnerRegister" class="row row-cols-lg-auto align-items-center">
+                                <div class="col-12  mb-3">
+                                    <label class="visually-hidden">Full Name</label>
+                                    <div class="input-group">
+                                        <input type="text" name="FullName" class="form-control" placeholder="Full Name">
+                                    </div>
+                                </div>
+                                <div class="col-12  mb-3">
+                                    <label class="visually-hidden">Email</label>
+                                    <div class="input-group">
+                                        <input type="text" name="Email" class="form-control" placeholder="Email">
+                                    </div>
+                                </div>
+                                <div class="col-12  mb-3">
+                                    <label class="visually-hidden">Mobile No</label>
+                                    <div class="input-group">
+                                        <input type="text" name="MobileNo" class="form-control" placeholder="Mobile No">
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12  mb-3">
+                                    <button id="btnRemitPartnerFilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Cash Agent Register List</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body overflow-x-auto">
+                        <partial name="_PaginationHeader" />
+                        <div id="RemitPartnerTableWrapper" class="table-responsive">
+                            <partial name="_CashAgentRegistrationList" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("Index", "CashAgentRegistration")',
+                selector: '#RemitPartnerTableWrapper'
+            });
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formRemitPartnerRegister').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+            addUsersPageHandlers();
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+                $('#formRemitPartnerRegister').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                $('#btnRemitPartnerFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}

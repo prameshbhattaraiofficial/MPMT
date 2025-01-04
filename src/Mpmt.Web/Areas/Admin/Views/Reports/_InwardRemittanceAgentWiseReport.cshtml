@@ -1,0 +1,98 @@
+﻿@using Mpmt.Core.Dtos.InwardRemitanceReport
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@model PagedList<InwardRemitanceAgentWiseReport>
+@{
+    Mpmt.Core.Dtos.InwardRemitanceReport.SumofTransaction DataList;
+    DataList = ViewData["grid"] as Mpmt.Core.Dtos.InwardRemitanceReport.SumofTransaction;
+}
+
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons78" class="table table-striped dataTable nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Agent Code</th>
+                <th>Agent</th>
+                <th>Province</th>
+                <th>District</th>
+                <th>Local Level</th>
+                <th>PAN</th>
+                <th>Total Transaction</th>
+                <th>Total Amount (NPR)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <style>
+                    tr.active {
+                        background: #ccc;
+                    }
+
+                    .tableFixHead {
+                        overflow-y: auto;
+                        height: 500px;
+                    }
+
+                        .tableFixHead thead th {
+                            position: sticky;
+                            top: 0px;
+                        }
+                </style>
+                @foreach (var value in Model.Items.Select((item, index) => new { item, index }))
+                {
+                    <tr>
+                        <td>@value.item.SN</td>
+                        <td>@value.item.AgentCode</td>
+                        <td>@value.item.Agent</td>
+                        <td>@value.item.Province</td>
+                        <td>@value.item.District</td>
+                        <td>@value.item.LocalLevel</td>
+                        <td>@value.item.Pan</td>
+                        <td>@value.item.TotalTxnCount</td>
+                        <td>@value.item.TotalAmountNPR</td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <thead class="table-warning">
+            <tr>
+                <th>Total :</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>@DataList.GrandTotalTxn</th>
+                <th>@DataList.GrandTotalAmountNPR</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>

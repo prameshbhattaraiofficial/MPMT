@@ -1,0 +1,133 @@
+﻿@using Mpmt.Core.ViewModel.CashAgent;
+@model CashAgentEmployeeVm
+
+<ul>
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <li class="text-danger">@ViewBag.Error</li>
+    }
+</ul>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+<form id="EmployeeForm" class="form-horizontal auth-form" method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" name="AgentCode" id="AgentCode" value="@ViewBag.AgentCode" />
+    <div class="row">
+        <div class="col-md-4 mb-2 mb-2">
+            <label asp-for="FirstName" class="form-label">First Name</label>
+            <input asp-for="FirstName" onkeydown="return /[a-z]/i.test(event.key)" id="FirstName" type="text" class="form-control">
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-2 mb-2">
+            <label asp-for="LastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+            <input asp-for="LastName" onkeydown="return /[a-z]/i.test(event.key)" type="text" required class="form-control">
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="col-md-4  mb-2">
+            <label asp-for="UserName" class="form-label">UserName <span class="text-danger">*</span></label>
+            <input asp-for="UserName" type="text" required class="form-control">
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mb-2">
+            <label asp-for="ContactNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
+            <div class="input-group has-validation">
+                <input type="text" class="form-control" maxlength="15" asp-for="ContactNumber" onkeypress="return isNumber(event)" placeholder="" required>
+            </div>
+            <span asp-validation-for="ContactNumber" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mb-2">
+            <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
+            <div class="input-group has-validation">
+                <input asp-for="Email" type="email" class="form-control">
+            </div>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mb-2">
+            <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
+            <div class="input-group">
+                <input asp-for="Password"  maxlength="50" type="password" class="form-control" id="id_password"> &ensp;
+                <i id="togglePassword" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+            </div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mb-2">
+            <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+            <div class="input-group">
+                <input asp-for="ConfirmPassword" type="password" class="form-control" id="id_confirm_password"> &ensp;
+                <i id="togglePasswordConfirm" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+            </div>
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        
+        <div class="col-md-6 mb-2">
+            <label asp-for="ProfileImage" class="form-label">Company Logo <span class="text-danger">*</span></label>
+            <input asp-for="ProfileImage" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'ProfileImageid','ProfileImageidtext')">
+            <span id="ProfileImageidtext" class="text-danger" hidden></span>
+            <img id="ProfileImageid" src="#" style="width:90px;" hidden>
+            <span asp-validation-for="ProfileImage" class="text-danger"></span>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+<script>
+    // const togglePass = document.querySelector('#togglePassword');
+    // const togglePassConfirm = document.querySelector('#togglePasswordConfirm');
+    // const pass = document.querySelector('#id_password');
+    // const passConfirm = document.querySelector('#id_confirm_password');
+
+    // togglePass.addEventListener('click', function (e) {
+    //     const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+    //     pass.setAttribute('type', type);
+    //     togglePass.classList.toggle('mdi-eye');
+    //     togglePass.classList.toggle('mdi-eye-off');
+    // });
+
+    // togglePassConfirm.addEventListener('click', function (e) {
+    //     const type = passConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
+    //     passConfirm.setAttribute('type', type);
+
+    //     togglePassConfirm.classList.toggle('mdi-eye');
+    //     togglePassConfirm.classList.toggle('mdi-eye-off');
+    // });
+    $(document).ready(function () {
+        setupToggleButtons();
+    });
+
+    function setupToggleButtons() {
+        const togglePass = document.querySelector('#togglePassword');
+        const togglePassConfirm = document.querySelector('#togglePasswordConfirm');
+        const pass = document.querySelector('#id_password');
+        const passConfirm = document.querySelector('#id_confirm_password');
+
+        togglePass.addEventListener('click', function (e) {
+            const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+            pass.setAttribute('type', type);
+            togglePass.classList.toggle('mdi-eye');
+            togglePass.classList.toggle('mdi-eye-off');
+        });
+
+        togglePassConfirm.addEventListener('click', function (e) {
+            const type = passConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
+            passConfirm.setAttribute('type', type);
+            togglePassConfirm.classList.toggle('mdi-eye');
+            togglePassConfirm.classList.toggle('mdi-eye-off');
+        });
+    }
+</script>
+
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddEmployee", "EmployeeManagement")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#EmployeeForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>
+<script src="~/js/ValidationScript.js"></script>
+
+

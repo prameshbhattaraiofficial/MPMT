@@ -1,0 +1,14 @@
+﻿tr.active {
+    background: #ccc;
+}
+
+.tableFixHead {
+    overflow-y: auto;
+    height: 500px;
+}
+
+    .tableFixHead thead th {
+        position: sticky;
+        top: 0px;
+        z-index: 10;
+    }

@@ -1,0 +1,16 @@
+﻿@using Mpmt.Core.Dtos.Pagination
+<form id="paginationHeaderForm" class="row justify-content-between my-2 mx-0">
+    <div class="col-sm-12 col-md-2 row align-items-center m-0">
+        @await Component.InvokeAsync("PageSizer", new PageSizeDdl(new int[] { 10, 20, 30, 50, 100 }, Model.PageSize, "", ""))
+    </div>
+    <div class="col-sm-12 col-md-2 row justify-content-sm-start justify-content-md-end mt-sm-2 mt-md-0">
+
+        <div class="col-auto">
+            <a class="btn btn-primary btn-sm" asp-action="Index" asp-controller="Settings"><i class="fa fa-arrow-alt-circle-left"></i>Back</a>
+        </div>
+    </div>
+</form>
+
+
+
+

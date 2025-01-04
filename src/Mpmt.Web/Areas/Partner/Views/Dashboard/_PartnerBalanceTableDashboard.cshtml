@@ -1,0 +1,114 @@
+﻿@using Mpmt.Core.Dtos.Partner
+@model PartnerDashBoard
+
+@if (Model.dashboardWalletBalances != null && Model.dashboardWalletBalances.Count > 0)
+{
+    <div class="table-responsive">
+        <div style="max-height: 250px; overflow-y: auto;">
+            <table id="tablePartnerBalanceId" class="table table-sm table-striped dataTable nowrap" data-sort-action="/partner/Dashboard/SortPartnerBalanceList" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            <span>Wallet Currency</span>
+                        </th>
+                        <th class="sortable" style="cursor: pointer" data-sort="WALLET">
+                            <span>Balance</span>
+                            <i class="fa fa-sort"></i>
+                        </th>
+                        <th class="sortable" style="cursor: pointer" data-sort="FEE">
+                            <span>Fee</span>
+                            <i class="fa fa-sort"></i>
+                        </th>
+                        <th>
+                            <span>Action</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.dashboardWalletBalances)
+                    {
+                        <tr>
+                            <td>@item.WalletCurrency</td>
+                            <td>@item.WalletBalanceText</td>
+                            <td>@item.FeeBalanceText</td>
+                            <td name="buttons">
+                                <a class="btn btn-sm btn-soft-dark btn-circle me-2" href="@Url.Action("PartnerStatement","Wallets", new { walletCurrencyById = item.WalletCurrency })" title="View Statement"><i class="dripicons-preview"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <h5 class="text-danger text-center">No Partner balance data</h5>
+}
+
+<script>
+    $(document).ready(function () {
+        // Cache table element
+        var table = $('#tablePartnerBalanceId');
+        var currentSort = null; // Stores current sort information (column and order)
+
+        // Function to handle table sorting
+        function sortTable(th) {
+            var sortColumnName = $(th).data('sort');
+            var sortOrder = 'asc';
+
+            // Toggle sort order on each click
+            if (currentSort && currentSort.columnName === sortColumnName) {
+                sortOrder = currentSort.sortOrder === 'asc' ? 'desc' : 'asc';
+            }
+
+            // Update current sort information
+            currentSort = { columnName: sortColumnName, sortOrder: sortOrder };
+
+            var table = $(th).closest('table');
+            var url = table.data('sortAction');
+
+            // Send sort data to controller using AJAX or form submission
+            $.ajax({
+                url: url, // Replace with your controller URL
+                type: 'POST',
+                data: {
+                    columnName: sortColumnName,
+                    sortOrder: sortOrder
+                },
+                success: function (response) {
+
+                    if (response.hasOwnProperty('partnerBalance')) {
+                        // Update table header icons
+                        $(th).closest('table').find('.sortable i').removeClass('fa-sort-up fa-sort-down').removeClass('text-danger').addClass('fa-sort'); // Reset all icons
+                        $(th).find('i').addClass(sortOrder === 'asc' ? 'fa-sort-up text-danger' : 'fa-sort-down text-danger'); // Update clicked header icon
+
+                        // Clear existing table rows
+                        $('#tablePartnerBalanceId tbody').empty();
+
+                        // Iterate over received data and update table body
+                        $.each(response.partnerBalance, function (index, item) {
+                            var newRow = $('<tr>');
+                            newRow.append('<td>' + item.walletCurrency + '</td>');
+                            newRow.append('<td>' + item.walletBalanceText + '</td>');
+                            newRow.append('<td>' + item.feeBalanceText + '</td>');
+                                
+                            var actionUrl = '@Url.Action("PartnerStatement", "Wallets")' +
+                                '?walletCurrencyById=' + encodeURIComponent(item.walletCurrency);
+                            var buttonHtml = '<a class="btn btn-sm btn-soft-dark btn-circle me-2" href="' + actionUrl +
+                                '" title="View Statement"><i class="dripicons-preview"></i></a>';
+                            newRow.append('<td>' + buttonHtml + '</td>');
+
+                            $('#tablePartnerBalanceId tbody').append(newRow);
+                        });
+                    }
+                }
+            });
+        }
+
+        // Attach click event listener to headers
+        $('.sortable').on('click', function () {
+            sortTable(this);
+        });
+    });
+</script>

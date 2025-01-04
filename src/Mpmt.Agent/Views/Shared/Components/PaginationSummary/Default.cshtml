@@ -1,0 +1,6 @@
+﻿@model Mpmt.Core.Dtos.Pagination.PaginationSummaryModel
+
+<div class="w-full w-sm-auto me-sm-auto">
+    Showing @(((Model.PageIndex - 1) * Model.PageSize) + 1) to @(((Model.PageIndex - 1) * Model.PageSize) + Model.PageItemsCount)
+    of @Model.MatchedRecords matched from total of @Model.TotalRecords records
+</div>

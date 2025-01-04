@@ -1,0 +1,143 @@
+﻿@using Mpmt.Core.Dtos.ActivityLog;
+@model VendorApiLogDetail
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 table-sm">
+            <thead>
+                <tr>
+                    <th style="background-color: #ECEFF1;"></th>
+                    <th style="background-color: #ECEFF1;" colspan="2"><h4 style="background-color: #ECEFF1; color: #000">Transaction Log</h4></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span>Log ID :</span></td>
+                    <td><span>#@Model.LogId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Transaction Id :</span></td>
+                    <td><span>#@Model.TransactionId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Tracker Id :</span></td>
+                    <td><span>#@Model.TrackerId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Response Http Status :</span></td>
+                    <td><span>@Model.ResponseHttpStatus</span></td>
+                </tr>
+                <tr>
+                    <td><span>Request Url :</span></td>
+                    <td><span>@Model.RequestUrl</span></td>
+                </tr>
+            </tbody>
+
+            <thead>
+                <tr><th colspan="4"></th></tr>
+                <tr>
+                    <th style="background-color: #ECEFF1;"></th>
+                    <th style="background-color: #ECEFF1;" colspan="2"><h4 style="background-color: #ECEFF1; color: #000">Validation Log</h4></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span>Vendor Id :</span></td>
+                    <td><span>@Model.VendorId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Type :</span></td>
+                    <td><span>@Model.VendorType</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Transaction Id :</span></td>
+                    <td><span>#@Model.VendorTransactionId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Tracker Id :</span></td>
+                    <td><span>#@Model.VendorTrackerId</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Request Url :</span></td>
+                    <td><span>@Model.VendorRequestURL</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Response Message :</span></td>
+                    <td><span>@Model.VendorResponseMessage</span></td>
+                </tr>
+            </tbody>
+
+            <thead>
+                <tr><th colspan="4"></th></tr>
+                <tr>
+                    <th style="background-color: #ECEFF1;"></th>
+                    <th style="background-color: #ECEFF1;" colspan="2"><h4 style="background-color: #ECEFF1; color: #000">Payout Log</h4></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span>Vendor Id 2 :</span></td>
+                    <td><span>@Model.VendorId2</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Type 2 :</span></td>
+                    <td><span>@Model.VendorType2</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Transaction Id 2 :</span></td>
+                    <td><span>#@Model.VendorTransactionId2</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Tracker Id 2 :</span></td>
+                    <td><span>#@Model.VendorTrackerId2</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Request Url 2 :</span></td>
+                    <td><span>@Model.VendorRequestURL2</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Response Message 2 :</span></td>
+                    <td><span>@Model.VendorResponseMessage2</span></td>
+                </tr>
+            </tbody>
+            <thead>
+                <tr><th colspan="4"></th></tr>
+                <tr>
+                    <th style="background-color: #ECEFF1;"></th>
+                    <th style="background-color: #ECEFF1;" colspan="2"><h4 style="background-color: #ECEFF1; color: #000">Transaction Status Log</h4></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span>Vendor Id 3 :</span></td>
+                    <td><span>@Model.VendorId3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Type 3 :</span></td>
+                    <td><span>@Model.VendorType3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Transaction Id 3 :</span></td>
+                    <td><span>#@Model.VendorTransactionId3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Tracker Id 3 :</span></td>
+                    <td><span>#@Model.VendorTrackerId3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Request Url 3 :</span></td>
+                    <td><span>@Model.VendorRequestURL3</span></td>
+                </tr>
+                <tr>
+                    <td><span>Vendor Response Message 3 :</span></td>
+                    <td><span>@Model.VendorResponseMessage3</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

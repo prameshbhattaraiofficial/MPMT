@@ -1,0 +1,59 @@
+﻿<form id="sendTransactionFilete" class="row row-cols-lg-auto align-items-end">
+    <div class="col-12">
+        <label class="form-label mb-0" for="inlineFormSelectPref">From Currency</label>
+        <select name="SourceCurrency" class="form-select" asp-items="@ViewBag.Currency">
+            <option value="">Select Source Currency</option>
+        </select>
+       
+        
+    </div>
+    @* <div class="col-12">
+        <label class="form-label mb-0" for="inlineFormSelectPref">To Currency</label>
+        <select name="DestinationCurrency" class="form-select" asp-items="@ViewBag.Currency">
+            <option value="">Select Source Currency</option>
+        </select>
+      
+    </div> *@
+    <div class="col-12">
+        <label class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+        <input type="date" name="StartDate"  class="form-control">
+    </div>
+    <div class="col-12">
+        <label class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+        <input type="date" name="EndDate" class="form-control">
+    </div>
+    <div class="col-12">
+        <div class="input-group">
+            <input type="text" name="PartnerCode" class="form-control" placeholder="Merchant id">
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="input-group">
+            <input type="text" name="TransactionId" class="form-control" placeholder="Tracker ID">
+        </div>
+    </div>
+    <div class="col-12">
+        <label class="form-label mb-0 mt-2" for="inlineFormSelectPref">Type</label>
+        <select class="form-select" name="SignType" id="validationTooltip04" required>
+            <option value="" selected>Select TransactionType</option>
+            <option value="DR" >Debit</option>
+            <option value="CR">Credit</option>
+        </select>
+    </div>
+    <div class="col-12">
+        <label class="form-label mb-0" for="inlineFormSelectPref">Sign</label>
+        <select class="form-select" name="TransactionType" id="validationTooltip04" required>
+            <option value="">Select Sign</option>
+            <option value="LOADWALLET">LOADWALLET</option>
+            <option value="WALLETCONVERSION">WALLETCONVERSION</option>
+            <option value="COMMISSION">COMMISSION</option>
+            <option value="APITRANSACTION">APITRANSACTION</option>
+            <option value="PARTNERTRANSACTION">PARTNERTRANSACTION</option>
+        </select>
+    </div>
+
+
+    <div class="col-12">
+        <button type="submit"  id="btnSendTransactionFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+    </div>
+</form>

@@ -1,0 +1,63 @@
+﻿@using Mpmt.Core.Dtos.DropDown;
+@model AssignUserRoleDto
+@{
+
+    var data = ViewBag.Roles;
+}
+<form id="formassignEmployeerole" method="post" autocomplete="off">
+    <input name="fullname" value="@ViewBag.FullName" hidden />
+    <input name="email" value="@ViewBag.Email" hidden />
+    @if (ViewBag.Error != "")
+    {
+        <ul>
+            <li class="text-danger">@ViewBag.Error</li>
+        </ul>
+    }
+    <div class="row">
+        <div class="col-sm-6 mb-3">
+            <label for="exampleInputEmail1">Full Name</label>
+            <input value="@ViewBag.FullName" type="text" class="form-control" disabled>
+        </div>
+        <div class="col-sm-6 mb-3">
+            <label for="exampleInputEmail1">Email </label>
+            <input value="@ViewBag.Email" type="text" class="form-control" disabled>
+        </div>
+    </div> 
+     <input asp-for="user_id" readonly hidden />
+    <div class="row">
+        <div class="col-sm-6">
+            <h6 class="text-center">Available Role</h6>
+        </div>
+        <div class="col-sm-6">
+            <h6 class="text-center">Selected Role</h6>
+        </div>
+        <div class="col-sm-12 mb-5">
+            <select multiple="multiple" id="my-select" asp-for="roleid" asp-items="ViewBag.Roles">
+           
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Update</button>
+    </div>
+
+</form>
+
+<script>
+
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AssignUserToRole", "AdminUser")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#formassignEmployeerole'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+    
+        Pagination.getData();
+    });
+</script>
+<script src="~/partner/assets/js/form-select-custom.js"></script>
+

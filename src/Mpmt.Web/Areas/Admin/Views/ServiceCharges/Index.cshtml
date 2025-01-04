@@ -1,0 +1,140 @@
+﻿@using Mpmt.Core.Dtos.ServiceCharge
+@using Mpmt.Core.Models.RMP;
+@model List<ServiceChargeDetails>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="col">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0);">Global Setting</a></li>
+                        <li class="breadcrumb-item active">Service Charge</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <form id="formServiceChargefilter" class="row row-cols-lg-auto align-items-end">
+                           
+                                <div class="col-3">
+                                    <label name="FromDate" class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+                                    <input name="FromDate" type="date" class="form-control">
+                                </div>
+                                <div class="col-3">
+                                    <label name="ToDate" class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+                                    <input name="ToDate" type="date" class="form-control">
+                                </div>
+                                <div class="col-3">
+                                    <label name="ChargeCategory" class="form-label mb-0" for="inlineFormSelectPref"> Category</label>
+                                    <select name="ChargeCategory" class="form-select" id="validationTooltip04" asp-items="@ViewBag.ChargeCategory" required>
+                                    <option value="" selected >--All--</option>
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <label name="PaymentType" class="form-label mb-0" for="inlineFormSelectPref"> Payment Type</label>
+                                    <select name="PaymentType" class="form-select" id="validationTooltip04" asp-items="@ViewBag.PaymentType" required>
+                                        <option value="" selected >--All--</option>
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label mb-0 mt-2" for="inlineFormSelectPref">Source Currency</label>
+                                    <select name="SourceCurrency" class="form-select" id="validationTooltip04" asp-items="@ViewBag.Currency" required>
+                                    <option value="" selected >--All--</option>
+                                    </select>
+                                </div>
+                                @*<div class="col-3">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Destination Currency</label>
+                                    <select name="DestinationCurrency" class="form-select" id="validationTooltip04" asp-items="@ViewBag.Currency" required>
+                                        <option value="" selected >--All--</option>
+                                    </select>
+                                </div>*@
+                                <div class="col-3">
+                                    <button id="btnServiceChargefilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="card-title">Service Charge</h4>
+                    </div>
+                    <div class="col-auto">
+                        <div class="add-btn">
+                                @if (actors.FirstOrDefault(x => x.Action == "AddServiceCharge")?.Permission ?? false)
+{
+                            <a onclick="ShowPopUp('@Url.Action("AddServiceCharge","ServiceCharges")','Add Service Charge','modal-dialog modal-xl')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                <i class="las la-plus ms-1"></i> Add Service Charge
+                            </a>
+}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="ServiceChargeTableWrapper" class="table-responsive">
+                    <partial name="_ServiceChargeIndex" model="@Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function() {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("Index", "ServiceCharges")',
+                selector: '#ServiceChargeTableWrapper'
+            });
+
+            $(Pagination).on('before', function(e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formServiceChargefilter').serializeArray();
+                $.each(usersFilterFormValues, function(i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+                $('#formServiceChargefilter').on('submit', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnServiceChargefilter').on('click', function(e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}

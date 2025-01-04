@@ -1,0 +1,81 @@
+﻿@using Mpmt.Core.Models.Route;
+@model AddcontrollerAction
+
+@{
+    var data = ViewBag.Menu as List<GetcontrollerAction>;
+}
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+
+<form id="MenuPermissionFormtest" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <select asp-for="RoleId" class="form-select" asp-items="@ViewBag.Role">
+    </select>
+    <table style="width:100%">
+        <tr>
+            <th>Controller</th>
+            <th>Action</th>
+        </tr>
+        @{
+            var i = 0;
+        }
+        @foreach (var menu in data.GroupBy(x => x.Controller))
+        {
+            <tr>
+
+                <td><input type="checkbox" onchange="controllerChecked('@menu.FirstOrDefault().Controller')" id="@menu.FirstOrDefault().Controller" checked="@menu.All(m => m.Permission)"> @menu.FirstOrDefault().Controller</td>
+                <td>
+                    @foreach (var act in menu)
+                    {
+                        @*<input asp-for="@data[i].Id" value="@act.Id" hidden readonly />
+                <input asp-for="@data[i].Area" value="@act.Id" hidden readonly />
+                <input asp-for="@data[i].Controller" value="@act.Id" hidden readonly />
+                <input asp-for="@data[i].Action" value="@act.Id" hidden readonly />*@
+                        <input type="text" asp-for="@Model.MenusIds[i].Id" value="@act.Id" hidden readonly />
+                        @if (act.Permission)
+                        {
+                            @act.Action <input type="checkbox" onchange="ActionChecked('@menu.FirstOrDefault().Controller','@menu.FirstOrDefault().Controller + @act.Action')" id="@menu.FirstOrDefault().Controller + @act.Action" class="@menu.FirstOrDefault().Controller" asp-for="@Model.MenusIds[i].Permission" checked> <br />
+                        }
+                        else
+                        {
+                            @act.Action <input type="checkbox" onchange="ActionChecked('@menu.FirstOrDefault().Controller','@menu.FirstOrDefault().Controller + @act.Action')" id="@menu.FirstOrDefault().Controller + @act.Action" class="@menu.FirstOrDefault().Controller" asp-for="@Model.MenusIds[i].Permission"> <br />
+                        }
+                        i++;
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit<i class="fas fa-paper-plane ms-1"></i></button>
+    </div>
+</form>
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("UpdateMenuPermission", "AgentRoles")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#MenuPermissionFormtest'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+    });
+    function controllerChecked(controllerName) {
+        var viewvalue = $('#' + controllerName).is(':checked');
+        if (viewvalue == true) {
+            $('.' + controllerName).prop('checked', true);
+        }
+    }
+    function ActionChecked(controllerName, ActionName) {
+        var viewvalue = $('#' + ActionName).is(':checked');
+        if (viewvalue == false) {
+            $('#' + controllerName).prop('checked', false);
+        }
+    }
+</script>
+

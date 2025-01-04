@@ -1,0 +1,330 @@
+﻿<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">User</a></li>
+                            <li class="breadcrumb-item active">User's KYC</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto">
+                    </div>
+                </div>
+                <div class="row mt-3">
+
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">Username</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Username">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">Email</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Email">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">KYC Status</label>
+                                    <select class="form-select" id="validationTooltip04" required>
+                                        <option selected>Choose Kyc Status</option>
+                                        <option selected>Active</option>
+                                        <option>Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">Country</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Country">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">User Status</label>
+                                    <select class="form-select" id="validationTooltip04" required>
+                                        <option selected>Active</option>
+                                        <option>Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">List of User's KYC</h4>
+                        </div>
+
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body  overflow-x-auto">
+                    <table id="datatable-buttons"  class="table table-striped dataTable nowrap">
+                        <thead class="table-light">
+                            <tr>
+
+                                <th>Full Name</th>
+                                <th>Reg Date</th>
+                                <th>Updated Date</th>
+                                <th>Email</th>
+                                <th>Country</th>
+                                <th>Status</th>
+                                <th>KYC Status</th>
+                                <th>AML Status</th>
+                                <th>Platform</th>
+                                <th>Registered By</th>
+                                <th>Remarks</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img src="~/partner/assets/images/player.png" alt="" class="rounded-circle thumb-xs me-1">
+                                    <a href="view_kyc.php">Sarita Baidhya</a>
+                                </td>
+
+                                <td>03-Jan-2023 03:08:12 PM </td>
+                                <td>03-Jan-2023 03:08:12 PM </td>
+                                <td>jduffy@gmial.com</td>
+                                <td>Nepal</td>
+                                <td>
+                                    <div class="form-check form-switch form-switch-success">
+                                        <input class="form-check-input" type="checkbox" id="customSwitchSuccess" checked>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-soft--warning px-2">pending</span></td>
+                                <td>Verified</td>
+                                <td>Android</td>
+                                <td>Admin</td>
+                                <td>Kindly upload profile image and PAN card in respective place.</td>
+
+
+                                <td name="buttons">
+                                    <div class=" float-center">
+
+                                        <a href="view_kyc.php">
+                                            <button type="button" class="btn btn-sm btn-soft-warning btn-circle tippy-btn" data-tippy-placement="top" data-tippy-arrow="true" data-tippy="" data-original-title="KYC Details" title="View KYC">
+                                                <i class="dripicons-preview"></i>
+                                            </button>
+                                        </a>
+
+                                        <!-- <button type="button" class="btn btn-sm btn-soft-success btn-circle me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <i class="dripicons-dots-3"></i></button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item"><i class="mdi mdi-check align-self-center font-16 icon-dual me-1"></i> Approve</a>
+                                            <a class="dropdown-item"><i class="mdi mdi-close align-self-center font-16 icon-dual me-1"></i>Reject</a>
+                                        </div> -->
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+</div><!-- container -->
+
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="viewuser" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">User Details</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+                <div class="card-body p-0 auth-header-box mb-3">
+                    <form id="form-horizontal" class="form-horizontal form-wizard-wrapper">
+                        <h3>Personal Details</h3>
+                        <fieldset>
+
+                            <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <label class="form-label" for="userpassword">Full Name</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Sarita Baidhya">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label" for="userpassword">Contact</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="e.g.984511541">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label" for="userpassword">Email</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text" id="inputGroupPrepend">@@</span>
+                                        <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend">
+
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="exampleFormControlSelect1">Gender</label>
+                                    <select class="form-select" id="exampleFormControlSelect1">
+                                        <option>Male</option>
+                                        <option>Female</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-6 form-group mb-2">
+                                    <label class="form-label" for="exampleFormControlSelect1">Date Of Birth</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="birthday" value="10/24/1984">
+                                        <span class="input-group-text"><i class="ti ti-calendar font-16"></i></span>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-6 form-group mb-2">
+                                    <label class="form-label" for="userpassword">Profile Image</label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="exampleFormControlSelect1">Country</label>
+                                    <select class="form-select" id="exampleFormControlSelect1">
+                                        <option>Choose Country</option>
+                                        <option>..</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-6  form-group mb-2">
+                                    <label class="form-label" for="userpassword">State</label>
+                                    <select class="form-select" id="exampleFormControlSelect1">
+                                        <option>Bagmati</option>
+                                        <option>Koshi</option>
+
+                                    </select>
+                                </div>
+                                <div class="col-md-6  form-group mb-2">
+                                    <label class="form-label" for="userpassword">City</label>
+                                    <select class="form-select" id="exampleFormControlSelect1">
+                                        <option>Kathmandu</option>
+                                        <option>Bhaktapur</option>
+
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6  form-group mb-2">
+                                    <label class="form-label" for="userpassword">Zip code</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6  form-group mb-2">
+                                    <label class="form-label" for="userpassword">Occupation</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset><!--end fieldset-->
+
+                        <h3>Identity Details </h3>
+                        <fieldset>
+                            <div class="row ">
+                                <div class="col-md-6 position-relative mb-2">
+                                    <label class="form-label">ID Type</label>
+                                    <select class="form-select" id="validationTooltip04">
+                                        <option selected disabled value="">Choose...</option>
+                                        <option>Driving License</option>
+                                        <option>Voter ID</option>
+                                        <option>National Id Card</option>
+                                        <option>Passport</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">ID Number</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Issued Date</label>
+                                    <input type="text" class="form-control">
+                                </div>
+
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Expiry date</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">ID Front </label>
+                                    <div class="input-group mb-3">
+                                        <input type="file" class="form-control" id="inputGroupFile01">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">ID Back </label>
+                                    <div class="input-group mb-3">
+                                        <input type="file" class="form-control" id="inputGroupFile01">
+                                    </div>
+                                </div>
+                            </div><!--end form-->
+                        </fieldset><!--end fieldset-->
+
+                        <h3>Bank Details</h3>
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Bank Name</label>
+                                    <input type="text" class="form-control" placeholder="e.g.Nic Asia Bank Ltd">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Branch</label>
+                                    <input type="text" class="form-control" placeholder="Newroad">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">Bank Code</label>
+                                    <input type="text" class="form-control" placeholder="0155">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">A/c Holder Name</label>
+                                    <input type="text" class="form-control" placeholder="Jacub Duffy">
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label">A/c Number</label>
+                                    <input type="text" class="form-control" placeholder="02154815484">
+                                </div>
+
+                            </div>
+                        </fieldset><!--end fieldset-->
+                    </form><!--end form-->
+                </div>
+            </div><!--end modal-body-->
+
+        </div><!--end modal-content-->
+    </div><!--end modal-dialog-->
+</div>
+<!--end modal-->

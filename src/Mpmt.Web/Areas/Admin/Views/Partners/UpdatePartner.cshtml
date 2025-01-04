@@ -1,0 +1,769 @@
+﻿@using Mpmt.Core.Dtos.Partner;
+@model UpdatePartnerrequest
+
+<style>
+    .fit-image {
+        width: 100%;
+        object-fit: cover;
+        height: 150px;
+    }
+</style>
+
+<ul>
+    @if (ViewBag.Error is not null)
+    {
+        <li class="text-danger">@ViewBag.Error</li>
+    }
+</ul>
+
+<form id="UpdatePartnerForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <ul class="nav mb-5" id="Ul-multiform">
+        <li class="nav-item" id="li-1">
+            <p class="nav-link active text-primary">
+                <button type="button" class="btn btn-primary btn-icon-circle btn-icon-circle-sm me-2">1</button>
+                Contact Person
+            </p>
+        </li>
+        <li class="nav-item" id="li-2">
+            <p class="nav-link text-secondary">
+                <button type="button" class="btn btn-soft-primary btn-icon-circle btn-icon-circle-sm me-2">2</button>Settlement Details
+            </p>
+        </li>
+        <li class="nav-item text-secondary" id="li-3">
+            <p class="nav-link">
+                <button type="button" class="btn btn-soft-primary btn-icon-circle btn-icon-circle-sm me-2">3</button>Company Details
+            </p>
+        </li>
+        <li class="nav-item ">
+            <p class="nav-link text-secondary" id="li-4">
+                <button type="button" class="btn btn-soft-primary btn-icon-circle btn-icon-circle-sm me-2">4</button>Document Details
+            </p>
+        </li>
+    </ul>
+    <input asp-for="Id" readonly hidden />
+    <input asp-for="UserName" readonly hidden />
+    <input asp-for="PartnerCode" readonly hidden />
+    <div id="step-one" style="display:block">
+        <div class="row">
+            <h3>Contact Person</h3>
+            <div class="col-md-6 mb-2 mb-2">
+                @if (@Model.FirstName is not null)
+                {
+                    <label asp-for="@Model.FirstName" class="form-label">First Name</label>
+                    <input asp-for="@Model.FirstName" onkeydown="return /[a-z]/i.test(event.key)" type="text" class="form-control">
+                    <div class="form-check">
+                        <input asp-for="IsFirstNamePresent" class="form-check-input" onchange="Namechange()" type="checkbox" id="ContinueWithoutFirstNameupdate">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Continue without First Name
+                        </label>
+                    </div>
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                }
+                else
+                {
+                    <label asp-for="@Model.FirstName" class="form-label">First Name</label>
+                    <input asp-for="@Model.FirstName" onkeydown="return /[a-z]/i.test(event.key)" type="text" class="form-control" disabled>
+                    <div class="form-check">
+                        <input asp-for="IsFirstNamePresent" class="form-check-input" onchange="Namechange()" type="checkbox" id="ContinueWithoutFirstNameupdate" checked>
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Continue without First Name
+                        </label>
+                    </div>
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                }
+            </div>
+            <div class="col-md-6 mb-2 mb-2">
+                <label asp-for="SurName" class="form-label">Last Name <span class="text-danger">*</span></label>
+                <input asp-for="SurName" onkeydown="return /[a-z]/i.test(event.key)" type="text" class="form-control">
+                <span asp-validation-for="SurName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  mb-2">
+                <label asp-for="MobileNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                <div class="row">
+                    <div class="col-md-5">
+                        <select asp-for="CallingCode" class="form-select" asp-items="@ViewBag.CallingCode">
+                        </select>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" maxlength="10" asp-for="MobileNumber" onkeypress="return isNumber(event)" placeholder="" required>
+                    </div>
+                </div>
+                <span asp-validation-for="MobileNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  mb-2">
+                <label asp-for="Email" for="validationCustomUsername" class="form-label">Email <span class="text-danger">*</span></label>
+                <div class="input-group has-validation">
+                    @{
+                        var sa = "@";
+                    }
+                    <input asp-for="Email" type="text" class="form-control">
+                </div>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  mb-2">
+                <label asp-for="Post" class="form-label">Position <span class="text-danger">*</span></label>
+                <input asp-for="Post" type="text" class="form-control">
+                <span asp-validation-for="Post" class="text-danger"></span>
+            </div>
+        </div>
+        <a class="btn btn-primary" onclick="showForm('1')">Next</a>
+    </div>
+    <div id="step-two" style="display:none">
+        <h3>Settlement Details</h3>
+        <div class="row">
+            <div class="col-md-4 mb-2">
+                <label asp-for="ChargeCategoryId" class="form-label">Service</label>
+                <select asp-for="ChargeCategoryId" class="form-select" asp-items="@ViewBag.ChargeCategoryType">
+                </select>
+                <span asp-validation-for="ChargeCategoryId" class="text-danger"></span>
+            </div>
+            <div class="col-md-4  form-group mb-2">
+                <label asp-for="FundType" class="form-label" for="userpassword">Balance Type</label>
+                <select asp-for="FundTypeId" onchange="Showlimit()" class="form-select" asp-items="@ViewBag.FundType">
+                </select>
+                <span asp-validation-for="FundType" class="text-danger"></span>
+            </div>
+            <div id="CreditSendTxnLimitWrapper" class="col-md-4 mb-2 PrefundingContainer ">
+                <label asp-for="CreditSendTxnLimit" class="form-label">Credit Send Txn Limit(Flat)</label>
+                <input asp-for="CreditSendTxnLimit" type="number" class="form-control">
+                <span asp-validation-for="CreditSendTxnLimit" class="text-danger"></span>
+            </div>
+            <div id="CreditSendTxnLimitPercentWrapper" class="col-md-4 mb-2 PrefundingContainer">
+                <label asp-for="CreditUptoLimitPerc" class="form-label">Credit Send Txn Limit(%)</label>
+                <input asp-for="CreditUptoLimitPerc" type="number" class="form-control">
+                <span asp-validation-for="CreditUptoLimitPerc" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label asp-for="CashPayoutSendTxnLimit" class="form-label">Send Txn Limit(Cash Payout)</label>
+                <input asp-for="CashPayoutSendTxnLimit" type="number" class="form-control">
+                <span asp-validation-for="CashPayoutSendTxnLimit" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label asp-for="WalletSendTxnLimit" class="form-label">Send Txn Limit(Wallet)</label>
+                <input asp-for="WalletSendTxnLimit" type="number" class="form-control">
+                <span asp-validation-for="WalletSendTxnLimit" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label asp-for="BankSendTxnLimit" class="form-label">Send Txn Limit(Bank)</label>
+                <input asp-for="BankSendTxnLimit" type="number" class="form-control">
+                <span asp-validation-for="BankSendTxnLimit" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 position-relative mb-2">
+                <label asp-for="TransactionApproval" class="form-label">Txn Approve</label>
+                <div class="form-check form-switch">
+                    <input asp-for="TransactionApproval" class="form-check-input" type="checkbox" id="flexSwitchCheckDefaults">
+                    <label class="form-check-label" for="flexSwitchCheckDefaults">Is Active</label>
+                </div>
+                <span asp-validation-for="TransactionApproval" class="text-danger"></span>
+            </div>
+        </div>
+        <a class="btn btn-primary" onclick="showForm('4')">Previous</a>
+        <a class="btn btn-primary" onclick="showForm('2')">Next</a>
+    </div>
+    <div id="step-three" style="display:none">
+        <h3>Company Details</h3>
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <label asp-for="OrganizationName" class="form-label">Organization Name <span class="text-danger">*</span></label>
+                <input asp-for="OrganizationName" type="text" class="form-control">
+                <span asp-validation-for="OrganizationName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="RegistrationNumber" class="form-label">Company Registration Number <span class="text-danger">*</span></label>
+                <input asp-for="RegistrationNumber" type="text" class="form-control">
+                <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="BusinessNumber" class="form-label">Business Number</label>
+                <input asp-for="BusinessNumber" type="text" class="form-control">
+                <span asp-validation-for="BusinessNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="FinancialTransactionRegNo" class="form-label">Financial Transaction Reg. No.</label>
+                <input asp-for="FinancialTransactionRegNo" type="text" class="form-control">
+                <span asp-validation-for="FinancialTransactionRegNo" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="RemittancRegNumber" class="form-label">Remittance Reg. No.</label>
+                <input asp-for="RemittancRegNumber" type="text" class="form-control">
+                <span asp-validation-for="RemittancRegNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="LicenseNumber" class="form-label">License Number</label>
+                <input asp-for="LicenseNumber" type="text" class="form-control">
+                <span asp-validation-for="LicenseNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="OrgEmail" for="validationCustomUsername" class="form-label">Email <span class="text-danger">*</span></label>
+                <input asp-for="OrgEmail" type="text" class="form-control">
+                <span asp-validation-for="OrgEmail" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="CountryCode" class="form-label">Country</label>
+                <select asp-for="CountryCode" class="form-select" asp-items="@ViewBag.Countryddl">
+                </select>
+                <span asp-validation-for="CountryCode" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="OrgState" class="form-label">State <span class="text-danger">*</span></label>
+                <input asp-for="OrgState" type="text" class="form-control">
+                <span asp-validation-for="OrgState" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="City" class="form-label">City <span class="text-danger">*</span></label>
+                <input asp-for="City" type="text" class="form-control">
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="ZipCode" class="form-label">Zip Code</label>
+                <input asp-for="ZipCode" type="text" class="form-control">
+                <span asp-validation-for="ZipCode" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="FullAddress" class="form-label">Full Address <span class="text-danger">*</span></label>
+                <input asp-for="FullAddress" type="text" class="form-control">
+                <span asp-validation-for="FullAddress" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="GMTTimeZone" for="validationCustomUsername" class="form-label">GMT Time Zone <span class="text-danger">*</span></label>
+                <div class="input-group has-validation">
+                    <span class="input-group-text" id="inputGroupPrepend">GMT</span>
+                    <select asp-for="GMTTimeZone" class="form-select" asp-items="@ViewBag.UtctimeZoneLookup">
+                    </select>
+                </div>
+                <span asp-validation-for="GMTTimeZone" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="SourceCurrency" class="form-label">Local (Source) Currency <span class="text-danger">*</span></label>
+                <select asp-for="SourceCurrency" class="form-select" asp-items="@ViewBag.Currency">
+                </select>
+                <span asp-validation-for="SourceCurrency" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="CompanyLogo" class="form-label">Company Logo <span class="text-danger">*</span></label>
+                <input asp-for="CompanyLogo" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'CompanyLogoId','logohide','CompanyLogotextid')">
+                <span asp-validation-for="CompanyLogo" class="text-danger"></span>
+                <span id="CompanyLogotextid" class="text-danger" hidden></span>
+                @{
+                    if (Model != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(Model.CompanyLogoImgPath))
+                        {
+                            <img style="width:90px;" id="logohide" src="@Model.CompanyLogoImgPath" alt="img">
+                        }
+                    }
+                    <img id="CompanyLogoId" src="#" style="width:90px;" hidden>
+                }
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-10">
+                        <h4 class="card-title text-primary">License Document *</h4>
+                    </div>
+                    <div class="col-2">
+                        <a onclick="AddLicense()" data-repeater-create="" class="btn btn-soft-primary btn-sm">
+                            <span class="fas fa-plus"></span>Add License
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @if (Model.LicensedocImgPath != null && Model.LicensedocImgPath.Count > 0)
+                    {
+                        foreach (var image in Model.LicensedocImgPath)
+                        {
+                            var imageid = Guid.NewGuid();
+                            <div class="col-4" id="@imageid">
+
+                                <img src="@image" alt="docimg" class="img-responsive fit-image" />
+                                <input asp-for="@Model.LicensedocImgPath" value="@image" hidden readonly />
+                            </div>
+                        }
+                    }
+                    <div class="row">
+                        <div id="License" class="repeater-default">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="card-title text-primary">Director Details </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="listitem" class="repeater-default">
+                            <div id="listitem-0" data-repeater-list="car">
+                                @{
+                                    int i = 0;
+                                }
+                                @foreach (var director in Model.Directors)
+                                {
+                                    <div data-repeater-item="">
+                                        <div class="form-group row d-flex align-items-end">
+                                            <div class="col-md-4 ">
+                                                <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control"
+                                                       value="@director.FirstName"
+                                                       data-val="true"
+                                                       data-val-required="Name is required"
+                                                       id="Directors_@i __FirstName"
+                                                       name="Directors[@i].FirstName" required>
+                                            </div>
+                                            <div class="col-md-4 ">
+                                                <label class="form-label">Contact <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control"
+                                                       value="@director.ContactNumber"
+                                                       data-val="true"
+                                                       data-val-required="Phone Number is required"
+                                                       id="Directors_@i __ContactNumber"
+                                                       name="Directors[@i].ContactNumber" onkeypress="return isNumber(event)" required>
+                                            </div>
+                                            <div class="col-md-3 ">
+                                                <label for="validationCustomUsername" class="form-label">Email <span class="text-danger">*</span></label>
+                                                <div class="input-group has-validation">
+                                                    <span class="input-group-text" id="inputGroupPrepend">a</span>
+                                                    <input type="text" class="form-control" data-val="true"
+                                                           value="@director.Email" data-val-required="Email is required"
+                                                           id="Directors_@i __Email" name="Directors[@i].Email" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+                        </div> 
+                        <div class="form-group mb-0 row">
+                            <div class="col-sm-12">
+                                <a onclick="Additem(@i)" data-repeater-create="" class="btn btn-soft-primary btn-sm">
+                                    <span class="fas fa-plus"></span> Add Director
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a class="btn btn-primary" onclick="showForm('1')">Previous</a>
+        <a class="btn btn-primary" onclick="showForm('3')">Next</a>
+    </div>
+    <div id="step-four" style="display:none">
+        <h3>Document Details</h3>
+        <div class="row ">
+            <div class="col-md-3 position-relative mb-2">
+                <label asp-for="DocumentTypeId" class="form-label">Document Type</label>
+                <select asp-for="DocumentTypeId" class="form-select" id="DocumentTypedropdown" onchange="citizenship()" asp-items="@ViewBag.DocumentType">
+                </select>
+                <span asp-validation-for="DocumentTypeId" class="text-danger"></span>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label asp-for="DocumentNumber" class="form-label">Document Number <span class="text-danger">*</span></label>
+                <input asp-for="DocumentNumber" type="text" class="form-control">
+                <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2" id="ExpiryDatediv">
+                <label asp-for="ExpiryDate" class="form-label">Expiry date</label>
+                <input asp-for="ExpiryDate" id="ExpiryDate" type="date" class="form-control">
+                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2" id="IssueDatediv">
+                <label asp-for="IssueDate" class="form-label">Issue Date</label>
+                <input asp-for="IssueDate" id="IssueDate" type="date" class="form-control">
+                <span asp-validation-for="IssueDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="IDFront" class="form-label">ID Front <span class="text-danger">*</span></label>
+                <div class="input-group mb-3">
+                    <input asp-for="IDFront" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'IDFrontId','fronthide','IDFronttextid')">
+                </div>
+                <span asp-validation-for="IDFront" class="text-danger"></span>
+                <span id="IDFronttextid" class="text-danger" hidden></span>
+                @{
+                    if (Model != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(Model.IdFrontImgPath))
+                        {
+                            <img style="width:90px;" id="fronthide" src="@Model.IdFrontImgPath" alt="IdFrontImgPath">
+                        }
+                    }
+                }
+                <img id="IDFrontId" src="#" style="width:90px;" hidden>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="IDBack" class="form-label">ID Back </label>
+                <div class="input-group mb-3">
+                    <input asp-for="IDBack" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'IDBackId','backhide','IDBacktextid')">
+                </div>
+                <span asp-validation-for="IDBack" class="text-danger"></span>
+                <span id="IDBacktextid" class="text-danger" hidden></span>
+                @{
+                    if (Model != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(Model.IdBackImgPath))
+                        {
+                            <img style="width:90px;" id="backhide" src="@Model.IdBackImgPath" alt="IdBackImgPath">
+                        }
+                    }
+                    <img id="IDBackId" src="#" style="width:90px;" hidden>
+                }
+            </div>
+            <div class="col-md-6 position-relative mb-2">
+                <label asp-for="AddressProofTypeId" class="form-label">Address Prof Type</label>
+                <select asp-for="AddressProofTypeId" class="form-select" asp-items="@ViewBag.Addressproof">
+                </select>
+                <span asp-validation-for="AddressProofTypeId" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label asp-for="AddressProfImage" class="form-label">Address Prof Image </label>
+                <div class="input-group mb-3">
+                    <input asp-for="AddressProfImage" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'AddressProfImageid','addresshide','AddressProfImagetextid')">
+                </div>
+                <span asp-validation-for="AddressProfImage" class="text-danger"></span>
+                <span id="AddressProfImagetextid" class="text-danger" hidden></span>
+                @{
+                    if (Model != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(Model.AddressProofImgPath))
+                        {
+                            <img style="width:90px;" id="addresshide" src="@Model.AddressProofImgPath" alt="AddressProofImgPath">
+                        }
+                    }
+                    <img id="AddressProfImageid" src="#" style="width:90px;" hidden>
+                }
+            </div>
+            <div class="form-check">
+                <input asp-for="IsActive" class="form-check-input" type="checkbox" id="flexCheckDefault2">
+                <label class="form-check-label" for="flexCheckDefault2">
+                    Activate User
+                </label>
+            </div>
+        </div>
+        <a class="btn btn-primary" onclick="showForm('2')">Previous</a>
+        <button class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+<style>
+    .invalid-input {
+        border: 2px solid red; /* Add a red border to the invalid input */
+        background-color: rgba(255, 0, 0, 0.1); /* Add a light red background */
+    }
+</style>
+
+<script>
+    function deleteimage(imageid, DeletedImage) {
+        const listDiv = document.getElementById(imageid);
+        const directorTemplate = `<input value="${DeletedImage}" hidden="" readonly="" type="text" id="DeletedLicensedocImgPath" name="DeletedLicensedocImgPath">`;
+        listDiv.insertAdjacentHTML("afterend", directorTemplate);
+        removeelement(imageid)
+    }
+</script>
+
+<script>
+    function onimagechange(data, id, hideid, textid) {
+        readURL(data, id, textid);
+        $('#' + hideid).attr("hidden", true);
+    }
+    function readURL(input, id, textid) {
+        if (input.files && input.files[0]) {
+            if (input.files[0].type.split('/')[0] != 'image') {
+                $('#' + id).attr('src', "");
+                document.getElementById(textid).innerHTML = 'Invalid file extension'
+                $('#' + textid).removeAttr('hidden');
+                return false
+            }
+            else if (input.files[0].size < (5 * 1024 * 1024)) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    var data = e.target.result;
+                    document.getElementById(textid).innerHTML = ''
+                    $('#' + id).attr('src', e.target.result);
+                    $('#' + id).removeAttr('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                $('#' + id).attr('src', "");
+                document.getElementById(textid).innerHTML = 'Invalid Image File Size (<5 MB)'
+                $('#' + textid).removeAttr('hidden');
+            }
+        }
+    };
+</script>
+
+<script>
+    function Namechange() {
+        var data = $('#ContinueWithoutFirstNameupdate').is(":checked");
+        if (data) {
+            $('#FirstName').val('');
+            $('#FirstName').attr('disabled', 'disabled');
+        } else {
+            $('#FirstName').val('');
+            $('#FirstName').removeAttr('disabled');
+        }
+    }
+
+    function ChangeFormnumber(selectedNumber) {
+        $("#Ul-multiform li p").removeClass("text-primary").addClass("text-secondary");
+        $("#Ul-multiform li button").removeClass("btn-primary").addClass("btn-soft-primary");
+        var $selectedItem = $("#li-" + selectedNumber);
+        // Update the selected item's classes
+        $selectedItem.find("p").removeClass("text-secondary").addClass("text-primary");
+        $selectedItem.find("button").removeClass("btn-soft-primary").addClass("btn-primary");
+    }
+</script>
+
+<script>
+    var count = 0;
+    var Licensecount = 0;
+    function AddLicense() {
+        const listDiv = document.getElementById("License");
+        const directorTemplate = `<div id="License-${Licensecount}" data-repeater-list="car">
+                                                        <div data-repeater-item="">
+                                                            <div class="form-group row d-flex align-items-end">
+                                                                    <img id="licanceimage-${Licensecount}" src="#" style="width:90px;height:41px;"  hidden>
+                                                                <div class="col-md-4 ">
+                                                                                    <input type="file"  name="LicenseDocument" class="form-control" onchange="onimagechange(this,'licanceimage-${Licensecount}','','licanceimageText-${Licensecount}')" accept="image/*" />
+                                                                           <span asp-validation-for="LicenseDocument" class="text-danger" ></span>
+                                                               </div>
+                                                                <div class="col-md-1 ">
+                                                                                <button onclick="removeelement('License-${Licensecount}')"class="btn btn-sm btn-danger" data-repeater-delete="">
+                                                                            <i class="dripicons-trash"></i></button>
+                                                                </div><!--end col-->
+                                                                    <span id="licanceimageText-${Licensecount}" class="text-danger" hidden></span>
+                                                            </div><!--end row-->
+                                                        </div><!--end /div-->
+                                                    </div><!--end repet-list-->`;
+        listDiv.insertAdjacentHTML("beforeend", directorTemplate);
+        Licensecount = Licensecount + 1;
+    }
+</script>
+
+<script>
+    var count = 0;
+    function Additem(val) {
+        if (count == 0) {
+            count = val;
+        }
+        const listDiv = document.getElementById("listitem");
+        var data = count;
+        const directorTemplate = `<div id="listitem-${count}" data-repeater-list="car">
+                                                                    <div data-repeater-item="">
+                                                                        <div class="form-group row d-flex align-items-end">
+                                                                            <div class="col-md-4 ">
+                                                                                <label  class="form-label">Full Name</label>
+                                                                                <input type="text" class="form-control" value=""  data-val="true"
+                                                                                            data-val-required="Name is required"
+                                                                                                    id="Directors_${count}__FirstName"
+                                                                                                        name="Directors[${count}].FirstName" required>
+                                                                                        <span asp-validation-for="Directors[${count}].FirstName" class="text-danger" ></span>
+                                                                            </div>
+                                                                            <div class="col-md-4 ">
+                                                                                <label class="form-label">Contact</label>
+                                                                                 <input type="text" class="form-control" data-val="true" maxlength="10" data-val-required="Phone Number is required" id="Directors_${count}__ContactNumber" name="Directors[${count}].ContactNumber" onkeypress="return isNumber(event)" placeholder="" required>
+                                                                                 <span asp-validation-for="Directors[${count}].ContactNumber" class="text-danger" ></span>
+                                                                            </div>
+                                                                            <div class="col-md-3 ">
+                                                                                <label for="validationCustomUsername" class="form-label">Email</label>
+                                                                                <div class="input-group has-validation">
+                                                                                    <span class="input-group-text" id="inputGroupPrepend">a</span>
+                                                                                               <input type="text" class="form-control"   data-val="true"
+                                                                                                            data-val-required="Email is required" Value=""
+                                                                                                                        id="Directors_${count}__Email" name="Directors[${count}].Email"  required>
+                                                                                </div>
+                                                                                    <span asp-validation-for="Directors[${count}].Email" class="text-danger"></span>
+                                                                            </div>
+                                                                            <div class="col-md-1 ">
+                                                                                    <button onclick="removeelement('listitem-${count}')"class="btn btn-sm btn-danger" data-repeater-delete="">
+                                                                                        <i class="dripicons-trash"></i></button>
+                                                                            </div><!--end col-->
+                                                                        </div><!--end row-->
+                                                                    </div><!--end /div-->
+                                                                </div><!--end repet-list-->`;
+        listDiv.insertAdjacentHTML("beforeend", directorTemplate);
+        count = count + 1;
+    }
+
+    function removeelement(divId) {
+        const divToRemove = document.getElementById(divId);
+        if (divToRemove) {
+            divToRemove.remove();
+        }
+    }
+</script>
+
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("UpdatePartner", "Partners")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#UpdatePartnerForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        citizenship();
+        handleBalanceType();
+    });
+
+    function citizenship() {
+        console.log('hoii')
+        var documenttype = $("#DocumentTypedropdown").val();
+        if (documenttype == 1 || documenttype == 6) {
+            //hide expiry and show  issue
+            $("#ExpiryDatediv").css("display", "none");
+            $("#IssueDatediv").css("display", "block");
+        }
+        else {
+            //show expiry and hide issue
+            $("#ExpiryDatediv").css("display", "block");
+            $("#IssueDatediv").css("display", "block");
+        }
+    }
+
+    function handleBalanceType() {
+        var valBalanceType = $("#UpdatePartnerForm #FundType").val();
+        switch (valBalanceType.toUpperCase()) {
+            case 'CONSUMPTION':
+                hideFormSection('#UpdatePartnerForm #CreditSendTxnLimitPercentWrapper');
+                showFormSection('#UpdatePartnerForm #CreditSendTxnLimitWrapper');
+                break;
+            case 'PREFUNDING':
+                showFormSection('#UpdatePartnerForm #CreditSendTxnLimitPercentWrapper');
+                hideFormSection('#UpdatePartnerForm #CreditSendTxnLimitWrapper');
+                break;
+            default: // => PREFUNDING
+                showFormSection('#UpdatePartnerForm #CreditSendTxnLimitPercentWrapper');
+                hideFormSection('#UpdatePartnerForm #CreditSendTxnLimitWrapper');
+        }
+    }
+
+    function Showlimit() {
+        handleBalanceType();
+    }
+
+    function checkformonevalidation(sectionId) {
+        var $inputField = $("#" + sectionId + " input");
+        $.validator.unobtrusive.parse($inputField);
+        if ($inputField.valid()) {
+            return true
+        }
+        return false
+    }
+
+    function validatedirector() {
+        var isValid = true;
+        $('#listitem input[name^="Directors"][name$=".FirstName"]').each(function () {
+            var inputValue = $(this).val();
+            var $newSpan = $("<span class='text-danger'>Director Name is Required</span>");
+            if (inputValue.trim() === '') {
+                $(this).next("span").remove();;
+                $(this).after($newSpan);
+                isValid = false;
+            } else {
+
+                $(this).next("span").remove();;
+            }
+        });
+
+        $('#listitem input[name^="Directors"][name$=".ContactNumber"]').each(function () {
+            var inputValue = $(this).val();
+            var $newSpan = $("<span class='text-danger'>Director Phone Number is Required</span>");
+            if (inputValue.trim() === '') {
+                $(this).next("span").remove();;
+                $(this).after($newSpan);
+                isValid = false;
+            } else {
+
+                $(this).next("span").remove();;
+            }
+        });
+
+        $('#listitem input[name^="Directors"][name$=".Email"]').each(function () {
+            var inputValue = $(this).val();
+            var $newSpan = $("<span class='text-danger'>Director Email is Required</span>");
+            if (inputValue.trim() === '') {
+                $(this).next("span").remove();;
+                $(this).after($newSpan);
+                isValid = false;
+            } else {
+
+                $(this).next("span").remove();;
+            }
+        });
+
+        return isValid;
+    }
+
+    function showForm(divId) {
+        if (divId == '1') {
+            var check = checkformonevalidation('step-one');
+            if (check) {
+                document.getElementById("step-one").style.display = "none"
+                document.getElementById("step-two").style.display = "block"
+                document.getElementById("step-three").style.display = "none"
+                document.getElementById("step-four").style.display = "none"
+                document.getElementById("step-four").style.display = "none"
+                ChangeFormnumber(2);
+            }
+        }
+
+        if (divId == '2') {
+            var check = checkformonevalidation('step-two');
+            if (check) {
+                document.getElementById("step-one").style.display = "none"
+                document.getElementById("step-two").style.display = "none"
+                document.getElementById("step-three").style.display = "block"
+                document.getElementById("step-four").style.display = "none"
+                ChangeFormnumber(3);
+            }
+        }
+
+        if (divId == '3') {
+            var director = validatedirector();
+            var check = checkformonevalidation('step-three');
+
+            if (check && director) {
+                document.getElementById("step-one").style.display = "none"
+                document.getElementById("step-two").style.display = "none"
+                document.getElementById("step-three").style.display = "none"
+                document.getElementById("step-four").style.display = "block"
+                ChangeFormnumber(4);
+            }
+        }
+
+        if (divId == '4') {
+            var check = checkformonevalidation('step-four');
+
+            if (check) {
+                document.getElementById("step-one").style.display = "block"
+                document.getElementById("step-two").style.display = "none"
+                document.getElementById("step-three").style.display = "none"
+                document.getElementById("step-four").style.display = "none"
+                document.getElementById("step-four").style.display = "none"
+                ChangeFormnumber(1);
+            }
+        }
+    }
+</script>
+
+
+

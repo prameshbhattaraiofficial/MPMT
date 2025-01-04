@@ -1,0 +1,65 @@
+﻿@using Mpmt.Web.Areas.Admin.ViewModels.Paetner;
+@model UpdateApikeyVM
+<form id="PartnerApikeyForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <div class="card p-2">
+        <div class="form-group mb-2">
+            <label class="form-label" for="userpassword">API KEY </label>
+
+            <div class="input-group">
+                <input class="form-control" aria-label="With textarea" id="Apikeyid" disabled
+                          value="@Model.Apikey" />
+                <button type="button" id="copyText" onclick="CopyText('Apikeyid')" class="input-group-text">Copy</button>
+            </div>
+        </div>
+        <input asp-for="PartnerCode" style="display:none" readonly />
+        <input asp-for="CredentialId" style="display:none" readonly />
+        <div class="row">
+            <div class="col"></div>
+            <!--end col-->
+            <div class="col-auto align-self-center">
+                <div class="button-items float-right pull-right">
+                    <button type="submit" class="btn btn-sm btn-primary">Regenrate ApiKey</button>
+                </div>
+            </div>
+            <!--end col-->
+        </div>
+    </div>
+
+
+
+    <div class="form-group mb-0 row mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+
+    </div>
+</form><!--end form-->
+<script>
+    function CopyText(fieldid){
+        debugger
+        var copyText = document.getElementById(fieldid);
+
+        // Select the text field
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(copyText.value);
+        $('#copyText').text('Copied');       
+    }
+</script>
+<script>
+
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("ViewCredentialsPartner", "Partners")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#PartnerApikeyForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+
+        Pagination.getData();
+    });
+</script>

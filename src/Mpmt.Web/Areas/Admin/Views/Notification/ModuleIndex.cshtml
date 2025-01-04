@@ -1,0 +1,56 @@
+﻿@using Mpmt.Core.Dtos.Notification;
+@model IEnumerable<NotificationModule>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Setting</a></li>
+                            <li class="breadcrumb-item active">Notification Module List</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Notification Module List</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="NotificationModuleTableWrapper" class="table-responsive">
+                        <partial name="_ModuleIndex" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("ModuleIndex", "Notification")',
+                selector: '#NotificationModuleTableWrapper'
+            });
+            addPaginationHandlers();
+        });
+    </script>
+}

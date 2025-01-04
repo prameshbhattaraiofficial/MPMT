@@ -1,0 +1,42 @@
+﻿@using Mpmt.Core.ViewModel.Role;
+@model UpdateRoleVm
+
+
+@if (Model is not null)
+{
+    <form id="formDeleterole" method="post" asp-controller="AgentRoles" asp-action="DeleteRole" autocomplete="off" class="text-center">
+        <div class="modal-content">
+            <input asp-for="Id" type="hidden">
+            <input asp-for="AgentCode" type="hidden">
+            <div class="modal-body">
+                Do you really want to delete these records?
+                This process cannot be undone
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="confirmYes" data-bs-dismiss="modal">Confirm</button>
+                <button type="button" class="btn btn-danger btn-sm" id="confirmNo" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </form>
+}
+else
+{
+    <i class="fa fa-circle-xmark text-danger fa-5x mb-20 m-t-15 "></i>
+    <h3 class="m-t-25">Opps!!</h3>
+    <p class="m-t-25 m-b-15">
+        We could not find Detail?<br>
+        SomeThing went wrong
+    </p>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+    </div>
+}
+<script>
+    document.getElementById('confirmYes').addEventListener('click', function () {
+        document.getElementById('formDeleterole').submit();
+    });
+    document.getElementById('confirmNo').addEventListener('click', function () {
+        document.getElementById('confirmation-overlay').style.display = 'none';
+        document.getElementById('confirmation-modal').style.display = 'none';
+    });
+</script>

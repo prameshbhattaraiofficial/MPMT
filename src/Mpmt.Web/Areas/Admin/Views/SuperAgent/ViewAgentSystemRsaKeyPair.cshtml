@@ -1,0 +1,108 @@
+﻿@using Mpmt.Web.Areas.Admin.ViewModels.Paetner;
+@model SystemRsakeyPairAgentVM
+<form id="PasswordSystemRsakeyPair" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <div class="card p-2">
+        <div class="form-group mb-2">
+            <label class="form-label" for="userpassword">System Public KEY </label>
+
+            <div class="input-group">
+                <textarea class="form-control" id="publickeyid" aria-label="With textarea" disabled
+                          placeholder="" rows="9" cols="64">@Model.PublicKey</textarea>
+            </div>
+            <div class="input-group justify-content-end mt-2">
+                <button type="button" id="copyText" onclick="CopyPrivateText('publickeyid')" class="input-group-text">Copy</button>
+                <button type="button" onclick="downloadKeyFile('SYSTEMPUBLICKEY')" class="input-group-text">Download</button>
+            </div>
+        </div>
+        <div class="form-group mb-2">
+            <label class="form-label" for="userpassword">System Private KEY </label>
+
+            <div class="input-group">
+                <textarea class="form-control" id="privatekeycopy" aria-label="With textarea" disabled
+                          placeholder="@Model.PrivetKey" rows="29" cols="64">@Model.PrivetKey</textarea>
+            </div>
+            <div class="input-group justify-content-end mt-2">
+                <button type="button" id="copyT" onclick="CopyPrivateT('privatekeycopy')" class="input-group-text">Copy</button>
+                <button type="button" onclick="downloadKeyFile('SYSTEMPRIVATEKEY')" class="input-group-text">Download</button>
+            </div>
+        </div>
+        <input asp-for="AgentCode" style="display:none" readonly />
+        <input asp-for="CredentialId" style="display:none" readonly />
+        <div class="row mt-2">
+            <div class="col"></div>
+            <!--end col-->
+            <div class="col-auto align-self-center">
+                <div class="button-items float-right pull-right">
+                    <button type="submit" class="btn btn-sm btn-primary">Regenerate System RSA Key Pair</button>
+                </div>
+            </div>
+            <!--end col-->
+        </div>
+    </div>
+
+    <div class="form-group mb-0 row mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+
+    </div>
+</form><!--end form-->
+
+<script>
+    function downloadKeyFile(keyType) {
+        if (!keyType)
+            throw new Error('Invalid keyType.');
+
+        var url = '@Url.Action("ExportCredential", "SuperAgent")';
+        var AgentCode = $('#PasswordSystemRsakeyPair [name="AgentCode"]').val();
+
+        var reqBodyObj = {
+            AgentCode: AgentCode,
+            CredentialType: keyType
+        }
+
+        downloadRsaFileAsPem(url, reqBodyObj);
+    }
+</script>
+<script>
+    function CopyPrivateText(fieldid) {
+        var copyText = document.getElementById(fieldid);
+
+        // Select the text field
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(copyText.value);
+        $('#copyText').text('Copied');
+    }
+</script>
+<script>
+    function CopyPrivateT(fieldid) {
+        var copyText = document.getElementById(fieldid);
+
+        // Select the text field
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(copyText.value);
+        $('#copyT').text('Copied');
+    }
+</script>
+
+<script>
+
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("ViewPasswordSystemRsakeyPair", "SuperAgent")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#PasswordSystemRsakeyPair'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+
+        Pagination.getData();
+    });
+</script>

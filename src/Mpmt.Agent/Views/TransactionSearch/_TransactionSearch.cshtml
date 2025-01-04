@@ -1,0 +1,544 @@
+﻿@using Mpmt.Core.Dtos.Agent;
+@model AgentTxnModel
+
+@* <form id="payoutForm" method="post" class="form-horizontal form-wizard-wrapper">
+ *@
+
+<link href="~/nepali.datepicker.v3/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/nepali.datepicker.v3/css/nepali.datepicker.v3.min.css" rel="stylesheet" />
+<div id="confirmation-overlay"></div>
+
+<div class="modal" id="confirmation-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel"> Are you sure ? </h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Want to payout this transaction ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="confirmYes" data-bs-dismiss="modal">Confirm</button>
+                <button type="button" class="btn btn-danger btn-sm" id="confirmNo" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ul id="formErrorsWrapper">
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <li class="text-danger">ViewBag.ErrorMessage</li>
+    }
+</ul>
+<div class="row">
+    <div class="col">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Tansaction Search</a></li>
+            <li class="breadcrumb-item active">Payout Details</li>
+        </ol>
+    </div>
+    <div class="col-auto">
+    </div>
+</div>
+
+<form method="post" id="myForm" enctype="multipart/form-data" asp-controller="TransactionSearch" asp-action="SearchTxn">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header  ps-m">
+                    <h4 class="card-titles">Transaction Details</h4>
+                </div>
+                <div class="card-body p-2 auth-header-box">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 table-sm table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td><span>Control Number :</span></td>
+                                    <td><span class="tb-lead">@Model.ControlNumber</span></td>
+                                    <input type="hidden" name="ControlNumber" id="ControlNumber" value="@Model.ControlNumber" />
+                                </tr>
+                                <tr>
+                                    <td><span>Payment Amount :</span></td>
+                                    <td><span class="tb-lead">NPR. @Model.PaymentAmountNPR</span></td>
+                                    <input type="hidden" name="PaymentAmountNPR" id="PaymentAmountNPR" value="@Model.PaymentAmountNPR" />
+                                </tr>
+                                <tr>
+                                    <td><span>Payment Mode :</span></td>
+                                    <td><span>@Model.PaymentType</span></td>
+                                    <input type="hidden" name="PaymentType" id="PaymentType" value="@Model.PaymentType" />
+                                </tr>
+                                <tr>
+                                    <td><span>Payment Status :</span></td>
+                                    <td><span class="badge bg-danger">@Model.PaymentStatus</span></td>
+                                    <input type="hidden" name="PaymentStatus" id="PaymentStatus" value="@Model.PaymentStatus" />
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header ps-m">
+                    <h4 class="card-titles">Sender Details</h4>
+                </div>
+                <div class="card-body p-2 auth-header-box">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 table-sm table-borderless">
+
+                            <tbody>
+
+                                <tr>
+                                    <td><span>Full Name :</span></td>
+                                    <td><span class="tb-lead">@Model.SenderFullName</span></td>
+                                    <input type="hidden" name="SenderFullName" id="SenderFullName" value="@Model.SenderFullName" />
+
+                                </tr>
+                                <tr>
+                                    <td><span>Contact :</span></td>
+                                    <td><span class="tb-lead">@Model.SenderContactNumber</span></td>
+                                    <input type="hidden" name="SenderContactNumber" id="SenderContactNumber" value="@Model.SenderContactNumber" />
+
+                                </tr>
+                                <tr>
+                                    <td><span>Email :</span></td>
+                                    <td><span>@Model.SenderEmail</span></td>
+                                    <input type="hidden" name="SenderEmail" id="SenderEmail" value="@Model.SenderEmail" />
+
+                                </tr>
+                                <tr>
+                                    <td><span>Country :</span></td>
+                                    <td><span class="tb-lead">@Model.SenderCountry</span></td>
+                                    <input type="hidden" name="SenderCountry" id="SenderCountry" value="@Model.SenderCountry" />
+
+                                </tr>
+                                <tr>
+                                    <td><span>Address :</span></td>
+                                    <td><span class="tb-lead">@Model.SenderAddress</span></td>
+                                    <input type="hidden" name="SenderAddress" id="SenderAddress" value="@Model.SenderAddress" />
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header  ps-m">
+                    <h4 class="card-titles">Receiver Details</h4>
+                </div>
+                <div class="card-body p-2 auth-header-box">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 table-sm table-borderless">
+
+                            <tbody>
+                                <tr>
+                                    <td><span>Full Name :</span></td>
+                                    <td><span class="tb-lead">@Model.ReceiverFullName</span></td>
+                                    <input type="hidden" name="ReceiverFullName" id="ReceiverFullName" value="@Model.ReceiverFullName" />
+                                </tr>
+                                <tr>
+                                    <td><span>Contact :</span></td>
+                                    <td><span class="tb-lead">@Model.ReceiverContactNumber</span></td>
+                                    <input type="hidden" name="ReceiverContactNumber" id="ReceiverContactNumber" value="@Model.ReceiverContactNumber" />
+
+                                </tr>
+                                <tr>
+                                    <td><span>Email :</span></td>
+                                    <td><span>@Model.ReceiverEmail</span></td>
+                                    <input type="hidden" name="ReceiverEmail" id="ReceiverEmail" value="@Model.ReceiverEmail" />
+                                </tr>
+
+                                <tr>
+                                    <td><span>District :</span></td>
+                                    <td><span>@Model.ReceiverDistrict</span></td>
+                                    <input type="hidden" name="ReceiverDistrict" id="ReceiverDistrict" value="@Model.ReceiverDistrict" />
+
+
+                                </tr>
+
+                                <tr>
+                                    <td><span>Address :</span></td>
+                                    <td><span class="tb-lead">@Model.ReceiverAddress</span></td>
+                                    <input type="hidden" name="ReceiverAddress" id="ReceiverAddress" value="@Model.ReceiverAddress" />
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+
+            <div class="card">
+                <div class="card-header  ps-m">
+                    <h4 class="card-titles">Receiver Information</h4>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label" for="MobileNumber">Mobile Number/Membership No <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="text" id="mobileNumber" onkeypress="isNumber(event)" asp-for="MobileNumber" class="form-control" placeholder="Mobile Number">
+                                <button type="button" class="btn btn-primary btn-sm">Search</button>
+                            </div>
+                            <span asp-validation-for="MobileNumber" class="text-danger">@ViewBag.ErrorMsg</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="IdentificationType">Identification Type</label>
+                            <select class="form-select" id="identificationType" asp-for="IdentificationType" asp-items="@ViewBag.DocumentTypeDdl">
+                                <option value="0" selected>--Select--</option>
+                            </select>
+                            <span asp-validation-for="IdentificationType" class="text-danger"></span>
+                            <input type="hidden" id="idTypeText" name="IDTypeName" value="" />
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" for="userpassword">Identification number <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input type="text" id="indentificationNumber" asp-for="IndentificationNumber" onkeypress="isAlphabateNum(event)" class="form-control" placeholder="Identification Number">
+                            </div>
+                            <span asp-validation-for="IndentificationNumber" class="text-danger">@ViewBag.ErrorMsg</span>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Issued date</label>
+                            <input type="date" id="IssueDateAD" name="IssueDateAD" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Issued date(BS)</label>
+                            <input type="text" id="IssueDateBS" asp-for="Id_IssuedDateBS" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="col-md-6 mb-2" id="ExpiryDateAd">
+                            <label class="form-label">Expiry date</label>
+                            <input type="date" id="ExpireDateAD" class="form-control">
+                        </div>
+                        <div class="col-md-6 ExpiryDateNep" id="ExpiryDateBs">
+                            <label class="form-label">Expiry date(BS)</label>
+                            <input type="text" id="ExpireDateBS" asp-for="Id_ExpiryDateBS" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label">Upload Document Image </label>
+                            <div class="input-group mb-3">
+                                <input asp-for="UploadImage" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'documentImageId','DocumentImageText')">
+                                <span id="DocumentImageText" class="text-danger" hidden></span>
+                                <a href="#" onClick='test(this)'>
+                                    <img id="documentImageId" src="#" style="width:90px;" hidden>
+                                </a>
+                                <span asp-validation-for="UploadImage" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-2 backImage">
+                            <label class="form-label">Upload Document Back Image </label>
+                            <div class="input-group mb-3">
+                                <input asp-for="UploadBackImage" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'documentBackImageId','DocumentBackImageText')">
+                                <span id="DocumentBackImageText" class="text-danger" hidden></span>
+                                <a href="#" onClick='test(this)'>
+                                    <img id="documentBackImageId" src="#" style="width:90px;" hidden>
+                                </a>
+                                <span asp-validation-for="UploadBackImage" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6  form-group mb-2">
+                            <label class="form-label" for="userpassword">Relationship  <span class="text-danger">*</span></label>
+                            <select class="form-select" id="relationShipType" asp-for="RelationShip" asp-items="@ViewBag.RelationshipDdl">
+                                <option value="0" selected>--Select--</option>
+                            </select>
+                            <span asp-validation-for="RelationShip" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-md-6 form-group mb-2 ">
+                            <label class="form-label" for="userpassword">Transaction Purpose  <span class="text-danger">*</span></label>
+                            <select class="form-select" id="purposeOfTxn" asp-for="TransactionPurpose" asp-items="@ViewBag.TransferPurposeDdl">
+                                <option value="0" selected>--Select--</option>
+                            </select>
+                            <span asp-validation-for="TransactionPurpose" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 OthersContainer" style="display: none;">
+                            <label class="form-label">Remarks <span class="text-danger">*</span></label>
+                            <input asp-for="RemarksPurpose" id="RemarksPurpose" type="text" class="form-control">
+                        </div>
+                        <h6 class="text-danger" id="remarksTxn" style="display:none;">Remarks is required!</h6>
+                        <input type="hidden" id="TransactionId" name="TransactionId" value="@Model.TransactionId" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group mb-0 row mt-4">
+            <div class="col-12">
+                <button class="btn btn-primary w-100 waves-effect waves-light" type="button" id="btnSubmit" data-bs-toggle="modal">Submit <i class="fas fa-paper-plane ms-1"></i></button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script src="~/nepali.datepicker.v3/jquery-ui.min.js"></script>
+<script src="~/nepali.datepicker.v3/js/nepali.datepicker.v3.min.js"></script>
+<script>
+
+
+    $("#identificationType").on("change", function () {
+        var text = $('#identificationType').find('option:selected').text();
+        $("#idTypeText").val(text);
+    })
+
+    $("#purposeOfTxn").on("change", function () {
+        var value = $('#purposeOfTxn').val();
+        if (value == 'Others') {
+            $(".OthersContainer").css("display", 'block');
+        }
+        else {
+            $(".OthersContainer").css("display", 'none');
+        }
+    })
+
+
+    function onimagechange(data, id, textid) {
+        readURL(data, id, textid);
+    }
+    function test(element) {
+        var newTab = window.open();
+        setTimeout(function () {
+            newTab.document.body.innerHTML = element.innerHTML;
+        }, 500);
+        return false;
+    }
+    function readURL(input, id, textid) {
+        if (input.files && input.files[0]) {
+            if (input.files[0].type.split('/')[0] != 'image') {
+                $('#' + id).attr('src', "");
+                document.getElementById(textid).innerHTML = 'Invalid file extension'
+                $('#' + textid).removeAttr('hidden');
+                return false
+            }
+            else if (input.files[0].size < (5 * 1024 * 1024)) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    var data = e.target.result;
+                    document.getElementById(textid).innerHTML = ''
+                    $('#' + id).attr('src', e.target.result);
+                    $('#' + id).removeAttr('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                $('#' + id).attr('src', "");
+                document.getElementById(textid).innerHTML = 'Invalid Image File Size (<5 MB)'
+                $('#' + textid).removeAttr('hidden');
+            }
+        }
+    };
+
+    $('#ExpiryDateAd').hide();
+    $('.ExpiryDateNep').hide();
+    $('#identificationType').change(function () {
+        if (($(this).val() === 'CTZ') || ($(this).val() === "0")) {
+            $('#ExpiryDateAd').hide();
+            $('.ExpiryDateNep').hide();
+            $('#ExpiryDateAd').val('');
+            $('.ExpiryDateNep').val('');
+        }
+        else if (($(this).val() === 'DLC')) {
+            $('#ExpiryDateAd').show();
+            $('.ExpiryDateNep').show();
+            $('.backImage').hide();
+        }
+        else if (($(this).val() === 'PPT')) {
+            $('#ExpiryDateAd').hide();
+            $('.ExpiryDateNep').hide();
+            $('#ExpiryDateAd').val('');
+            $('.ExpiryDateNep').val('');
+            $('.backImage').hide();
+        }
+        else if (($(this).val() === 'NID')) {
+            $('#ExpiryDateAd').hide();
+            $('.ExpiryDateNep').hide();
+            $('.backImage').hide();
+        }
+        else {
+            $('#ExpiryDateAd').show();
+            $('.ExpiryDateNep').show();
+        }
+    });
+</script>
+<script>
+    var yearRangeDOB = "1944:-10"; //"1944:+0";
+    var yearRangeIssue = "1944:-0";
+    var yearRangeExpire = "1944:+10"; //"1944:+20";
+    var minimum = "[1943, 04, 14]";
+    var dateFormat = "yy-mm-dd";
+    var today = new Date();
+    var startDate = today.getFullYear() - 10 + '-' + today.getMonth() + '-01';
+    var nepaliDOB = NepaliFunctions.ConvertDateFormat({ year: NepaliFunctions.GetCurrentBsYear() - 9, month: 1, day: 1 }, "YYYY-MM-DD");
+    var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+
+    $("#IssueDateAD").datepicker({
+        dateFormat: dateFormat,
+        defaultDate: startDate,
+        maxDate: new Date,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: '1943:' + today.getFullYear(),
+        showAnim: "slideDown",
+        autoSize: true
+    }).attr('readonly', 'readonly');
+
+    $('#IssueDateBS').nepaliDatePicker({
+        ndpYear: true,
+        ndpMonth: true,
+        readOnlyInput: true,
+        defaultDate: NepalDateToday,
+        ndpEnglishInput: 'IssueDateAD',
+        disableAfter: NepalDateToday,
+        onChange: function () {
+            $('#IssueDateBS').removeClass("input-validation-error");
+            if ($('#IssueDateBS-error').length > 0) {
+                $('#IssueDateBS-error').html("");
+            };
+            $('#IssueDateAD').removeClass("input-validation-error");
+            if ($('#IssueDateAD-error').length > 0) {
+                $('#IssueDateAD-error').html("");
+            }
+        }
+    });
+    $("#ExpireDateAD").datepicker({
+        dateFormat: dateFormat,
+        minDate: new Date,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-100:+20",
+        showAnim: "slideDown",
+        autoSize: true
+    }).attr('readonly', 'readonly');
+
+    $('#ExpireDateBS').nepaliDatePicker({
+        ndpYear: true,
+        ndpMonth: true,
+        readOnlyInput: true,
+        ndpEnglishInput: 'ExpireDateAD',
+        disableBefore: NepalDateToday,
+        onChange: function () {
+            $('#ExpireDateBS').removeClass("input-validation-error");
+            if ($('#ExpireDateBS-error').length > 0) {
+                $('#ExpireDateBS-error').html("");
+            };
+            $('#ExpireDateAD').removeClass("input-validation-error");
+            if ($('#ExpireDateAD-error').length > 0) {
+                $('#ExpireDateAD-error').html("");
+            }
+        }
+    });
+    $('#IssueDateAD').change(function () {
+        var dateObj = NepaliFunctions.ConvertToDateObject($('#IssueDateAD').val(), "YYYY-MM-DD");
+        $('#IssueDateBS').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+        $('#IssueDateAD').removeClass("input-validation-error");
+        if ($('#IssueDateAD-error').length > 0) {
+            $('#IssueDateAD-error').html("");
+        }
+        $('#IssueDateBS').removeClass("input-validation-error");
+        if ($('#IssueDateBS-error').length > 0) {
+            $('#IssueDateBS-error').html("");
+        }
+    });
+    $('#ExpireDateAD').change(function () {
+        var dateObj = NepaliFunctions.ConvertToDateObject($('#ExpireDateAD').val(), "YYYY-MM-DD");
+        $('#ExpireDateBS').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+        $('#ExpireDateAD').removeClass("input-validation-error");
+        if ($('#ExpireDateAD-error').length > 0) {
+            $('#ExpireDateAD-error').html("");
+        }
+        $('#ExpireDateBS').removeClass("input-validation-error");
+        if ($('#ExpireDateBS-error').length > 0) {
+            $('#ExpireDateBS-error').html("");
+        }
+    });
+</script>
+
+
+<script>
+    document.getElementById('btnSubmit').addEventListener('click', function () {
+        debugger;
+        var value = $('#purposeOfTxn').val();
+        var valuetext = $('#RemarksPurpose').val();
+        if (value != null && value.toUpperCase() == 'OTHERS') {
+            if (valuetext == null || valuetext == '') {
+                $('#remarksTxn').css('display', 'block');
+                return false;
+            }
+        }
+
+        if (!$('#myForm').valid()) {
+            document.getElementById('confirmation-overlay').style.display = 'none';
+            document.getElementById('confirmation-modal').style.display = 'none';
+        }
+        else {
+            $('#confirmation-modal').modal('show');
+        }
+
+    });
+
+    document.getElementById('confirmYes').addEventListener('click', function () {
+        document.getElementById('myForm').submit();
+    });
+
+    document.getElementById('confirmNo').addEventListener('click', function () {
+        document.getElementById('confirmation-overlay').style.display = 'none';
+        document.getElementById('confirmation-modal').style.display = 'none';
+    });
+
+
+    //alphabet and whitespace
+    function isAlphabateOnly(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode == 32)) {
+            return true;
+        }
+        return false;
+    }
+    //alphabet number>47<58 -46 /47
+    function isAlphabateNum(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 45 || charCode == 47 || (charCode > 47 && charCode < 58)) {
+            return true;
+        }
+        return false;
+    }
+    //alphabet whitespace 32  ,44 -45
+    function isAlphabateComHyp(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || (charCode == 32) || charCode == 44 || charCode == 45) {
+            return true;
+        }
+        return false;
+    }
+    //Number Only
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+</script>

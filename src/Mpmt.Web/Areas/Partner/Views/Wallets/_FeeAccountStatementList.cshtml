@@ -1,0 +1,59 @@
+﻿@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.FeeAccount
+@model PagedList<FeeAccountStatement>
+
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Partner Code</th>
+                <th>Partner Name</th>
+                <th>Partner Country</th>
+                <th>Wallet Currency</th>
+                <th>Reference Id</th>
+                <th>Type</th>
+                <th>Particular</th>
+                <th>Amount</th>
+                <th>Exchange Rate</th>
+                <th>Sign</th>
+                <th>Previous Balance</th>
+                <th>Current Balance</th>
+                <th>Remarks</th>
+                <th>User Type</th>
+                <th>Transaction By</th>
+                <th>Nepal Standard Date</th>
+                <th>Nepali Date</th>
+                @* <th>Fund</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Items.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@value.item.SN</td>
+                    <td>@value.item.PartnerCode</td>
+                    <td>@value.item.PartnerName</td>
+                    <td>@value.item.PartnerCountry</td>
+                    <td>@value.item.WalletCurrency</td>
+                    <td>@value.item.ReferenceId</td>
+                    <td>@value.item.Type</td>
+                    <td>@value.item.Particular</td>
+                    <td>@value.item.Amount</td>
+                    <td>@value.item.ExchangeRate</td>
+                    <td>@value.item.Sign</td>
+                    <td>@value.item.PreviousBalance</td>
+                    <td>@value.item.CurrentBalance</td>
+                    <td>@value.item.Remarks</td>
+                    <td>@value.item.UserType</td>
+                    <td>@value.item.TxnBy</td>
+                    <td>@value.item.NepalStandardDate</td>
+                    <td>@value.item.NepaliDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

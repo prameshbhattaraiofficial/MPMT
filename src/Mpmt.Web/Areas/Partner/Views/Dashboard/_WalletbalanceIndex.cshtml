@@ -1,0 +1,23 @@
+﻿@using Mpmt.Core.Dtos.Partner
+@using Mpmt.Core.Models.RMP
+@model Mpmt.Core.Dtos.Partner.PartnerDashBoard
+
+<table class="table table-borderless">
+    <thead>
+        <tr>
+            <th>Currency</th>
+            <th>Balance</th>
+            <th>Credit</th>
+        </tr>
+    </thead>
+    <tbody>
+         @foreach (var wallet in Model.dashboardwallet)
+        {
+             <tr>
+                <td><img src="#" alt="#" style="height:100px; width:100px;" /></td> 
+                <td>@wallet.Balance</td>
+                <td>@wallet.CreditBalance</td>
+            </tr> 
+        } 
+    </tbody>
+</table>

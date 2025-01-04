@@ -1,0 +1,121 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Models.RMP;
+@model PagedList<AgentDetail>
+
+@{
+    int sn = 1;
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Created Date</th>
+                <th>Full Name</th>
+                <th>Number</th>
+                <th>Email</th>
+
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <style>
+                    tr.active {
+                        background: #ccc;
+                    }
+
+                    .tableFixHead {
+                        overflow-y: auto;
+                        height: 500px;
+                    }
+
+                        .tableFixHead thead th {
+                            position: sticky;
+                            top: 0px;
+                        }
+                </style>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@sn</td>
+                        <td>@item.CreatedDate</td>
+                        <td><img src="assets/images/player.png" alt="" class="rounded-circle thumb-xs me-1">@item.FullName</td>
+                        <td>@item.ContactNumber</td>
+                        <td>@item.Email</td>
+                        @if (item.IsActive == true)
+                        {
+                            <td><span class="badge bg-soft-success px-2">Active</span></td>
+                        }
+                        else
+                        {
+                            <td><span class="badge bg-soft-danger px-2">InActive</span></td>
+                        }
+                        <td name="buttons">
+                            <div class=" float-center">
+                                @if (actors.FirstOrDefault(x => x.Action == "UpdateEmployee")?.Permission ?? false)
+                                {
+                                    <a onclick="ShowPopUp('@Url.Action("UpdateEmployee","EmployeeManagement",new {EmployeeId = item.EmployeeId})','Update Employee')" class="btn btn-sm btn-success" data-bs-toggle="modal" title="Edit" data-bs-target="#exampleModalLogin">
+                                        <i class="dripicons-pencil" aria-hidden="true"></i>
+                                    </a>
+                                }
+                                @*<a style="cursor:pointer" class="btn btn-sm btn-soft-warning btn-circle me-2" title="View Details"> <i class="dripicons-preview" aria-hidden="true"></i></a>
+                        <a style="cursor:pointer" class="btn btn-sm btn-soft-info btn-circle" title="Assign Role"> <i class="dripicons-contract-2" aria-hidden="true"></i></a>
+                        <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle tippy-btn" title="Block"> <i class="fas fa-user-ninja" aria-hidden="true"></i></a>*@
+                                <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <i class="dripicons-dots-3"></i></button>
+                                <div class="dropdown-menu">
+                                    @if (actors.FirstOrDefault(x => x.Action == "ActivateUser")?.Permission ?? false)
+                                    {
+                                        @if (item.IsActive)
+                                        {
+                                            <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("ActivateUser", "EmployeeManagement", new { EmployeeId = item.EmployeeId, isActive = "False", UserName = item.UserName })', 'Activate User','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin"><i class="dripicons-cross" aria-hidden="true"></i>&emsp;Deactivate User</a>
+                                        }
+                                        else
+                                        {
+                                            <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("ActivateUser", "EmployeeManagement", new { EmployeeId = item.EmployeeId, isActive = "True", UserName = item.UserName  })', 'Deactivate User','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin"><i class="dripicons-checkmark" aria-hidden="true"></i>&emsp;Activate User</a>
+                                        }
+                                    }
+                                    @if (actors.FirstOrDefault(x => x.Action == "DeleteUser")?.Permission ?? false)
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("DeleteUser", "EmployeeManagement", new { EmployeeId = item.EmployeeId, isActive = "True", UserName = item.UserName, AgentCode = item.Agentcode  })', 'Delete User','')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin"><i class="dripicons-trash" aria-hidden="true"></i>&emsp;Delete User</a>
+                                    }
+                                </div>
+                                <a style="cursor:pointer" class="btn btn-sm btn-soft-info btn-circle" onclick="ShowPopUp('@Url.Action("AssignUserToRole", "EmployeeManagement", new { id = item.EmployeeId,fullname=item.FullName,email=item.Email })', 'Assign Roles')" title="Assign Roles"> <i class="dripicons-swap" aria-hidden="true"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    sn = sn + 1;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

@@ -1,0 +1,175 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@using Mpmt.Core.Dtos.Paging;
+@model PagedList<AgentLedger>
+
+<link href="~/nepali.datepicker.v3/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/nepali.datepicker.v3/css/nepali.datepicker.v3.min.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Ledger</a></li>
+                            <li class="breadcrumb-item active">Agent Ledger</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                        <form id="formAgentLedgerFilter" class="row row-cols-lg-auto align-items-end">
+                            <input name="AgentCode" value="@ViewBag.AgentCode" hidden/>
+                            <div class="col-12">
+                                <label class="form-label">Start date (BS)</label>
+                                <input type="text" id="IssueDateBS" name="StartDate" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">End date (BS)</label>
+                                <input type="text" id="ExpireDateBS" name="EndDate" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off">
+                            </div>
+                            <div class="col-12">
+                                <button id="btnAgentLedgerFilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            @* <div class="col">
+                                <h4 class="card-title">Agent Ledger List</h4>
+                            </div> *@
+                            <div class="col-8">
+                                <h4 class="card-title">Agent Ledger List</h4>
+                            </div>
+                            <div class="col-4">
+                                <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                                    <button id="btnAgentLedgerExportExcel" class="btn btn-primary"> Export to Excel</button>
+                                    <button id="btnAgentLedgerExportCSV" class="btn btn-primary"> Export to CSV</button>
+                                    <button id="btnAgentLedgerExportPdf" class="btn btn-primary"> Export to Pdf</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body overflow-x-auto">
+                        <div id="AgentLedgerTableWrapper" class="table-responsive12">
+                            <partial name="_AgentLedger" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script src="~/js/admin/admin.partners.js" asp-append-version="true"></script>
+    <script src="~/nepali.datepicker.v3/jquery-ui.min.js"></script>
+    <script src="~/nepali.datepicker.v3/js/nepali.datepicker.v3.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("AgentLedger", "SuperAgent")',
+                selector: '#AgentLedgerTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formAgentLedgerFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+                $('#formAgentLedgerFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnAgentLedgerFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+                $('#btnAgentLedgerExportExcel').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportAgentLedgerToExcel", "Reports")');
+                    return false;
+                });
+                $('#btnAgentLedgerExportCSV').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+                    }
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportAgentLedgerToCsv", "Reports")');
+                    return false;
+                });
+                $('#btnAgentLedgerExportPdf').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportAgentLedgerToPdf", "Reports")');
+                    debugger
+                    return false;
+                });
+            }
+        });
+    </script>
+
+    <script>
+        var yearRangeDOB = "1944:-10";
+        var yearRangeIssue = "1944:-0";
+        var yearRangeExpire = "1944:+10";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        var today = new Date();
+        var startDate = today.getFullYear() - 10 + '-' + today.getMonth() + '-01';
+        var nepaliDOB = NepaliFunctions.ConvertDateFormat({ year: NepaliFunctions.GetCurrentBsYear() - 9, month: 1, day: 1 }, "YYYY-MM-DD");
+        var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+
+        $('#IssueDateBS').nepaliDatePicker({
+            ndpYear: true,
+            ndpMonth: true,
+            readOnlyInput: true,
+            defaultDate: NepalDateToday,
+            onChange: function () {
+                $('#IssueDateBS').removeClass("input-validation-error");
+                if ($('#IssueDateBS-error').length > 0) {
+                    $('#IssueDateBS-error').html("");
+                };
+            }
+        });
+
+        $('#ExpireDateBS').nepaliDatePicker({
+            ndpYear: true,
+            ndpMonth: true,
+            readOnlyInput: true,
+            onChange: function () {
+                $('#ExpireDateBS').removeClass("input-validation-error");
+                if ($('#ExpireDateBS-error').length > 0) {
+                    $('#ExpireDateBS-error').html("");
+                };
+            }
+        });
+    </script>
+    }

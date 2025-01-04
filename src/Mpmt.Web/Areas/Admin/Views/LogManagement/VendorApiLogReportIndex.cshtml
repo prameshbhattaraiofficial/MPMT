@@ -1,0 +1,254 @@
+﻿@using Mpmt.Core.Dtos.ActivityLog;
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Models.RMP;
+@model PagedList<VendorApiLogReport>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Log Management</a></li>
+                            <li class="breadcrumb-item active">Vendor Api Log</li>
+                        </ol>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="formReportsFilter" class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12 mb-2">
+                                    <div class="input-group">
+                                        <input type="text" name="PartnerCode" class="form-control" placeholder="Partner Code">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" name="StartDate" class="form-control">
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" name="EndDate" class="form-control">
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="input-group">
+                                        <input type="text" name="TransactionId" class="form-control" placeholder="Transaction Id">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <div class="input-group">
+                                        <input type="text" name="TrackerId" class="form-control" placeholder="Tracker Id">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-2">
+                                    <button type="button" id="btnReportsFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Vendor Api Log Report</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="ReportsTableWrapper" class="table-responsive">
+                        <partial name="_VendorApiLogReportIndex" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("VendorApiLogReportIndex", "LogManagement")',
+                selector: '#ReportsTableWrapper'
+            });
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formReportsFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+            addUsersPageHandlers();
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+                $('#formReportsFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                $('#btnReportsFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}
+
+<!-- @* <div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item "><a href="javascript:void(0);">Log Management</a></li>
+                            <li class="breadcrumb-item active">Api Log</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form class="row row-cols-lg-auto align-items-center">
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+
+
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">Role</label>
+                                    <select class="form-select" id="validationTooltip04" required>
+                                        <option>Select Role</option>
+                                        <option>Admin</option>
+                                        <option>Employee</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Name">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="merchant ID ">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Vendor Txn ID">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder=" Transaction ID">
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-12 mb-3">
+                                    <button type="buton" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div>
+            <!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row--><!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">API  Logs</h4>
+                        </div>
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body overflow-x-auto">
+                    <table id="datatable-buttons"  class="table table-striped dataTable nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date </th>
+                                <th>Created By</th>
+                                <th>Transaction ID</th>
+                                <th>Merchant Unique ID</th>
+                                <th>Merchant Name</th>
+                                <th>Organization Name </th>
+                                <th>Merchant Contact No</th>
+                                <th>PlatForm </th>
+                                <th>Ip Address </th>
+                                <th>Req Reference No </th>
+                                <th>API Type</th>
+
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>03-Jan-2023 03:08:12 PM </td>
+                                <td>Admin</td>
+                                <td>2612202206400640650619977255 </td>
+                                <td>REM42080902 </td>
+                                <td>Sash Thapa </td>
+                                <td>Xpressewa pvt ltd </td>
+                                <td>7874545151 </td>
+                                <td>postmanruntime/7.29.2 </td>
+                                <td>202.164.60.146 </td>
+                                <td>2401:4900:1f34:54a9:b08b:5e9c:9cb1:fa03 </td>
+                                <td>BankTransfer </td>
+                                <td name="buttons">
+                                    <div class=" float-center">
+                                        <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2" data-bs-toggle="modal" data-bs-target="#exampleModalLogin" title="View">
+                                            <i class="dripicons-preview"></i>
+                                        </button>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+</div><!-- container --> *@ -->

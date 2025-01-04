@@ -1,0 +1,167 @@
+﻿@using Mpmt.Core.ViewModel.CashAgent;
+@model RemitCashAgentsDetails
+
+
+<style>
+    .fit-image {
+        width: 100%;
+        object-fit: cover;
+        height: 150px;
+        margin-bottom: 2%;
+    }
+</style>
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="AgentCode">Agent Code</label>
+                <input type="text" class="form-control" id="AgentCode" value="@Model.AgentCode" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="FirstName">First Name</label>
+                <input type="text" class="form-control" id="FirstName" value="@Model.FirstName" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="LastName">Last Name</label>
+                <input type="text" class="form-control" id="LastName" value="@Model.LastName" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <input type="text" class="form-control" id="Email" value="@Model.Email" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="ContactNumber">Contact Number</label>
+                <input type="text" class="form-control" id="ContactNumber" value="@Model.ContactNumber" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="UserName">User Name</label>
+                <input type="text" class="form-control" id="UserName" value="@Model.UserName" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="OrganizationName">Organization Name</label>
+                <input type="text" class="form-control" id="OrganizationName" value="@Model.OrganizationName" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DistrictName">District Name</label>
+                <input type="text" class="form-control" id="DistrictName" value="@Model.DistrictName" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="FullAddress">Full Address</label>
+                <input type="text" class="form-control" id="FullAddress" value="@Model.FullAddress" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="RegistrationNumber">Registration Number</label>
+                <input type="text" class="form-control" id="RegistrationNumber" value="@Model.RegistrationNumber" readonly>
+            </div>
+        </div>
+       
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DocumentType">Document Type</label>
+                <input type="text" class="form-control" id="DocumentType" value="@Model.DocumentType" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="DocumentNumber">Document Number</label>
+                <input type="text" class="form-control" id="DocumentNumber" value="@Model.DocumentNumber" readonly>
+            </div>
+        </div>
+       
+      
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="ExpiryDate">Expiry Date</label>
+                <input type="text" class="form-control" id="ExpiryDate" value="@Model.ExpiryDate" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IpAddress">IP Address</label>
+                <input type="text" class="form-control" id="IpAddress" value="@Model.IpAddress" readonly>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IsActive">Is Active</label>
+                <input type="checkbox" class="form-check-input" id="IsActive" @(Model.IsActive ? "checked" : "") disabled>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IsPrefunding">Prefunding</label>
+                <input type="checkbox" class="form-check-input" id="IsPrefunding" @(Model.IsPrefunding ? "checked" : "") disabled>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IdBackImgPath">Back Image</label>
+                <img src="@Model.IdBackImgPath" alt="Back Image" class="img-fluid" style="max-height: 100px; ">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="CompanyLogoImgPath">Company Logo</label>
+                @if (Model.CompanyLogoImgPath is null)
+                {
+                    
+                }
+                <img src="@Model.CompanyLogoImgPath" alt="Company Logo" class="img-fluid" style="max-height: 100px; ">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="IdFrontImgPath">Front Image</label>
+                <img src="@Model.IdFrontImgPath" alt="FrontImage" height="180" width="240" class="fit-image">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-10">
+                            <h4 class="card-title">Document Image</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @if (Model.DocumentImgPath != null && Model.DocumentImgPath.Count > 0)
+                        {
+                            foreach (var image in Model.DocumentImgPath)
+                            {
+                                <div class="col-3">
+                                    <img src="@image" alt="DocumentImage" height="180" width="240" class="fit-image" />
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

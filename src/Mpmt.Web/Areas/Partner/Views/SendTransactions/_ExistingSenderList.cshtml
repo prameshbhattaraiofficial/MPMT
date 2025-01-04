@@ -1,0 +1,58 @@
+﻿@using Mpmt.Core.Domain.Partners.Senders;
+@model IEnumerable<ExistingSender>
+
+@{
+    if (!Model.Any())
+    {
+        <div class="my-2 col-md-12 d-flex justify-content-center align-items-center">
+            <p>No records found.</p>
+        </div>
+    }
+    else
+    {
+        foreach (var sender in Model)
+        {
+            <div class="col-lg-4 sender-item" id="@sender.MemberId">
+                <input type="radio" class="card-input-element" value="@sender.MemberId" />
+                <div class=" card card panel-default card-input">
+                    <div class="card-body">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col">
+                                <div class="media">
+                                    <a class="" href="#">
+                                        <div class="avatar-box thumb-sm align-self-center me-2">
+                                            <span class="avatar-title bg-soft-primary rounded-circle"><i class="far fa-user"></i></span>
+                                        </div>
+                                    </a>
+                                    <div class="media-body align-self-center ms-2">
+                                        <p class="font-14 font-weight-semibold mb-0">@sender.FullName</p>
+                                        <p class="mb-0 font-12 text-muted">#@sender.MemberId</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="list-unstyled personal-detail mt-2">
+                                <li class=""><b class="text-muted"> A/c </b> : @sender.AccountNumber</li>
+                                <li class=""><b class="text-muted"> Bank </b> : @sender.BankName</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        const selectorSenderItem = '#addTransactionForm #existingSenderListContainer .sender-item';
+        $(selectorSenderItem).on('click', function () {
+            //let memberId = $(selectorSenderItem + ' input[type="radio"]').val();
+            let memberId = $(this).attr('id');;
+            setExistingSenderSelection(memberId);
+            $(selectorSenderItem + ' > .card').removeClass('card-item-checked');
+            $(this).find('.card').addClass('card-item-checked');
+            FormStepper.isStepValid();
+        });
+    });
+</script>

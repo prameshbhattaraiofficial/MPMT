@@ -1,0 +1,168 @@
+﻿@using Mpmt.Core.Dtos.AdminUser
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP;
+
+@model PagedList<AdminUserDetails>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Users Details</a></li>
+                            <li class="breadcrumb-item active">Users List</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto">
+                        <form id="formadminuserfilter" class="row row-cols-lg-auto align-items-end">
+                                    <div class="col-12 mb-3">
+                                        <label class="visually-hidden" for="inlineFormInputGroupUsername">Username</label>
+                                        <div class="input-group">
+                                            <input type="text" name="UserName" class="form-control" placeholder="Username">
+                                        </div>
+                                    </div>
+                            <div class="col-12 mb-3">
+                                        <label class="visually-hidden">Email</label>
+                                        <div class="input-group">
+                                            <input type="text" name="Email" class="form-control"  placeholder="Email">
+                                        </div>
+                                    </div>
+                            <div class="col-12 mb-3">
+                                        <label class="visually-hidden">Mobile Number</label>
+                                        <div class="input-group">
+                                    <input type="text" name="MobileNumber" class="form-control" maxlength="10" onkeypress="return isNumber(event)" placeholder="Mobile Number">
+                                        </div>
+                                    </div>
+                            <div class="col-12 mb-3">
+                                        <label class="form-label mb-0" for="inlineFormSelectPref">KYC Status</label>
+                                        <select class="form-select" name="KycStatusCode" id="validationTooltip04" required>
+                                            <option selected value="" >Active</option>
+                                            <option value="">Inactive</option>
+                                        </select>
+                                    </div>
+                            <div class="col-12 mb-3">
+                                        <label class="visually-hidden" for="inlineFormInputGroupUsername">Country</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="CountryCode"  placeholder="Country">
+                                        </div>
+                                    </div>
+                            <div class="col-12 mb-3">
+                                        <label class="form-label mb-0">User Status</label>
+                                        <select class="form-select" name="UserStatus" id="validationTooltip04" required>
+                                            <option value="0" selected>All</option>
+                                            <option value="1">Active</option>
+                                            <option value="2">Inactive</option>
+                                        </select>
+                                    </div>
+                            <div class="col-12 mb-3">
+                                        <button id="btnadminuserfilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                    </div>
+                                </form>
+                    </div>
+
+
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Users List</h4>
+                        </div>
+                        <!--end col-->
+                        <div class="col-auto">
+                            @* <div class="add-btn">
+                                <a  class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                    <i class="las la-plus ms-1"></i> Add Users
+                                </a>
+
+                            </div> *@
+                            <div class="add-btn">
+                                @if (actors.FirstOrDefault(x => x.Action == "AddAdminUser")?.Permission ?? false)
+                                {
+                                    <a onclick="ShowPopUp('@Url.Action("AddAdminUser","AdminUser")','Add Admin User')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                        <i class="las la-plus ms-1"></i> Add User
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body overflow-x-auto">
+                     <partial name="_PaginationHeader" />
+                    <div id="UserTableWrapper" class="table-responsive">
+                        <partial name="_AdminUserList" model="@Model" />
+                    </div>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+</div><!-- container -->
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize pagination settings object
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("UserIndex", "AdminUser")',
+                selector: '#UserTableWrapper'
+            });
+         
+             $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formadminuserfilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#formadminuserfilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnadminuserfilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+
+
+}

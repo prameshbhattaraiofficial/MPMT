@@ -1,0 +1,128 @@
+﻿@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Models.CashAgent;
+@model PagedList<FundRequest>
+
+<style>
+    .float-center {
+        float: left;
+        margin-right: 10px; /* Adjust this value to control the spacing between buttons */
+    }
+</style>
+
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>S.N</th>
+                <th>Agent Name</th>
+                <th>Organization Name</th>
+                <th>Net Receivable(NPR)</th>
+                <th>Net Commission(NPR)</th>
+                <th>Total Balance(NPR)</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items.Select((x, i) => new { Data = x, Index = i + 1 }))
+            {
+                <tr>
+                    <td>@item.Data.SN</td>
+                    @* <td><a href="#" data-bs-toggle="modal" data-bs-target="#details" class="text-primary">@item.Data.AgentName</a> </td> *@
+                    <td>@item.Data.AgentName</td>
+                    <td>@item.Data.OrganizationName</td>
+                    <td>@Math.Round(item.Data.TxnCashAmount, 2)</td>
+                    <td>@Math.Round(item.Data.CommissionAmount, 2)</td>
+                    <td>@Math.Round(item.Data.TotalAmount, 2)</td>
+                    <td>
+                        @if (item.Data.StatusCode.ToUpper() == "PENDING")
+                        {
+                            <span class="badge rounded-pill bg-warning">PENDING</span>
+                        }
+                        else if (item.Data.StatusCode.ToUpper() == "APPROVED")
+                        {
+                            <span class="badge rounded-pill bg-success">APPROVED</span>
+                        }
+                        else if (item.Data.StatusCode.ToUpper() == "REVIEWED")
+                        {
+                            <span class="badge rounded-pill bg-primary">REVIEWED</span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill bg-danger">REJECTED</span>
+                        }
+                    </td>
+                    <td name="buttons">
+                        @* @if (item.Data.StatusCode.ToUpper() != "APPROVED")
+                    {
+                    <div class="float-center">
+                    <a onclick="ShowPopUp('@Url.Action("ApproveFundRequestByAgent", "SuperAgent", new { AgentCode = item.Data.AgentCode,FundRequestId=item.Data.FundRequestId })', 'Fund request approve','modal-dialog modal-md')" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#resetKey">Approve</a>
+                    </div>
+                    }
+                    else
+                    {
+                    <div class=" float-center">
+                    <button type="button" disabled class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#statusconfirm">Approve</button>
+                    </div>
+                    }
+                    @if (item.Data.IsPrefunding == true)
+                    {
+                    <div class="float-center">
+                    <a onclick="ShowPopUp('@Url.Action("ReviewFundRequestByAgent", "SuperAgent", new { AgentCode = item.Data.AgentCode,FundRequestId=item.Data.FundRequestId })', 'Review fund request','modal-dialog modal-md')" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#resetKey">Review</a>
+                    </div>
+                    } *@
+
+                        @if (item.Data.IsPrefunding == true)
+                        {
+
+                            @if (item.Data.StatusCode.ToUpper() == "PENDING" && item.Data.IsTxnCashRequested)
+                            {
+                                @* <div class="float-center">
+                                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#statusconfirm" disabled>Approve</button>
+                                </div> *@
+                                <div class="float-center">
+                                    <a onclick="ShowPopUp('@Url.Action("ReviewFundRequestByAgent", "SuperAgent", new { AgentCode = item.Data.AgentCode,FundRequestId=item.Data.FundRequestId })', 'Review fund request','modal-dialog modal-md')" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#resetKey">Review</a>
+                                </div>
+                            }
+                            else if (item.Data.StatusCode.ToUpper() == "REVIEWED")
+                            {
+                                <div class="float-center">
+                                    <a onclick="ShowPopUp('@Url.Action("ApproveFundRequestByAgent", "SuperAgent", new { AgentCode = item.Data.AgentCode,FundRequestId=item.Data.FundRequestId })', 'Fund request approve','modal-dialog modal-md')" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#resetKey">Approve</a>
+                                </div>
+                                <div class="float-center">
+                                    <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#statusconfirm" disabled>Review</button>
+                                </div>
+                            }
+                            else if (item.Data.StatusCode.ToUpper() == "PENDING" && item.Data.IsCommissionRequested)
+                            {
+                                <div class="float-center">
+                                    <a onclick="ShowPopUp('@Url.Action("ApproveFundRequestByAgent", "SuperAgent", new { AgentCode = item.Data.AgentCode,FundRequestId=item.Data.FundRequestId })', 'Fund request approve','modal-dialog modal-md')" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#resetKey">Approve</a>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="float-center">
+                                @if (item.Data.StatusCode.ToUpper() == "PENDING")
+                                {
+                                    <div class="float-center">
+                                        <a onclick="ShowPopUp('@Url.Action("ApproveFundRequestByAgent", "SuperAgent", new { AgentCode = item.Data.AgentCode,FundRequestId=item.Data.FundRequestId })', 'Fund request approve','modal-dialog modal-md')" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#resetKey">Approve</a>
+                                    </div>
+                                }
+                                @* else
+                                {
+                                    <div class="float-center">
+                                        <button type="button" disabled class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#statusconfirm">Approve</button>
+                                    </div>
+                                } *@
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

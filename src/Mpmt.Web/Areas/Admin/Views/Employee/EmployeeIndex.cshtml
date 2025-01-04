@@ -1,0 +1,78 @@
+﻿@using Mpmt.Core.Dtos.Employee
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<EmployeeDetails>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">User</a></li>
+                            <li class="breadcrumb-item active">Employee List</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Employee List</h4>
+                        </div>
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                @if (actors.FirstOrDefault(x => x.Action == "AddEmployee")?.Permission ?? false)
+                                {
+                                    <a onclick="ShowPopUp('@Url.Action("AddEmployee","Employee")','Add Employee')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                        <i class="las la-plus ms-1"></i> Add Employee
+                                    </a>
+                                }
+                              
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="EmployeeTableWrapper" class="table-responsive">
+                        <partial name="_EmployeeIndex" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("EmployeeIndex", "Employee")',
+                selector: '#EmployeeTableWrapper'
+            });
+            addPaginationHandlers();
+        });
+
+
+
+  
+
+    </script>
+}

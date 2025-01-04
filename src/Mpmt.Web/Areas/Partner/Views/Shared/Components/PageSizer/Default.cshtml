@@ -1,0 +1,19 @@
+﻿@model Mpmt.Core.Dtos.Pagination.PageSizeDdl
+
+<div class="w-56 d-inline-flex align-items-center position-relative text-gray-700 dark-text-gray-300">
+    <span class="mr-1">Show</span>
+    <select class="w-25 d-inline-block box mt-3 mt-sm-0 custom-select custom-select-sm form-control form-control-sm" name="pageSize">
+        @foreach (var opt in Model.PageSizeOptions)
+        {
+            if (opt == Model.PageSize)
+            {
+                <option selected value="@opt">@opt</option>
+            }
+            else
+            {
+                <option value="@opt">@opt</option>
+            }
+        }
+    </select>
+    <span class="ml-1">entries</span>
+</div>

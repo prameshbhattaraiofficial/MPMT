@@ -1,0 +1,228 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@model SignUpAgentStep2
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>MyPay Remit Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style>
+        .fit-image {
+            width: 100%;
+            object-fit: cover;
+            height: 150px;
+        }
+    </style>
+    <link rel="shortcut icon" href="~/assets/images/logo-sm.png">
+    <link rel="stylesheet" href="~/plugins/jquery-steps/jquery.steps.css">
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="account-body accountbg">
+    @{
+        var sa = "@";
+    }
+    <div class="container">
+        <div class="row vh-100 d-flex justify-content-center">
+            <div class="col-12 align-self-center">
+                <div class="row">
+                    <div class="col-lg-7 mx-auto">
+                        <div class="card">
+                            <div class="card-body p-0 ">
+                                <div class="p-3 text-center">
+                                    <a href="index.php" class="logo logo-admin text-center">
+                                        <img src="~/assets/images/logo.png" height="50" alt="logo" class="auth-logo">
+                                    </a>
+                                    <p class="text-muted  mb-0">Please fill up additional details for further process.</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="p-3 text-start">
+                                    <form id="form-horizontal" class="form-horizontal form-wizard-wrapper register" enctype="multipart/form-data" asp-action="Step2" asp-controller="AgentRegistration" method="post">
+                                        <input asp-for="Email" hidden readonly />
+                                        <input asp-for="PhoneNumber" hidden readonly />
+                                        <input asp-for="Token" hidden readonly />
+                                        @if (ViewBag.Error is not null)
+                                        {
+                                            <li class="text-danger">@ViewBag.Error</li>
+                                        }
+                                        <h3>Organization Details</h3>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Organization Name <sapn class="text-danger">*</sapn></label>
+                                                <input type="text" asp-for="OrganizationName" class="form-control">
+                                                <span asp-validation-for="OrganizationName" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Company registration number/PAN Card <sapn class="text-danger">*</sapn></label>
+                                                <input type="text" asp-for="RegistrationNumber" class="form-control">
+                                                <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                @* <label class="form-label">District <sapn class="text-danger">*</sapn></label>
+                                                <input type="text" asp-for="District" class="form-control">
+                                                <span asp-validation-for="District" class="text-danger"></span> *@
+                                                <label class="form-label" for="exampleFormControlSelect1">District <span class="text-danger">*</span></label>
+                                                <select asp-for="District" class="form-select" id="exampleFormControlSelect1" asp-items="ViewBag.District" required>
+                                                    <option value="">--Select--</option>
+                                                </select>
+                                                <span asp-validation-for="District" class="text-danger"></span>
+                                            </div>
+                                            @* <div class="col-md-6 mb-2">
+                                            <label class="form-label">City <sapn class="text-danger">*</sapn></label>
+                                            <input type="text" asp-for="City" class="form-control">
+                                            <span asp-validation-for="City" class="text-danger"></span>
+                                            </div> *@
+                                            <div class="col-md-6 mb-2">
+                                                <label class="form-label">Address <sapn class="text-danger">*</sapn></label>
+                                                <input type="text" asp-for="Address" class="form-control">
+                                                <span asp-validation-for="Address" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6 mb-2">
+                                                <label asp-for="DocumentImage" class="form-label">Company Logo  <span class="text-danger">*</span></label>
+                                                <input asp-for="DocumentImage" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'CompanyLogoaddid','CompanyLogoaddidtext')">
+                                                <span id="CompanyLogoaddidtext" class="text-danger" hidden></span>
+                                                <img id="CompanyLogoaddid" src="#" style="width:90px;" hidden>
+                                                <span asp-validation-for="DocumentImage" class="text-danger"></span>
+                                            </div>
+                                            <div class="card mt-3">
+                                                <div class="card-header">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-8">
+                                                            <h4 class="card-title text-primary">License Document <span class="text-danger">*</span></h4>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <a onclick="AddLicense()" data-repeater-create="" class="btn btn-soft-primary btn-sm">
+                                                                <span class="fas fa-plus"></span>Add License
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div id="License" class="repeater-default">
+                                                                <div id="License-0" data-repeater-list="car">
+                                                                    <div data-repeater-item="">
+                                                                        <div class="form-group row d-flex align-items-end">
+                                                                            <img id="licanceimage-0" src="#" style="width:90px;height:68px;" hidden>
+                                                                            <div class="col-md-4 ">
+                                                                                <input type="file" accept="image/*" class="form-control" data-val="true"
+                                                                                       data-val-required="image is required"
+                                                                                       onchange="onimagechange(this,'licanceimage-0','licanceimageText-0')"
+                                                                                       name="licensedocument" required>
+                                                                                <span class="text-danger"></span>
+                                                                            </div>
+                                                                            <span id="licanceimageText-0" class="text-danger" hidden></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <button class="btn btn-primary" type="submit">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card-body bg-light-alt text-center border-top">
+                                <span class="text-muted d-none d-sm-inline-block">
+                                    MyPay Remit © <script>
+                                                      document.write(new Date().getFullYear())
+                                    </script>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var count = 0;
+        var Licensecount = 0;
+        function AddLicense() {
+            Licensecount = Licensecount + 1;
+            const listDiv = document.getElementById("License");
+            const directorTemplate = `<div id="License-${Licensecount}" data-repeater-list="car">
+                                                <div data-repeater-item="">
+                                                  <div class="form-group row d-flex align-items-end">
+                                                       <img id="licanceimage-${Licensecount}" src="#" style="width:90px;height:68px;"  hidden>
+                                                    <div class="col-md-4">
+                                                               <input type="file"  name="LicenseDocument" class="form-control"  onchange="onimagechange(this,'licanceimage-${Licensecount}','licanceimageText-${Licensecount}')"  accept="image/*" />
+                                                               <span asp-validation-for="LicenseDocument[${Licensecount}].Image" class="text-danger" ></span>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                       <button onclick="removeelement('License-${Licensecount}')"class="btn btn-sm btn-danger" data-repeater-delete="">
+                                                       <i class="dripicons-trash"></i></button>
+                                                    </div>
+                                                       <span id="licanceimageText-${Licensecount}" class="text-danger" hidden></span>
+                                                  </div>
+                                                </div>
+                                             </div>`;
+            listDiv.insertAdjacentHTML("beforeend", directorTemplate);
+        }
+        function removeelement(divId) {
+            const divToRemove = document.getElementById(divId);
+            if (divToRemove) {
+                divToRemove.remove();
+            }
+        }
+    </script>
+    <script>
+        function onimagechange(data, id, textid) {
+            readURL(data, id, textid);
+        }
+        function readURL(input, id, textid) {
+            if (input.files && input.files[0]) {
+                if (input.files[0].type.split('/')[0] != 'image') {
+                    $('#' + id).attr('src', "");
+                    document.getElementById(textid).innerHTML = 'Invalid file extension'
+                    $('#' + textid).removeAttr('hidden');
+                    return false
+                }
+                else if (input.files[0].size < (5 * 1024 * 1024)) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var data = e.target.result;
+                        document.getElementById(textid).innerHTML = ''
+                        $('#' + id).attr('src', e.target.result);
+                        $('#' + id).removeAttr('hidden');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+                else {
+                    $('#' + id).attr('src', "");
+                    document.getElementById(textid).innerHTML = 'Invalid Image File Size (<5 MB)'
+                    $('#' + textid).removeAttr('hidden');
+                }
+            }
+        };
+    </script>
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/waves.js"></script>
+    <script src="~/assets/js/feather.min.js"></script>
+    <script src="~/assets/js/simplebar.min.js"></script>
+    <script src="~/js/imageupload.js"></script>
+</body>
+</html>

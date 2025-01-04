@@ -1,0 +1,223 @@
+﻿@using Mpmt.Core.Dtos.FeeFundRequest;
+@using Mpmt.Core.Dtos.Partner
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP;
+@model PagedList<PartnerDetails>
+@{
+    var sn = 1;
+}
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons1234" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>S.No</th>
+                <th>Date</th>
+                <th>Full Name</th>
+                <th>User Name</th>
+                <th>Shortname</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Merchant Id</th>
+                <th>Organization Name</th>
+                @*<th>Status</th>*@
+                @*   <th>Fee Balance</th>*@
+                @*  <th>Fee Type</th>
+                <th>Margin Conversion Rate</th>*@
+                <th>Created By</th>
+                <th>Updated By</th>
+                <th>Ip Address </th>
+                @*               <th>API Key/Password </th>
+                <th>Public Key/Private Key </th>*@
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <style>
+                    tr.active {
+                        background: #ccc;
+                    }
+
+                    .tableFixHead {
+                        overflow-y: auto;
+                        height: 500px;
+                    }
+
+                        .tableFixHead thead th {
+                            position: sticky;
+                            top: 0px;
+                        }
+                </style>
+
+                @foreach (var item in Model.Items)
+                {
+                    var status = item.IsActive == true ? "Active" : "InActive";
+                    var statusclass = @status == "Active" ? "badge bg-soft--success px-2" : "badge bg-soft--danger px-2";
+                    <tr>
+                        <td>@item.SN</td>
+                        <td>@item.DateString</td>
+                        <td>@item.FirstName </td>
+                        <td>@item.Username </td>
+                        <td>@item.Shortname </td>
+                        <td>@item.Contact </td>
+                        <td>@item.Email </td>
+                        <td>@item.MarchantId </td>
+                        <td>@item.OrganizationName </td>
+                        @* <td class="@statusclass">@status</td>*@
+                        <td>@item.CreatedBy </td>
+                        <td>@item.UpdatedBy </td>
+                        <td>@item.IPAddress </td>
+                        @* <td>@item.APIKey/@item.APIPassword </td>
+                <td>@item.PrivateKey/@item.PrivatePassword </td>*@
+
+                        @*  <td><a data-bs-toggle="modal" data-bs-target="#showapi" class="text-primary">show </a></td>
+                <td><a data-bs-toggle="modal" data-bs-target="#showkey" class="text-primary">show </a></td>*@
+
+                        <td>
+                            <div class="form-check form-switch form-switch-success">
+                                @if (actors.FirstOrDefault(x => x.Action == "ToggelActive")?.Permission ?? false)
+                                {
+                                    <input asp-for="@item.IsActive" class="form-check-input" onchange="AjaxPost(@item.Id,'@Url.Action("ToggelActive", "Partners", new {UserId = item.Id })')" type="checkbox" id="Successactive-@item.Id">
+                                }
+                            </div>
+                        </td>
+                        <td name="buttons">
+                            <div class=" float-center">
+                                <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <i class="dripicons-dots-3"></i></button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("AssignPartnerToRole", "Partners", new { Id = item.Id,fullName=item.FirstName,userName=item.Username })', 'Assign Roles to Partner')" title="Assign Roles to Partner"> <i class="dripicons-swap" aria-hidden="true"></i>&emsp;Assign Roles</a>
+
+                                    @if (actors.FirstOrDefault(x => x.Action == "ViewPartnerDetail")?.Permission ?? false)
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("ViewPartnerDetail", "Partners", new { partnerId = item.Id })', 'View Detail','modal-dialog modal-xl')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin"><i class="dripicons-preview" aria-hidden="true"></i>&emsp;View Details</a>
+                                    }
+                                    @if (actors.FirstOrDefault(x => x.Action == "AddPartnerBank")?.Permission ?? false)
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("AddPartnerBank", "PartnerBank", new { partnerCode = item.MarchantId})', 'Add Bank Details')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin"><i class="dripicons-plus" aria-hidden="true"></i>&emsp;Add Bank Details</a>
+                                    }
+                                    @if (actors.FirstOrDefault(x => x.Action == "PartnerWalletCurrency")?.Permission ?? false)
+                                    {
+                                        <a class="dropdown-item" asp-action="PartnerWalletCurrency" asp-controller="Partners" asp-route-partnerId="@item.Id"><i class="dripicons-wallet" aria-hidden="true"></i>&emsp;Wallet Currency</a>
+                                    }
+                                    @if (actors.FirstOrDefault(x => x.Action == "GetFeeAccount")?.Permission ?? false)
+                                    {
+                                        <a class="dropdown-item" asp-action="GetFeeAccount" asp-controller="Partners" asp-route-PartnerCode="@item.MarchantId"><i class="dripicons-wallet" aria-hidden="true"></i>&emsp;Fee Account</a>
+                                    }
+                                    @if (actors.FirstOrDefault(x => x.Action == "UpdatePartner")?.Permission ?? false)
+                                    {
+                                        <a onclick="ShowPopUp('@Url.Action("UpdatePartner", "Partners", new { partnerId = item.Id })', 'Update Partner ')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updtaeFree"><i class="dripicons-time-reverse" aria-hidden="true"></i>&emsp;Update Partner</a>
+                                    }
+
+                                    @* <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("AddPartnerBank","PartnerBank")','Add Partner Bank')" data-bs-toggle="modal" data-bs-target="#exampleModalLogin"><i class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i> Add Bank Details</a> *@
+
+
+                                    @if (!string.IsNullOrEmpty(item.CredentialId))
+                                    {
+                                        @if (actors.FirstOrDefault(x => x.Action == "ViewCredentialsPartner")?.Permission ?? false)
+                                        {
+                                            <a onclick="ShowPopUp('@Url.Action("ViewCredentialsPartner", "Partners", new { partnerId = item.Id })', 'Api Key')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="dripicons-preview" aria-hidden="true"></i>&emsp;View ApiKey</a>
+                                        }
+                                        @if (actors.FirstOrDefault(x => x.Action == "ViewPasswordCredentialsPartner")?.Permission ?? false)
+                                        {
+                                            <a onclick="ShowPopUp('@Url.Action("ViewPasswordCredentialsPartner", "Partners", new { partnerId = item.Id })', 'Api Password')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="dripicons-preview" aria-hidden="true"></i>&emsp;View Api Username/Password</a>
+                                        }
+                                        @if (actors.FirstOrDefault(x => x.Action == "ViewPasswordSystemRsakeyPair")?.Permission ?? false)
+                                        {
+                                            <a onclick="ShowPopUp('@Url.Action("ViewPasswordSystemRsakeyPair", "Partners", new { partnerId = item.Id })', 'System Rsa keyPair')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="dripicons-preview" aria-hidden="true"></i>&emsp;View System RSA Key Pair</a>
+                                        }
+                                        @if (actors.FirstOrDefault(x => x.Action == "ViewPasswordUserRsakeyPair")?.Permission ?? false)
+                                        {
+                                            <a onclick="ShowPopUp('@Url.Action("ViewPasswordUserRsakeyPair", "Partners", new { partnerId = item.Id })', 'User Rsa keyPair')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#resetKey"><i class="dripicons-preview" aria-hidden="true"></i>&emsp;View User RSA Key Pair</a>
+                                        }
+                                        @if (actors.FirstOrDefault(x => x.Action == "UpdateCredentialsPartner")?.Permission ?? false)
+                                        {
+
+                                            <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("UpdateCredentialsPartner", "Partners", new { partnerId = item.Id })', ' Whitelist IPS')"><i class="dripicons-to-do" aria-hidden="true"></i>&emsp;Whitelist IPS</a>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        @if (actors.FirstOrDefault(x => x.Action == "AddCredentialsPartner")?.Permission ?? false)
+                                        {
+                                            <a onclick="ShowPopUp('@Url.Action("AddCredentialsPartner", "Partners", new { partnerId = item.Id })', 'Add ApiKeys')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updtaeFree">
+                                                <i class="dripicons-plus" aria-hidden="true"></i>&emsp;Add ApiKeys
+                                            </a>
+                                            // <a onclick="ShowPopUp('@Url.Action("AddCredentialsPartner", "Partners", new { partnerCode = item })', 'Add ApiKeys')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updtaeFree">
+                                            //     <i class="dripicons-plus" aria-hidden="true"></i>&emsp;Add ApiKeys
+                                            // </a>
+                                        }
+                                    }
+
+                                    @if (actors.FirstOrDefault(x => x.Action == "DeletePartner")?.Permission ?? false)
+                                    {
+
+                                        <a onclick="ShowPopUp('@Url.Action("DeletePartner", "Partners", new { partnerId = item.Id })', 'Delete Partner ')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updtaeFree">
+                                            <i class="dripicons-trash" aria-hidden="true"></i>&emsp;Delete Partner
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    sn = sn + 1;
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    function AjaxPost(checkbodId, Url) {
+        debugger
+        var actionVal = $('#Successactive-' + checkbodId).is(":checked");
+        Url = Url + '&Actionval=' + actionVal;
+        var decodeurl = decodeURIComponent(Url);
+
+        $.ajax({
+            type: "GET",
+            url: decodeurl,
+            success: function (res) {
+                debugger;
+
+            },
+
+            error: function (err) {
+
+            }
+
+        })
+        return false;
+    }
+</script>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

@@ -1,0 +1,154 @@
+﻿@using Mpmt.Core.Dtos.ConversionRateHistory
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP
+@model PagedList<ExchangeRateHistoryDetails>
+
+@{
+    var rateFilter = ViewBag.ExchangeRateFilter as ExchangeRateFilter;
+    var actors = ViewBag.Actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Global Setting</a></li>
+                            <li class="breadcrumb-item active">Exchange Rate History</li>
+                        </ol>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="formExchangeRateFilter" class="row row-cols-lg-auto align-items-end">
+                                <input name="Wallet" value="@ViewBag.Wallet" hidden />
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" name="StartDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" name="EndDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0 mt-2" for="transactionType">Wallet Currency</label>
+                                    <select name="WalletCurrency" class="form-select" id="walletCurrency" required asp-items="@ViewBag.Currency">
+                                        <option value="" selected>-All-</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <button type="button" id="btnExchangeRateFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h4 class="card-title">Exchange Rate History</h4>
+                        </div>
+                        <div class="col-4">
+                            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                                <button id="btnExchangeRateExportToExcel" class="btn btn-primary"> Export to Excel</button>
+                                <button id="btnExchangeRateExportToCSV" class="btn btn-primary"> Export to CSV</button>
+                                <button id="btnExchangeRateExportToPDF" class="btn btn-primary"> Export to PDF</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="ExchangeRateTableWrapper">
+                        <partial name="_ExchangeRateHistory" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("ExchangeRateHistory", "ConversionRate")',
+                selector: '#ExchangeRateTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formExchangeRateFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+                $('#formExchangeRateFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnExchangeRateFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                // $('#walletCurrency').on('change', function (e) {
+                //     e.preventDefault();
+                //     Pagination.getData();
+                //     return false;
+                // });
+
+                $('#btnExchangeRateExportToExcel').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportExchangeRateToExcel", "ConversionRate")');
+                    return false;
+                });
+
+                $('#btnExchangeRateExportToCSV').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+                    }
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportExchangeRateToCSV", "ConversionRate")');
+                    return false;
+                });
+
+                $('#btnExchangeRateExportToPDF').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportExchangeRateToPDF", "ConversionRate")');
+                    return false;
+                });
+            }
+        });
+    </script>
+}

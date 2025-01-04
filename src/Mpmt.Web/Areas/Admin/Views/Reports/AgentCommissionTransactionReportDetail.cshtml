@@ -1,0 +1,241 @@
+﻿@using Mpmt.Core.Dtos.AgentReport;
+@using Mpmt.Core.Dtos.Paging;
+@model PagedList<AgentCommissionTransactionReportDetail>
+
+@{
+    var txFilter = ViewBag.TransactionFilter as AgentCommissionFilter;
+}
+
+<link href="~/nepali.datepicker.v3/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/nepali.datepicker.v3/css/nepali.datepicker.v3.min.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Global Setting</a></li>
+                            <li class="breadcrumb-item active">Commision Detail Reports</li>
+                        </ol>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="formCommissionReportsFilter" class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12">
+                                    <label class="form-label">Start date (BS)</label>
+                                    <input type="text" id="IssueDateBS" name="StartDate" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">End date (BS)</label>
+                                    <input type="text" id="ExpireDateBS" name="EndDate" class="form-control" placeholder="yyyy-mm-dd" autocomplete="off">
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" id="transactionId" name="TransactionId" class="form-control" placeholder="Transaction Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" id="organizationName" name="AgentOrganizationName" class="form-control" placeholder="Organization Name">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" id="recipientNumber" name="RecipientContactNumber" class="form-control" placeholder="Contact Number">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="TransactionType">Transaction Type</label>
+                                    <select name="TransactionType" id="transactionType" class="form-select">
+                                        <option value="" selected>Select TransactionType</option>
+                                        <option value="AGENTWEBTRANSACTION">Web Transaction</option>
+                                        <option value="AGENTAPITRANSACTION">API Transaction</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="DistrictCode">District</label>
+                                    <select name="DistrictCode" id="districtCode" class="form-select" asp-items="@ViewBag.District">
+                                        <option value="" selected>Select District</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <button type="button" id="btnCommisionReportsFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h4 class="card-title">Agent Commission Transaction Detail Report</h4>
+                        </div>
+                        <div class="col-4">
+                            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                                <button id="btnAgentCommissionTransactionExportExcel" class="btn btn-primary"> Export to Excel</button>
+                                <button id="btnAgentCommissionTransactionExportCSV" class="btn btn-primary"> Export to CSV</button>
+                                <button id="btnAgentCommissionTransactionExportPdf" class="btn btn-primary"> Export to Pdf</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="CommissionReportsTableWrapper" class="table-responsive">
+                        <partial name="_AgentCommissionTransactionReportDetail" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script src="~/nepali.datepicker.v3/jquery-ui.min.js"></script>
+    <script src="~/nepali.datepicker.v3/js/nepali.datepicker.v3.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("AgentCommissionTransactionReportDetail", "Reports")',
+                selector: '#CommissionReportsTableWrapper'
+            });
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formCommissionReportsFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+            addUsersPageHandlers();
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+                $('#formCommissionReportsFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                $('#btnCommisionReportsFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                $('#transactionId').on('keypress', function (e) {
+                    if (e.which == 13) {
+                        e.preventDefault();
+                        Pagination.getData();
+                        return false;
+                    }
+                });
+
+                $('#organizationName').on('keypress', function (e) {
+                    if (e.which == 13) {
+                        e.preventDefault();
+                        Pagination.getData();
+                        return false;
+                    }
+                });
+
+                $('#recipientNumber').on('keypress', function (e) {
+                    if (e.which == 13) {
+                        e.preventDefault();
+                        Pagination.getData();
+                        return false;
+                    }
+                });
+
+                $('#transactionType').on('change', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                $('#districtCode').on('change', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                $('#btnAgentCommissionTransactionExportExcel').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportAgentCommissionTransactionDetailToExcel", "Reports")');
+                    return false;
+                });
+                $('#btnAgentCommissionTransactionExportCSV').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+                    }
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportAgentCommissionTransactionDetailToCsv", "Reports")');
+                    return false;
+                });
+                $('#btnAgentCommissionTransactionExportPdf').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportAgentCommissionTransactionDetailToPdf", "Reports")');
+                    return false;
+                });
+            }
+        });
+    </script>
+
+    <script>
+        var yearRangeDOB = "1944:-10";
+        var yearRangeIssue = "1944:-0";
+        var yearRangeExpire = "1944:+10";
+        var minimum = "[1943, 04, 14]";
+        var dateFormat = "yy-mm-dd";
+        var today = new Date();
+        var startDate = today.getFullYear() - 10 + '-' + today.getMonth() + '-01';
+        var nepaliDOB = NepaliFunctions.ConvertDateFormat({ year: NepaliFunctions.GetCurrentBsYear() - 9, month: 1, day: 1 }, "YYYY-MM-DD");
+        var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+
+        $('#IssueDateBS').nepaliDatePicker({
+            ndpYear: true,
+            ndpMonth: true,
+            readOnlyInput: true,
+            defaultDate: NepalDateToday,
+            onChange: function () {
+                $('#IssueDateBS').removeClass("input-validation-error");
+                if ($('#IssueDateBS-error').length > 0) {
+                    $('#IssueDateBS-error').html("");
+                };
+            }
+        });
+
+        $('#ExpireDateBS').nepaliDatePicker({
+            ndpYear: true,
+            ndpMonth: true,
+            readOnlyInput: true,
+            onChange: function () {
+                $('#ExpireDateBS').removeClass("input-validation-error");
+                if ($('#ExpireDateBS-error').length > 0) {
+                    $('#ExpireDateBS-error').html("");
+                };
+            }
+        });
+    </script>
+}

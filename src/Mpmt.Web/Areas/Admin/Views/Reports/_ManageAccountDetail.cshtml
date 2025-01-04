@@ -1,0 +1,115 @@
+﻿@using Mpmt.Core.Dtos.Transaction;
+@using Mpmt.Core.ViewModel.AdminReport;
+@model ReceiverAccountDetailsVM
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <form id="UpdateAccountDetails" class="form-horizontal auth-form" method="post" autocomplete="off">
+        <input asp-for="TransactionId" hidden readonly />
+        <input asp-for="PaymentType" id="paymentType" hidden readonly />
+        <input asp-for="PaymentStatusCode" id="paymentStatusCode" hidden readonly />
+        <input asp-for="GatewayTxnId" id="gatewayTxnId" hidden readonly />
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+        <div id="AccountDetails">
+            <h3>Account Details</h3>
+            <fieldset>
+
+                <div class="row">
+                    <div id="BankDetails" class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="AccountHolderName" for="accountdetails">Receiver Name *</label>
+                            <div class="input-group">
+                                <input type="text" asp-for="AccountHolderName" class="form-control" placeholder="Receiver Name">
+                            </div>
+                            <span asp-validation-for="AccountHolderName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="AccountNumber" for="accountdetails">Account Number *</label>
+                            <div class="input-group">
+                                <input type="text" asp-for="AccountNumber" class="form-control" placeholder="Receiver Account Number">
+                            </div>
+                            <span asp-validation-for="AccountNumber" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="BankCode">Bank Name</label>
+                            <select asp-for="BankCode" class="form-select" asp-items="@ViewBag.BankListDdl">
+                            </select>
+                            <span asp-validation-for="BankCode" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="Branch" for="accountdetails">Branch Name *</label>
+                            <div class="input-group">
+                                <input type="text" asp-for="Branch" class="form-control" placeholder="Branch Name">
+                            </div>
+                            <span asp-validation-for="Branch" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div id="walletDetails" class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label" asp-for="WalletHolderName" for="accountdetails">Receiver Name *</label>
+                            <div class="input-group">
+                                <input type="text" asp-for="WalletHolderName" class="form-control" placeholder="Receiver Name">
+                            </div>
+                            <span asp-validation-for="WalletHolderName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6  form-group mb-2">
+                            <label class="form-label" asp-for="WalletNumber" for="accountdetails">Mobile Number *</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="inputGroupPrepend">+977</span>
+                                <input type="text" asp-for="WalletNumber" data-val-maxlength-max="10" class="form-control" placeholder="Receiver Mobile Number">
+                            </div>
+                            <span asp-validation-for="WalletNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="TxnUpdateRemarks" for="accountdetails">Remarks *</label>
+                        <div class="input-group">
+                            <textarea name="TxnUpdateRemarks" class="form-control" asp-for="TxnUpdateRemarks" data-val-required="The remarks field is required." data-val-maxlength-max="5000" data-val="true"></textarea>
+                        </div>
+                        <span asp-validation-for="TxnUpdateRemarks" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary ms-2" id="btnSubmit" type="submit">Submit</button>
+                    <button type="button" class="btn btn-danger ms-2" data-bs-dismiss="modal">Close</button>
+                </div>
+            </fieldset>
+        </div>
+    </form>
+</div>
+
+<script>
+    function allowNumbersOnly(e) {
+        var code = (e.which) ? e.which : e.keyCode;
+        if (code > 31 && (code < 48 || code > 57)) {
+            e.preventDefault();
+        }
+    }
+
+    $(document).ready(function () {
+        var value = $("#paymentType").val();
+        if (value == "WALLET")
+            $("#BankDetails").hide();
+        else
+            $("#walletDetails").hide();
+    });
+
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("ManageAccountDetail", "Reports")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#UpdateAccountDetails'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+
+</script>
+

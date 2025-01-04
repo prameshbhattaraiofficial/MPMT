@@ -1,0 +1,119 @@
+﻿@using Mpmt.Core.Dtos.AgentReport;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+
+@model PagedList<AgentSettlementReport>
+
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Transaction Date</th>
+                <th>Sender Txn Date</th>
+                <th>Payout Date</th>
+                <th>Sender Name</th>
+                <th>Sender Country</th>
+                <th>Sender Contact</th>
+                <th>Sender Address</th>
+                <th>Sender Email</th>
+                <th>Receiver Name</th>
+                <th>Receiver Contact</th>
+                <th>Receiver Address</th>
+                <th>Transcation Id</th>
+                <th>Agent Tracker Id</th>
+                <th>Source Currency</th>
+                @* <th>Destination Currency</th> *@
+                @* <th>Payout Type</th> *@
+                <th>Send Amount</th>
+                @* <th>Conversion Rate</th> *@
+                @* <th>Net Send Amt</th> *@
+                <th>Net Receive Amt NPR</th>
+                <th>Agent District</th>
+                <th>Agent Name</th>
+                <th>Agent Code</th>
+                <th>Agent Commission NPR</th>
+                <th>Super Agent Name</th>
+                <th>Super Agent Code</th>
+                <th>Super Agent Commission NPR</th>
+                <th>Transaction Type</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <link href="~/css/customfixedheader.css" rel="stylesheet" />
+                @foreach (var value in Model.Items.Select((item, index) => new { item, index }))
+                {
+                    <tr>
+                        <td>@(value.index + 1)</td>
+                        <td>@value.item.TransactionDate</td>
+                        <td>@value.item.SenderTransactionDateString</td>
+                        <td>@value.item.PayoutNepaliDate</td>
+                        <td>@value.item.SenderName</td>
+                        <td>@value.item.SenderCountry</td>
+                        <td>@value.item.SenderContact</td>
+                        <td>@value.item.SenderAddress</td>
+                        <td>@value.item.SenderEmail</td>
+                        <td>@value.item.ReceiverName</td>
+                        <td>@value.item.ReceiverContact</td>
+                        <td>@value.item.ReceiverAddress</td>
+                        <td>@value.item.TransactionId</td>
+                        <td>@value.item.AgentTrackerId</td>
+                        <td>@value.item.SourceCurrency</td>
+                        @* <td>@value.item.DestinationCurrency</td> *@
+                        @* <td>@value.item.PayoutType</td> *@
+                        <td>@value.item.SendingAmount.ToString("N2")</td>
+                        @* <td>@value.item.ConversionRate.ToString("N2")</td> *@
+                        @* <td>@value.item.NetSendingAmount.ToString("N2")</td> *@
+                        <td>@value.item.NetReceivingAmountNPR.ToString("N2")</td>
+                        <td>@value.item.AgentDistrict</td>
+                        <td>@value.item.AgentName</td>
+                        <td>@value.item.AgentCode</td>
+                        <td>@value.item.AgentCommissionNPR</td>
+                        <td>@value.item.SuperAgentName</td>
+                        <td>@value.item.SuperAgentCode</td>
+                        <td>@value.item.SuperAgentCommissionNPR</td>
+                        @if (value.item.TransactionType == "AGENTWEBTRANSACTION")
+                        {
+                            <td>Web Transaction</td>
+                        }
+                        else if (value.item.TransactionType == "AGENTAPITRANSACTION")
+                        {
+                            <td>API Transaction</td>
+                        }
+                        <td>@value.item.Status</td>
+                        <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("ViewSettlementDetail", "AgentReport", new { TransactionId = value.item.TransactionId, PayoutNepaliDate = value.item.PayoutNepaliDate, AgentCode = value.item.AgentCode })', 'Settlement Detail')">View Detail</a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

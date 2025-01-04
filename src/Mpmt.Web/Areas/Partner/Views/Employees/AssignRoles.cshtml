@@ -1,0 +1,99 @@
+﻿@using Mpmt.Core.Dtos.DropDown;
+@model AssignUserRoleDto
+@{
+
+    var data = ViewBag.Roles;
+}
+<form id="formassignEmployeerole" method="post" autocomplete="off">
+    @if (ViewBag.Error != "")
+    {
+        <ul>
+            <li class="text-danger">@ViewBag.Error</li>
+        </ul>
+    }
+    <div class="row">
+        @* <input asp-for="user_id" value="" type="hidden" />*@
+        <div class="col-sm-6 mb-3">
+            <label for="exampleInputEmail1">Full Name</label>
+            <input value="@ViewBag.FullName" type="text" class="form-control" disabled>
+        </div>
+        <div class="col-sm-6 mb-3">
+            <label for="exampleInputEmail1">Username </label>
+            <input value="@ViewBag.UserName" type="text" class="form-control" disabled>
+        </div>
+    </div>
+    <input asp-for="user_id" readonly hidden />
+    <div class="row">
+        <div class="col-sm-6">
+            <h6 class="text-center">Available Role</h6>
+        </div>
+        <div class="col-sm-6">
+            <h6 class="text-center">Selected Role</h6>
+        </div>
+        <div class="col-sm-12 mb-5">
+            <select multiple="multiple" id="my-select" asp-for="roleid" asp-items="ViewBag.Roles">
+                @* @foreach (var item in ViewBag.Roles as List<SelectListItem>)
+                {
+                <option value='@item.Value' selected="@item.Selected">@item.Text</option>
+                }*@
+                @*<option value='elem_1' selected="">Admin</option>
+                <option value='elem_2'>User</option>
+                <option value='elem_3'>Super Admin</option>
+                <option value='elem_4'>Guests</option>
+                <option value='elem_5'>Super Admin</option>*@
+            </select>
+        </div>
+    </div>
+
+
+    @*
+    <div class="row">
+    <div class="col-sm-6">
+    <h6 class="text-center">Available Role</h6>
+    </div>
+    <div class="col-sm-6">
+    <h6 class="text-center">Selected Role</h6>
+    </div>
+    <div class="col-sm-12 mb-5">
+    @Html.ListBoxFor(model => model.roleid, new MultiSelectList(ViewBag.Roles, "Value", "Text"), new { @class = "form-control", multiple = "multiple", id = "my-select" })
+    </div>
+    </div>*@
+
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Update</button>
+    </div>
+
+</form>
+
+
+
+
+
+<script>
+
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AssignUserToRole", "Employees")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#formassignEmployeerole'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        //    new PNotify({
+        //    // title: 'Success ',
+        //    text:'Assign Role To User Successfully  ',
+        //    type: 'success',
+        //    animation: {
+        //        effect_in: 'fade',
+        //        effect_out: 'slide'
+        //    }
+
+        //});
+        Pagination.getData();
+    });
+</script>
+<script src="~/partner/assets/js/form-select-custom.js"></script>
+

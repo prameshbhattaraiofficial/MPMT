@@ -1,0 +1,131 @@
+﻿@{
+    Layout = null;
+    var countdown = ViewBag.countdown;
+}
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>MyPay Remit - Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/partner/assets/images/logo-sm.png">
+
+    <!-- App css -->
+    <link href="~/partner/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/partner/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/partner/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="account-body accountbg">
+
+    <!-- Log In page -->
+    <div class="container">
+        <div class="row vh-100 d-flex justify-content-center">
+            <div class="col-12 align-self-center">
+                <div class="row">
+                    <div class="col-lg-4 mx-auto">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="text-center p-3">
+                                    <a href="index.php" class="logo logo-admin">
+                                        <img src="~/partner/assets/images/logo.png" height="50" alt="logo" class="auth-logo">
+                                    </a>
+                                    <p class="text-muted  mb-0">OTP has been sent to  your email "@ViewBag.email"</p>
+                                    <p align="center">Please verify!!</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="text-center p-3">
+                                    <p class="mb-0">Please Check Your Verified Email For OTP</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+
+                                <div class="p-3">
+                                    <form class="form-horizontal auth-form" method="post" asp-area="partner" asp-controller="Login" asp-action="EmployeeTokenVerification">
+                                        <ul>
+                                            @if (ViewBag.Error is not null)
+                                            {
+                                                <li class="text-danger">@ViewBag.Error</li>
+                                            }
+                                        </ul>
+                                        <div class="form-group mb-2">
+                                            <label class="form-label" for="username">OTP</label>
+                                            <div class="input-group">
+                                                <input type="text" onkeyup="return isNumber()" class="form-control" name="OTP" id="otp" placeholder="Enter OTP">
+                                            </div>
+                                        </div><!--end form-group-->
+
+
+                                        <div class="form-group mb-0 row">
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary w-100 waves-effect waves-light">Validate <i class="fas fa-sign-in-alt ms-1"></i></button>
+                                            </div><!--end col-->
+                                        </div> <!--end form-group-->
+                                        <div>
+                                            @* <p>Your One-Time Password is: <span id="otp"></span></p>*@
+                                            <p id="countdownp">Time left: <span id="countdown"></span> seconds</p>
+                                        </div>
+                                    </form><!--end form-->
+
+
+                                </div>
+
+                                <script>
+
+                                    // Set the date we're counting down to
+                                    var countDownDate = new Date('@countdown').getTime();
+
+                                    // Update the count down every 1 second
+                                    var x = setInterval(function () {
+
+                                        // Get today's date and time
+                                        var now = new Date().getTime();
+
+                                        // Find the distance between now and the count down date
+                                        var distance = countDownDate - now;
+
+                                        // Time calculations for days, hours, minutes and seconds
+                                        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                                        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                                        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                                        // Output the result in an element with id="demo"
+                                        document.getElementById("countdown").innerHTML = minutes + "m " + seconds + "s ";
+                                        console.log('Countdown value:', countDownDate);
+                                        // If the count down is over, write some text
+                                        if (distance < 0) {
+                                            clearInterval(x);
+                                            document.getElementById("countdownp").innerHTML = "OTP EXPIRED";
+                                        }
+                                    }, 1000);
+                                </script>
+                            </div><!--end card-body-->
+                            <div class="card-body bg-light-alt text-center">
+                                <span class="text-muted d-none d-sm-inline-block">
+                                    MyPay Remit ©
+                                    <script>
+                                        document.write(new Date().getFullYear())
+                                    </script>
+                                </span>
+                            </div>
+                        </div><!--end card-->
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end col-->
+        </div><!--end row-->
+    </div><!--end container-->
+    <!-- End Log In page -->
+    <!-- jQuery  -->
+    <script src="~/partner/assets/js/jquery.min.js"></script>
+    <script src="~/partner/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/partner/assets/js/waves.js"></script>
+    <script src="~/partner/assets/js/feather.min.js"></script>
+    <script src="~/partner/assets/js/simplebar.min.js"></script>
+
+</body>
+</html>

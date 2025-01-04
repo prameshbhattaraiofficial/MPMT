@@ -1,0 +1,89 @@
+﻿@using Mpmt.Core.Dtos.Roles
+@model List<MenuRoleWithchild>
+@{
+}
+<div class="row">
+    <!-- [ Invoice ] start -->
+    <div class="container ">
+        <div class="g-col-12 g-col-lg-12 g-col-xxl-12">
+            <div class="intro-y">
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <input value="@ViewBag.roleid" id="roleid" type="hidden" />
+                        <div>
+                            <label for="update-profile-form-1" class="form-label">Role Name</label>
+                            <input id="update-profile-form-1" type="text" class="form-control" placeholder="Admin" value="@ViewBag.Rolename" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="">
+                            <label for="update-profile-form-1" class="form-label">Username</label>
+                            <input id="update-profile-form-1" type="text" class="form-control" placeholder="Input text" value="@ViewBag.Username" disabled>
+                        </div>
+                    </div>
+                </div>
+                <form method="post">
+                  
+                <table id="PermissionCheckbox" class="table table-striped mt-3 assign-table" style="vertical-align:baseline">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-nowrap">Menu Title</th>
+                            <th class="text-nowrap">
+                                <input onchange="ValidationAllfunc('View')" @ViewBag.Viewall id="viewAll" class="viewallclass" type="checkbox">
+                                View
+                            </th>
+                            @*<th class="text-nowrap">
+                                <input onchange="ValidationAllfunc('Create')" @ViewBag.Createall id="CreateAll" type="checkbox">
+                                Create
+                            </th>
+                            <th class="text-nowrap">
+                                <input onchange="ValidationAllfunc('Edit')" @ViewBag.Editall id="EditAll" type="checkbox">
+                                Edit
+                            </th>
+                            <th class="text-nowrap">
+                                <input onchange="ValidationAllfunc('Delete')" @ViewBag.Deleteall id="DeleteAll" type="checkbox">
+                                Delete
+                            </th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr style="color:green">
+
+                                <td>@item.title</td>
+                                <td><input asp-for="@item.viewPer" onchange="ValidationListFun('View',@item.menuId,@item.parentId)" id="viewper-@item.menuId" type="checkbox" class="ViewCheck"></td>
+                                @*<td><input asp-for="@item.createPer" onchange="ValidationListFun('create',@item.menuId,@item.parentId)" id="createper-@item.menuId" type="checkbox" class="CreateCheck"></td>
+                                <td><input asp-for="@item.updatePer" onchange="ValidationListFun('edit',@item.menuId,@item.parentId)" id="editper-@item.menuId" type="checkbox" class="EditCheck"></td>
+                                <td><input asp-for="@item.deletePer" onchange="ValidationListFun('delete',@item.menuId,@item.parentId)" id="deleteper-@item.menuId" type="checkbox" class="DeleteCheck"></td>*@
+                                <td hidden><input type="hidden" class="menuval" asp-for="@item.menuId" /></td>
+                            </tr>
+                            @foreach (var child in item.Child)
+                            {
+                                <tr class="Row-@child.parentId">
+
+                                    <td>@child.title</td>
+                                    <td><input asp-for="@child.viewPer" onchange="ValidationListFun('View',@child.menuId,@child.parentId)" id="viewper-@child.menuId" type="checkbox" class="ViewCheck"></td>
+                                    @*<td><input asp-for="@child.createPer" onchange="ValidationListFun('create',@child.menuId,@child.parentId)" id="createper-@child.menuId" type="checkbox" class="CreateCheck"></td>
+                                    <td><input asp-for="@child.updatePer" onchange="ValidationListFun('edit',@child.menuId,@child.parentId)" id="editper-@child.menuId" type="checkbox" class="EditCheck"></td>
+                                    <td><input asp-for="@child.deletePer" onchange="ValidationListFun('delete',@child.menuId,@child.parentId)" id="deleteper-@child.menuId" type="checkbox" class="DeleteCheck"></td>*@
+                                    <td hidden><input type="hidden" class="menuval" asp-for="@child.menuId" /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" onclick="PostCheckBox()" class="btn btn-sm btn-primary">Update Role</button>
+            </div>
+        </div>
+    </div>
+    <!-- [ Invoice ] end -->
+
+</div>
+
+    <script src="~/js/roles/assignrole.js"></script>

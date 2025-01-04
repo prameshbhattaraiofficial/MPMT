@@ -1,0 +1,114 @@
+﻿@using Mpmt.Core.Dtos.TransferPurpose
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<TransferPurposeDetails>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Setting</a></li>
+                            <li class="breadcrumb-item active">Transfer Purpose List</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                        <form id="formtransferpurposefilter" class="row row-cols-lg-auto align-items-end">
+                            <div class="col-12 mb-2">
+                                <div class="input-group">
+                                    <input name="TransferPurposeName" type="text" class="form-control" placeholder="Transfer Purpose">
+                                </div>
+                            </div>
+                            <div class="col-12 mb-2">
+                                <label class="form-label mb-0" for="inlineFormSelectPref">Status</label>
+                                <select name="Status" class="form-select" id="validationTooltip04" required>
+                                    <option value="0" selected>All</option>>
+                                    <option value="1">Active</option>>
+                                    <option value="2">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mb-2">
+                                <button id="btntransferpurposefilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Transfer Purpose List</h4>
+                        </div>
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                @if (actors.FirstOrDefault(x => x.Action == "AddTransferPurpose")?.Permission ?? false)
+{
+                                <a onclick="ShowPopUp('@Url.Action("AddTransferPurpose","TransferPurpose")','Add New Transfer Purpose')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                    <i class="las la-plus ms-1"></i> Add Transfer Purpose
+                                </a>
+}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="TransferPurposeTableWrapper" class="table-responsive">
+                        <partial name="_TransferPurposeIndex" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("TransferPurposeIndex", "TransferPurpose")',
+                selector: '#TransferPurposeTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formtransferpurposefilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+                $('#formtransferpurposefilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btntransferpurposefilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}

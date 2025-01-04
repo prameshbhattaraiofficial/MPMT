@@ -1,0 +1,300 @@
+﻿@using Mpmt.Core.Dtos.PartnerReport
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Models.RMP;
+@model PagedList<RemitTxnReport>
+
+@{
+    var txFilter = ViewBag.TransactionFilter as RemitTxnReportFilter;
+}
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Global Setting</a></li>
+                            <li class="breadcrumb-item active">Reports</li>
+                        </ol>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="formReportsFilter" class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+                                    @if (ViewBag.StartDate != null)
+                                    {
+                                        <input type="date" name="StartDate" class="form-control" value="@ViewBag.StartDate.ToString("yyyy-MM-dd")">
+                                    }
+                                    else
+                                    {
+                                        <input type="date" name="StartDate" class="form-control">
+                                    }
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+                                    @if (ViewBag.EndDate != null)
+                                    {
+                                        <input type="date" name="EndDate" class="form-control" value="@ViewBag.EndDate.ToString("yyyy-MM-dd")">
+                                    }
+                                    else
+                                    {
+                                        <input type="date" name="EndDate" class="form-control">
+                                    }
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <label class="form-label mb-0" for="dateFilterBy">Date based on</label>
+                                    <select name="DateFilterBy" class="form-select" id="dateFilterBy">
+                                        <option value=1>Receiver Txn Date</option>
+                                        <option value=2>Payout Date</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" id="transactionId" name="TransactionId" class="form-control" placeholder="Transaction Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" id="ControlNumber" name="ControlNumber" class="form-control" placeholder="Control Number(MTCN)">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" id="PartnerName" name="PartnerName" class="form-control" placeholder="Partner Name">
+                                    </div>
+                                </div>
+                                @*<div class="col-12">
+                                <div class="input-group">
+                                <input type="text" id="merchantMobile" name="MerchantMobileNo" class="form-control" maxlength="10" onkeypress="return isNumber(event)" placeholder="Merchant Mobile">
+                                </div>
+                                </div>*@
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="AgentTrackerId" class="form-control" placeholder="Agent Tracker Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="GatewayTxnId" class="form-control" placeholder="Gateway Transaction Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="TrackerId" class="form-control" placeholder="Partner Tracker Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0 mt-2" for="transactionType">Transaction Type</label>
+                                    <select name="TransactionType" class="form-select" id="transactionType" required>
+                                        <option value="" selected> Select Transaction</option>
+                                        <option value="APITRANSACTION">APITRANSACTION</option>
+                                        <option value="PARTNERTRANSACTION">PARTNERTRANSACTION</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0 mt-2" for="transactionStatus">Transaction Status</label>
+                                    <select name="TransactionStatus" class="form-select" id="transactionStatus" required asp-items="@ViewBag.TStatus">
+                                        <option value="">-All-</option>
+                                    </select>
+                                </div>
+                                @*<div class="col-12">
+                                <label class="form-label mb-0" for="signType">Sign Type</label>
+                                <select name="SignType" class="form-select" id="signType" required>
+                                <option value="" selected>Select SignType</option>
+                                <option value="DR">Debit</option>
+                                <option value="CR">Credit</option>
+                                </select>
+                                </div>*@
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="sourceCurrency">Source Currency</label>
+                                    <select name="SourceCurrency" class="form-select" id="sourceCurrency" asp-items="@ViewBag.SCurrency" required>
+                                        <option value="" selected>Select Currency</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="sourceCurrency"> Payment Type</label>
+                                    <select name="PaymentType" class="form-select" asp-items="ViewBag.PaymentTypeddl" required>
+                                        <option value="" selected>Select Payment Type</option>
+                                    </select>
+                                </div>
+                                @*<div class="col-12">
+                                <label class="form-label mb-0" for="inlineFormSelectPref">Destination Currency</label>
+                                <select name="DestinationCurrency" class="form-select" id="validationTooltip04" asp-items="@ViewBag.DCurrency" required>
+                                <option value="" selected>Select Currency</option>
+                                </select>
+                                </div>*@
+                                <br />
+                                <div class="col-12 mt-2">
+                                    <label class="form-label mb-0" for="complianceStatus">Compliance Status</label>
+                                    <select name="ComplianceStatus" class="form-select" id="complianceStatus" required>
+                                        <option value="0" selected>Compliance Status</option>
+                                        <option value="1">True</option>
+                                        <option value="2">False</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <button type="button" id="btnReportsFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h4 class="card-title">Remit Transaction Reports</h4>
+                        </div>
+                        <div class="col-4">
+                            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                                <button id="btnTransactionexportexcell" class="btn btn-primary">  Export to Excel</button>
+                                <button id="btnTransactionexportcsv" class="btn btn-primary"> Export to CSV</button>
+                                <button id="btnTransactionexportPdf" class="btn btn-primary"> Export to Pdf</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="ReportsTableWrapper" class="table-responsive">
+                        <partial name="_TransactionAdminReportsIndex" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener('keypress', function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                // Enter key is pressed
+                document.getElementById('btnReportsFilter').click();
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("TransactionAdminReportsIndex", "Reports")',
+                selector: '#ReportsTableWrapper'
+            });
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formReportsFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+            addUsersPageHandlers();
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+                $('#formReportsFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                $('#btnReportsFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                // $('#transactionId').on('keypress', function (e) {
+                //     if (e.which == 13) {
+                //         e.preventDefault();
+                //         Pagination.getData();
+                //         return false;
+                //     }
+                // });
+
+                // $('#signType').on('change', function (e) {
+                //     e.preventDefault();
+                //     Pagination.getData();
+                //     return false;
+                // });
+
+                // $('#transactionType').on('change', function (e) {
+                //     e.preventDefault();
+                //     Pagination.getData();
+                //     return false;
+                // });
+
+                // $('#sourceCurrency').on('change', function (e) {
+                //     e.preventDefault();
+                //     Pagination.getData();
+                //     return false;
+                // });
+
+                // $('#complianceStatus').on('change', function (e) {
+                //     e.preventDefault();
+                //     Pagination.getData();
+                //     return false;
+                // });
+
+                // $('#merchantMobile').on('keypress', function (e) {
+                //     if (e.which == 13) {
+                //         e.preventDefault();
+                //         Pagination.getData();
+                //         return false;
+                //     }
+                // });
+
+                $('#btnTransactionexportexcell').on('click', function (e) {
+
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1
+
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportTransactiontoexcell", "Reports")');
+
+                    return false;
+                });
+                $('#btnTransactionexportcsv').on('click', function (e) {
+
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+
+                    }
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportTransactionToCsv", "Reports")');
+
+                    return false;
+                });
+                $('#btnTransactionexportPdf').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportTransactiontoPdf", "Reports")');
+                    return false;
+                });
+            }
+        });
+    </script>
+}

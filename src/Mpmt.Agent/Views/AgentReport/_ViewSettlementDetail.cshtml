@@ -1,0 +1,96 @@
+﻿@using Mpmt.Core.Dtos.AgentReport;
+@model AgentSettlementReport
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <tbody>
+                <tr>
+                    <td><span>Transaction Id :</span></td>
+                    <td><span><strong style="color: #f98c45">#@Model.TransactionId</strong></span></td>
+                </tr>
+                <tr>
+                    <td><span>Agent Tracker Id :</span></td>
+                    <td><span><strong style="color: #f98c45">#@Model.AgentTrackerId</strong></span></td>
+                </tr>
+                <tr>
+                    <td><span>Payout Nepali Date :</span></td>
+                    <td><span> @Model.PayoutNepaliDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Payout Date :</span></td>
+                    <td><span> @Model.PayoutDate</span></td>
+                </tr>
+                <tr>
+                    <td><span>Agent Code :</span></td>
+                    <td><span class="tb-lead">@Model.AgentCode</span></td>
+                </tr>
+                <tr>
+                    <td><span>Agent Name :</span></td>
+                    <td><span> @Model.AgentName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Agent District :</span></td>
+                    <td><span> @Model.AgentName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Source Currency :</span></td>
+                    <td><span> @Model.SourceCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Destination Currency :</span></td>
+                    <td><span>@Model.DestinationCurrency</span></td>
+                </tr>
+                <tr>
+                    <td><span>Payout Type :</span></td>
+                    <td><span> @Model.PayoutType</span></td>
+                </tr>
+                <tr>
+                    <td><span>Transaction Type :</span></td>
+                    <td><span> @Model.TransactionType</span></td>
+                </tr>
+                <tr>
+                    <td><span>Sending Amount :</span></td>
+                    <td><span class="tb-lead"> @Model.SendingAmount</span></td>
+                </tr>
+                <tr>
+                    <td><span>Conversion Rate :</span></td>
+                    <td>@Model.ConversionRate</></td>
+                </tr>
+                <tr>
+                    <td><span>Net Sending Amount :</span></td>
+                    <td><span class="tb-lead"> @Model.NetSendingAmount</span></td>
+                </tr>
+                <tr>
+                    <td><span>Net Receiving Amount NPR :</span></td>
+                    <td><span class="tb-lead"> @Model.NetReceivingAmountNPR</span></td>
+                </tr>
+                <tr>
+                    <td><span>Agent Commission:</span></td>
+                    <td><span class="tb-lead"> @Model.AgentCommissionNPR</span></td>
+                </tr>
+                <tr>
+                    <td><span>Super Agent Name :</span></td>
+                    <td><span> @Model.SuperAgentName</span></td>
+                </tr>
+                <tr>
+                    <td><span>Super Agent Code :</span></td>
+                    <td><span> @Model.SuperAgentCode</span></td>
+                </tr>
+                <tr>
+                    <td><span>Super Agent Commission:</span></td>
+                    <td><span class="tb-lead"> @Model.SuperAgentCommissionNPR</span></td>
+                </tr>
+                <tr>
+                    <td><span>Status :</span></td>
+                    <td><span> @Model.Status</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4">
+        <div class="button-items">
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

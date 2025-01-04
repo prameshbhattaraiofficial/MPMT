@@ -1,0 +1,67 @@
+[
+  {
+    "Endpoint": "POST:*",
+    "Period": "1m",
+    "Limit": 65
+  },
+  {
+    "Endpoint": "PUT:*",
+    "Period": "1m",
+    "Limit": 15
+  },
+  {
+    "Endpoint": "DELETE:*",
+    "Period": "1m",
+    "Limit": 15
+  },
+  {
+    "Endpoint": "PATCH:*",
+    "Period": "1m",
+    "Limit": 15
+  },
+  {
+    "Endpoint": "POST:/partner/dashboard/sendtransferamount",
+    "Period": "1m",
+    "Limit": 10
+  },
+  {
+    "Endpoint": "POST:/partner/partnerroles/addrole",
+    "Period": "1m",
+    "Limit": 10
+  },
+  {
+    "Endpoint": "POST:/partner/employees/addpartneremployee",
+    "Period": "1m",
+    "Limit": 10
+  },
+  {
+    "Endpoint": "POST:/partner/partnermenu/addmenu",
+    "Period": "1m",
+    "Limit": 10
+  },
+  {
+    "Endpoint": "POST:/partner/partnermenu/updatemenu",
+    "Period": "1m",
+    "Limit": 10
+  },
+  {
+    "Endpoint": "POST:/partner/users/adduser",
+    "Period": "1m",
+    "Limit": 10
+  },
+  {
+    "Endpoint": "POST:/partner/users/deleteuser",
+    "Period": "1m",
+    "Limit": 10
+  },
+  {
+    "Endpoint": "POST:/partner/users/updateuser",
+    "Period": "1m",
+    "Limit": 10
+  },
+  {
+    "Endpoint": "POST:/partner/recipient/recipientsadd",
+    "Period": "1m",
+    "Limit": 10
+  }
+]

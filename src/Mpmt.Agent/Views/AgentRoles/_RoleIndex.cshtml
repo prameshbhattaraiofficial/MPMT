@@ -1,0 +1,73 @@
+﻿@using Mpmt.Core.Dtos.Roles;
+@model IEnumerable<AppRole>
+
+@{
+    int sn = 1;
+}
+
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Role Name</th>
+                <th>Descriptions</th>
+                <th>Is System Role</th>
+                <th>Status</th>
+                <th>CreatedBy</th>
+                <th>UpdatedBy</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@sn</td>
+                    <td>@item.RoleName</td>
+                    <td>@item.Description</td>
+                    @if (item.IsSystemRole == true)
+                    {
+                        <td><span class="badge bg-soft-success px-2">Yes</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="badge bg-soft-danger px-2">No</span></td>
+                    }
+                    @if (item.IsActive == true)
+                    {
+                        <td><span class="badge bg-soft-success px-2">Active</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="badge bg-soft-danger px-2">InActive</span></td>
+                    }
+                    <td>@item.LoggedInUser</td>
+                    <td>@item.UserType</td>
+                    <td name="buttons">
+                        <div class=" float-center">
+                            @* <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2" title="Lock">
+                                <i class="dripicons-lock-open"></i>
+                            </button> *@
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdateRole", "AgentRoles", new { id = item.Id })', 'Update Role')" title="Update Role"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                           
+                            
+@*                             <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="PopUPAjaxDelete('@Url.Action("DeleteRole", "AgentRoles", new { id = item.Id })', 'Remove Role')" title="Delete Role"> <i class="dripicons-trash" aria-hidden="true"></i></a>
+ *@
+                            <a onclick="ShowPopUp('@Url.Action("DeleteRole", "AgentRoles", new { id = item.Id})', 'Are you sure?','modal-dialog modal-md')" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal" data-bs-target="#resetKey" title="Delete Role"><i class="dripicons-trash" aria-hidden="true"></i></a>
+                               
+                                @* <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#statusconfirm">Approve</button>
+                            *@
+
+
+                            <button id="bEdit" style="cursor: pointer;" type="button" class="btn btn-sm btn-soft-warning btn-circle me-2" data-toggle="tooltip" title="Assign Permission" onclick="ShowPopUp('@Url.Action("UpdateMenuPermission", "AgentRoles", new { RoleId = item.Id })', 'Assign Permission')"><i class="dripicons-lock" aria-hidden="true"></i></button>
+                            @* <button id="bEdit" style="cursor: pointer;" type="button" class="btn btn-sm btn-soft-success btn-circle me-2" data-toggle="tooltip" title="Assign Role" onclick="ShowPopUp('@Url.Action("AssignRole", "AgentRoles", new { Id = item.Id })', 'Assign Role')"><i class="fa fa-solid fa-plus"></i></button> *@
+                            @* <button id="bEdit" style="cursor: pointer;" type="button" class="btn btn-sm btn-soft-danger btn-circle me-2" data-toggle="tooltip" title="Assign Permission" onclick="ShowPopUp('@Url.Action("UpdateMenuPermission", "MenuPremission", new { RoleId = item.Id })', 'Assign Permission')"><i class="fa fa-solid fa-plus"></i></button> *@
+                        </div>
+                    </td>
+                </tr>
+                sn = sn + 1;
+            }
+        </tbody>
+    </table>
+</div>

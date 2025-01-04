@@ -1,0 +1,235 @@
+﻿@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Models.CashAgent;
+@model PagedList<FundRequest>
+
+<link href="~/nepali.datepicker.v3/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/nepali.datepicker.v3/css/nepali.datepicker.v3.min.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Agent</a></li>
+                            <li class="breadcrumb-item active">Fund Request</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form class="row row-cols-lg-auto align-items-center" id="FormAgentFundRequestfilter">
+                                <div class="col-12  mb-3">
+                                    <label class="form-label">Agent Name</label>
+                                    <input type="text" class="form-control" id="AgentName" name="AgentName" placeholder="Agent name">
+                                </div>
+                                @* <div class="col-12  mb-3">
+                                    <label class="form-label">Agent Code</label>
+                                    <input type="text" class="form-control" id="AgentCode" name="AgentCode" placeholder="Agent code">
+                                </div> *@
+                                @*   <div class="col-12  mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="text" class="form-control" id="Email" name="Email" placeholder="Email">
+                                </div> *@
+                                <div class="col-md-6 mb-3" hidden>
+                                    <label class="form-label">Start Date(AD)</label>
+                                    <input type="date" id="IssueDateAD" name="StartDate" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Start Date(BS)</label>
+                                    <input type="text" placeholder="yyyy-mm-dd" id="IssueDateNep" name="StartDateBS" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3" id="EndDate" hidden>
+                                    <label class="form-label">End date</label>
+                                    <input type="date" id="ExpireDateAD" name="EndDate" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3" id="ExpiryBs">
+                                    <label class="form-label">End date(BS)</label>
+                                    <input type="text" placeholder="yyyy-mm-dd" id="ExpireDateNep" name="EndDateBS" class="form-control">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Request Status</label>
+                                    <select name="Status" class="form-select" id="status" asp-items="@ViewBag.RequestStatus" required>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mt-2">
+                                    <button type="button" id="btnFundRequestFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h4 class="card-title">List of Fund Request</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="AgentTableRequestFundWrapper" class="table-responsive12">
+                        <partial name="_AgentFundRequestListForAdmin" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script src="~/js/admin/admin.partners.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('.js-example-basic-single').select2();
+            // Initialize pagination settings object
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("ReqtFundByAgent", "SuperAgent")',
+                selector: '#AgentTableRequestFundWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#FormAgentFundRequestfilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#FormAgentFundRequestfilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnFundRequestFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}
+
+<script src="~/nepali.datepicker.v3/jquery-ui.min.js"></script>
+<script src="~/nepali.datepicker.v3/js/nepali.datepicker.v3.min.js"></script>
+<script>
+    var yearRangeDOB = "1944:-10"; //"1944:+0";
+    var yearRangeIssue = "1944:-0";
+    var yearRangeExpire = "1944:+10"; //"1944:+20";
+    var minimum = "[1943, 04, 14]";
+    var dateFormat = "yy-mm-dd";
+    var today = new Date();
+    var startDate = today.getFullYear() - 10 + '-' + today.getMonth() + '-01';
+    var nepaliDOB = NepaliFunctions.ConvertDateFormat({ year: NepaliFunctions.GetCurrentBsYear() - 9, month: 1, day: 1 }, "YYYY-MM-DD");
+    var NepalDateToday = NepaliFunctions.ConvertDateFormat(NepaliFunctions.GetCurrentBsDate());
+
+    $("#IssueDateAD").datepicker({
+        dateFormat: dateFormat,
+        defaultDate: startDate,
+        maxDate: new Date,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: '1943:' + today.getFullYear(),
+        showAnim: "slideDown",
+        autoSize: true
+    }).attr('readonly', 'readonly');
+
+    $('#IssueDateNep').nepaliDatePicker({
+        ndpYear: true,
+        ndpMonth: true,
+        readOnlyInput: true,
+        defaultDate: NepalDateToday,
+        ndpEnglishInput: 'IssueDateAD',
+        disableAfter: NepalDateToday,
+        onChange: function () {
+            $('#IssueDateNep').removeClass("input-validation-error");
+            if ($('#IssueDateNep-error').length > 0) {
+                $('#IssueDateNep-error').html("");
+            };
+            $('#IssueDateAD').removeClass("input-validation-error");
+            if ($('#IssueDateAD-error').length > 0) {
+                $('#IssueDateAD-error').html("");
+            }
+        }
+    });
+
+    $('#IssueDateAD').change(function () {
+        var dateObj = NepaliFunctions.ConvertToDateObject($('#IssueDateAD').val(), "YYYY-MM-DD");
+        $('#IssueDateBS').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+        $('#IssueDateAD').removeClass("input-validation-error");
+        if ($('#IssueDateAD-error').length > 0) {
+            $('#IssueDateAD-error').html("");
+        }
+        $('#IssueDateBS').removeClass("input-validation-error");
+        if ($('#IssueDateNep-error').length > 0) {
+            $('#IssueDateNep-error').html("");
+        }
+    });
+
+    $('#ExpireDateAD').change(function () {
+        var dateObj = NepaliFunctions.ConvertToDateObject($('#ExpireDateAD').val(), "YYYY-MM-DD");
+        $('#ExpireDateNep').val(NepaliFunctions.ConvertDateFormat(NepaliFunctions.AD2BS(dateObj)));
+        $('#ExpireDateAD').removeClass("input-validation-error");
+        if ($('#ExpireDateAD-error').length > 0) {
+            $('#ExpireDateAD-error').html("");
+        }
+        $('#ExpireDateNep').removeClass("input-validation-error");
+        if ($('#ExpireDateNep-error').length > 0) {
+            $('#ExpireDateNep-error').html("");
+        }
+    });
+    $("#ExpireDateAD").datepicker({
+        dateFormat: dateFormat,
+        // minDate: new Date,
+        changeMonth: true,
+        changeYear: true,
+        // yearRange: "-100:+20",
+        showAnim: "slideDown",
+        autoSize: true
+    }).attr('readonly', 'readonly');
+
+    $('#ExpireDateNep').nepaliDatePicker({
+        ndpYear: true,
+        ndpMonth: true,
+        readOnlyInput: true,
+        ndpEnglishInput: 'ExpireDateAD',
+        // disableBefore: NepalDateToday,
+        onChange: function () {
+            $('#ExpireDateNep').removeClass("input-validation-error");
+            if ($('#ExpireDateNep-error').length > 0) {
+                $('#ExpireDateNep-error').html("");
+            };
+            $('#ExpireDateAD').removeClass("input-validation-error");
+            if ($('#ExpireDateAD-error').length > 0) {
+                $('#ExpireDateAD-error').html("");
+            }
+        }
+    });
+
+</script>
+

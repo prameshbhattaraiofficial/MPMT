@@ -1,0 +1,39 @@
+﻿@using Mpmt.Core.Dtos.Notification;
+@model IEnumerable<NotificationModule>
+
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Module Code</th>
+                <th>Module Name</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@(value.index + 1)</td>
+                    <td>@value.item.ModuleCode</td>
+                    <td>@value.item.ModuleName</td>
+                    @if (value.item.IsActive == true)
+                    {
+                        <td><span class="badge bg-soft-success px-2">Active</span></td>
+                    }
+                    else
+                    {
+                        <td><span class="badge bg-soft-danger px-2">InActive</span></td>
+                    }
+                    <td name="buttons">
+                        <div class=" float-center">
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-info btn-circle" onclick="ShowPopUp('@Url.Action("AssignNotificationModuleRole", "Notification", new { id = value.item.Id })', 'Assign Roles')" title="Assign Roles"> <i class="dripicons-swap" aria-hidden="true"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,303 @@
+﻿@using Mpmt.Core.ViewModel.CashAgent;
+@model CashAgentUserVm
+
+<ul>
+    @if (ViewBag.Error is not null)
+    {
+        foreach (var error in ViewBag.Error)
+        {
+            <li class="text-danger">@error</li>
+        }
+    }
+</ul>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form id="AgentForm" class="form-horizontal auth-form" method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" name="AgentCode" id="AgentCode" value="@ViewBag.AgentCode" />
+    <div class="row">
+        <div class="col-md-4 mb-2 mb-2">
+            <label asp-for="FirstName" class="form-label">First Name</label>
+            <input asp-for="FirstName" onkeydown="return /[a-z]/i.test(event.key)" id="FirstName" type="text" class="form-control">
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+
+        </div>
+        <div class="col-md-4 mb-2 mb-2">
+            <label asp-for="LastName" class="form-label">Last Name <span class="text-danger">*</span></label>
+            <input asp-for="LastName" onkeydown="return /[a-z]/i.test(event.key)" type="text" required class="form-control">
+            <span asp-validation-for="LastName" class="text-danger"></span>
+
+        </div>
+        <div class="col-md-4  mb-2">
+            <label asp-for="UserName" class="form-label">UserName <span class="text-danger">*</span></label>
+            <input asp-for="UserName" type="text" required class="form-control">
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mb-2">
+            <label asp-for="ContactNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
+            <div class="input-group has-validation">
+
+                <input type="text" class="form-control" maxlength="15" asp-for="ContactNumber" onkeypress="return isNumber(event)" placeholder="" required>
+            </div>
+
+            <span asp-validation-for="ContactNumber" class="text-danger"></span>
+
+        </div>
+        <div class="col-md-6  mb-2">
+            <label asp-for="Email" class="form-label">Email</label>
+            <div class="input-group has-validation">
+
+                <input asp-for="Email" type="email" class="form-control">
+
+            </div>
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mb-2">
+            <label asp-for="FullAddress" class="form-label">Address <span class="text-danger">*</span></label>
+            <input asp-for="FullAddress" type="text" required class="form-control">
+            <span asp-validation-for="FullAddress" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mb-2">
+            @* <label asp-for="DistrictCode" class="form-label">District <span class="text-danger">*</span></label>
+            <input asp-for="DistrictCode" type="text" required class="form-control">
+            <span asp-validation-for="DistrictCode" class="text-danger"></span> *@
+            <label class="form-label" for="exampleFormControlSelect1">District <span class="text-danger">*</span></label>
+            <select asp-for="DistrictCode" class="form-select" id="exampleFormControlSelect1" asp-items="ViewBag.District" required>
+                <option value="">--Select--</option>
+            </select>
+            <span asp-validation-for="DistrictCode" class="text-danger"></span>
+        </div>
+        @* <div class="col-md-4  mb-2">
+        <label class="form-label" for="exampleFormControlSelect1">Agent Category <span class="text-danger">*</span></label>
+        <select asp-for="AgentCategoryId" class="form-select" id="exampleFormControlSelect1" asp-items="ViewBag.AgentCategory" required>
+        <option value="">--Select--</option>
+        </select>
+        <span asp-validation-for="AgentCategoryId" class="text-danger"></span>
+        </div> *@
+        <div class="col-md-6  mb-2">
+            <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
+            <div class="input-group">
+                <input asp-for="Password" type="password" class="form-control" id="id_password"> &ensp;
+                <i id="togglePassword" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+            </div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="col-md-6  mb-2">
+            <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+            <div class="input-group">
+                <input asp-for="ConfirmPassword" type="password" class="form-control" id="id_confirm_password"> &ensp;
+                <i id="togglePasswordConfirm" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+            </div>
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+        @* <div class="col-md-6 mb-2">
+        <label asp-for="SuperAgentCode" class="form-label">Super Agent Code</label>
+        <input asp-for="SuperAgentCode" type="text" class="form-control">
+        <span asp-validation-for="SuperAgentCode" class="text-danger"></span>
+        </div> *@
+        <div class="col-md-5 mb-2 form-control-wrap focused">
+            <label class="form-label" for="inlineFormSelectPref">Super Agent</label>
+            <div class="input-group">
+                <select class="form-select js-example-basic-single" style="font-size: 0.8125rem;font-weight: 400" id="SuperAgentCode" asp-for="SuperAgentCode" asp-items="@ViewBag.AgentListDdl" onchange="togglePrefundingCheckbox(this)">
+                    <option value="" selected>--Select Agent--</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2 mb-2 mt-4 d-flex align-items-center" style="justify-content: center;">
+            <input asp-for="IsPrefunding" class="form-check-input m-0" type="checkbox" id="prefundingCheckbox">&nbsp;&nbsp;
+            <label class="form-check-label" for="prefundingCheckbox">Is Prefunding</label>
+        </div>
+        <div class="col-md-5 mb-2">
+            <label asp-for="OrganizationName" class="form-label">Organization Name <span class="text-danger">*</span></label>
+            <input asp-for="OrganizationName" type="text" class="form-control">
+            <span asp-validation-for="OrganizationName" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-2">
+            <label asp-for="RegistrationNumber" class="form-label">Company registration number/PAN Card <span class="text-danger">*</span></label>
+            <input asp-for="RegistrationNumber" type="text" class="form-control">
+            <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-2">
+            <label asp-for="DocumentImage" class="form-label">Company Logo  <span class="text-danger">*</span></label>
+            <input asp-for="DocumentImage" type="file" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimagechange(this,'CompanyLogoaddid','CompanyLogoaddidtext')">
+            <span id="CompanyLogoaddidtext" class="text-danger" hidden></span>
+            <img id="CompanyLogoaddid" src="#" style="width:90px;" hidden>
+            <span asp-validation-for="DocumentImage" class="text-danger"></span>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-10">
+                        <h4 class="text-primary">License Document</h4>
+                    </div>
+                    <div class="col-2">
+                        <a onclick="AddLicense()" data-repeater-create="" class="btn btn-soft-primary btn-sm">
+                            <span class="fas fa-plus"></span>Add License
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="License" class="repeater-default">
+                            <div id="License-0" data-repeater-list="car">
+                                <div data-repeater-item="">
+                                    <div class="form-group row d-flex align-items-end">
+                                        <img id="licanceimage-0" src="#" style="width:90px;height:41px;" hidden>
+                                        <div class="col-md-4 ">
+                                            <input type="file" accept="image/*" class="form-control" data-val="true"
+                                                   data-val-required="Image is required"
+                                                   onchange="onimagechange(this,'licanceimage-0','licanceimageText-0')"
+                                                   name="licensedocument" required>
+                                            <span class="text-danger"></span>
+                                        </div>
+                                        <span id="licanceimageText-0" class="text-danger" hidden></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+<script src="~/js/ValidationScript.js"></script>
+<script>
+    var count = 0;
+    var Licensecount = 0;
+    function AddLicense() {
+        debugger;
+        Licensecount = Licensecount + 1;
+        const listDiv = document.getElementById("License");
+        const directorTemplate = `<div id="License-${Licensecount}" data-repeater-list="car">
+                                                            <div data-repeater-item="">
+                                                                <div class="form-group row d-flex align-items-end">
+                                                                      <img id="licanceimage-${Licensecount}" src="#" style="width:90px;height:41px;"  hidden>
+                                                                    <div class="col-md-4 ">
+                                                                      <input type="file"  name="LicenseDocument" class="form-control"  onchange="onimagechange(this,'licanceimage-${Licensecount}','licanceimageText-${Licensecount}')"  accept="image/*" />
+                                                                      <span asp-validation-for="LicenseDocument[${Licensecount}].Image" class="text-danger" ></span>
+                                                                   </div>
+                                                                    <div class="col-md-1 ">
+                                                                      <button onclick="removeelement('License-${Licensecount}')"class="btn btn-sm btn-danger" data-repeater-delete="">
+                                                                      <i class="dripicons-trash"></i></button>
+                                                                    </div><!--end col-->
+                                                                      <span id="licanceimageText-${Licensecount}" class="text-danger" hidden></span>
+                                                                </div><!--end row-->
+                                                            </div><!--end /div-->
+                                                        </div><!--end repet-list-->`;
+        listDiv.insertAdjacentHTML("beforeend", directorTemplate);
+    }
+    function removeelement(divId) {
+        const divToRemove = document.getElementById(divId);
+
+        if (divToRemove) {
+            divToRemove.remove();
+        }
+    }
+</script>
+
+<script>
+    function onimagechange(data, id, textid) {
+        debugger;
+        readURL(data, id, textid);
+    }
+    function readURL(input, id, textid) {
+        if (input.files && input.files[0]) {
+            if (input.files[0].type.split('/')[0] != 'image') {
+                $('#' + id).attr('src', "");
+                document.getElementById(textid).innerHTML = 'Invalid file extension'
+                $('#' + textid).removeAttr('hidden');
+                return false
+            }
+            else if (input.files[0].size < (5 * 1024 * 1024)) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    document.getElementById(textid).innerHTML = ''
+                    $('#' + id).attr('src', e.target.result);
+                    $('#' + id).removeAttr('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                $('#' + id).attr('src', "");
+                document.getElementById(textid).innerHTML = 'Invalid Image File Size (<5 MB)'
+                $('#' + textid).removeAttr('hidden');
+            }
+        }
+    };
+</script>
+
+<script>
+    function togglePrefundingCheckbox(selectElement) {
+        const prefundingCheckbox = document.getElementById('prefundingCheckbox');
+        if (selectElement.value === '') {
+            prefundingCheckbox.disabled = false;
+        } else {
+            prefundingCheckbox.disabled = true;
+            prefundingCheckbox.checked = false;
+        }
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        setupToggleButtons();
+    });
+
+    function setupToggleButtons() {
+        const togglePass = document.querySelector('#togglePassword');
+        const togglePassConfirm = document.querySelector('#togglePasswordConfirm');
+        const pass = document.querySelector('#id_password');
+        const passConfirm = document.querySelector('#id_confirm_password');
+
+        togglePass.addEventListener('click', function (e) {
+            const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+            pass.setAttribute('type', type);
+            togglePass.classList.toggle('mdi-eye');
+            togglePass.classList.toggle('mdi-eye-off');
+        });
+
+        togglePassConfirm.addEventListener('click', function (e) {
+            const type = passConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
+            passConfirm.setAttribute('type', type);
+            togglePassConfirm.classList.toggle('mdi-eye');
+            togglePassConfirm.classList.toggle('mdi-eye-off');
+        });
+    }
+</script>
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddAgent", "SuperAgent")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#AgentForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="~/js/ValidationScript.js"></script>
+
+

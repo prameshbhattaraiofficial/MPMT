@@ -1,0 +1,62 @@
+﻿@using Mpmt.Core.Dtos.FeeFundRequest;
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<FeeAccount>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Partner Code</th>
+                <th>Source Currency</th>
+                <th>Balance</th>
+                <th>Ledger</th>
+                <th>Created Date</th>
+                <th>Updated Date</th>
+                <th>Credit Limit</th>
+                <th>Statement</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Select((item, index) => new { item, index }))
+            {
+                <tr>
+                    <td>@(value.index + 1)</td>
+                    <td>@value.item.PartnerCode</td>
+                    <td>@value.item.SourceCurrency</td>
+                    <td>@value.item.Balance</td>
+                    <td>@value.item.Ledger</td>
+                    <td>@value.item.CreatedDate</td>
+                    <td>@value.item.UpdatedDate</td>
+                    <td>@value.item.CreditLimit</td>
+                    <td name="button">
+                        <div class=" float-center">
+                            <a class="btn btn-sm btn-soft-success btn-circle me-2" href="@Url.Action("PartnerFeeAccountStatement","Partners", new { WalletCurrency = value.item.SourceCurrency,PartnerCode=value.item.PartnerCode })"><i class="dripicons-preview"></i></a>
+                        </div>
+                    </td>
+                    @*<td>
+                        @if (actors.FirstOrDefault(x => x.Action == "AddFeeFundRequest")?.Permission ?? false)
+                        {
+                            <a class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("AddFeeFundRequest","Partners", new { walletcurrencyid = value.item.Id })','Add Fee Fund')"><i class="dripicons-plus"></i> Add Fund</a>
+                        }
+                    </td>*@
+                    
+                    <td><a class="btn btn-sm btn-soft-warning btn-circle me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"> <i class="mdi mdi-dots-horizontal text-secondary font-16"></i></a>
+                        @if (actors.FirstOrDefault(x => x.Action == "UpdatePartnerFeeWallet")?.Permission ?? false)
+                        {
+                            <div class="dropdown-menu" style="overflow: visible;">
+
+                                <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("UpdatePartnerFeeWallet","Partners", new { Id = value.item.Id, sourceCurrency = value.item.SourceCurrency })','Update Fee Wallet')"><i class="mdi mdi-pencil align-self-center font-16 icon-dual me-1"></i> Edit</a>
+
+                                @* <a class="dropdown-item" onclick="PopUPAjaxDelete('@Url.Action("UpdatePartnerFeeWallet", "Partners", new { Id = value.item.Id })', 'Remove Fee Wallet')"><i class="mdi mdi-bank align-self-center font-16 icon-dual me-1"></i>Delete</a> *@
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

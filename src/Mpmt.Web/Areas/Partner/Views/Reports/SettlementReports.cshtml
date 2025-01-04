@@ -1,0 +1,580 @@
+﻿<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item "><a href="javascript:void(0);">Reports</a></li>
+                            <li class="breadcrumb-item active">Settlement Report</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto">
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form class="row row-cols-lg-auto align-items-center">
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Merchant id">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Merchant Mobile No">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Transaction ID">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Parent TXn ID">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Gateway TXn ID">
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Tracker ID">
+                                    </div>
+                                </div>
+                               
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">Type</label>
+                                    <select class="form-select" id="validationTooltip04" required>
+                                        <option>Select Sign</option>
+                                        <option>Load Wallet</option>
+                                        <option>Convert Wallet</option>
+                                        <option>NOt Selected</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">From Currency</label>
+                                    <select class="form-select" id="validationTooltip04" required>
+                                        <option>Select Source Currency</option>
+                                        <option>USD</option>
+                                        <option>AUD</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="sourceCurrency">Source Currency</label>
+                                    <select name="PaymentType" class="form-select" id="paymenttype" asp-items="ViewBag.paymentTypeddl" required>
+                                        <option value="" selected>Select Payment Type</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 mb-3 form-control-wrap focused">
+                                    <label class="form-label-outlined" for="inlineFormSelectPref">To Currency</label>
+                                    <select class="form-select" id="validationTooltip04" required>
+                                        <option>Select Destination Currency</option>
+                                        <option>NPR</option>
+                                        <option>USD</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <button type="buton" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div>
+            <!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row--><!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Settlement Report</h4>
+                        </div>
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body overflow-x-auto">
+                    <table id="datatable-buttons"  class="table table-striped dataTable nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th>S.No</th>
+                                <th>Date </th>
+                                <th>MerchantUniqueID</th>
+                                <th>Transaction ID</th>
+                                <th>Gateway Transaction ID</th>
+                                <th>Tracker Id </th>
+                                <th>Merchant Name</th>
+                                <th>Merchant ContactNo </th>
+                                <th>From</th>
+                                <th>To </th>
+                                <th>Sign </th>
+                                <th>Service Charge </th>
+                                <th>Conversion Rate </th>
+                                <th>Converted Amount </th>
+                                <th>Net Amount </th>
+                                <th>Type </th>
+                                <th>Walllet Type </th>
+                                <th>Current Balance</th>
+                                <th>Previous Balance</th>
+                                <th>Fee Type</th>
+                                <th>Gateway Status </th>
+                                <th>MyPay Status </th>
+                                <th>IP Address </th>
+                                <th>Created By </th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>1</td>
+                                <td>03-Jan-2023 03:08:12 PM </td>
+                                <td>REM99529118</td>
+                                <td>#03012023103444344456470857278 </td>
+                                <td>79988785446846156</td>
+                                <td>2201202306140214208736616198 </td>
+                                <td>Ravi Sehgal </td>
+                                <td>2342342342 </td>
+                                <td>84474 NPR </td>
+                                <td>1000 AUD </td>
+                                <td><span class="text-danger">Debit</span></td>
+                                <td>1067.04 </td>
+                                <td>88.92 </td>
+                                <td>88.92 </td>
+                                <td>1243.04 </td>
+                                <td>ApiTransaction </td>
+                                <td>Prefund </td>
+                                <td>94230.96 </td>
+                                <td>95474 </td>
+                                <td>Fixed </td>
+                                <td>Pending </td>
+                                <td><span class="badge badge-soft-danger px-2">Pending</span></td>
+                                <td>2401:4900:1f34:54a9:b08b:5e9c:9cb1:fa03 </td>
+                                <td>Admin</td>
+                                <td name="buttons">
+                                    <div class=" float-center">
+                                        <button type="button" class="btn btn-sm btn-soft-success btn-circle me-2" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">
+                                            <i class="dripicons-preview"></i>
+                                        </button>
+
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>03-Jan-2023 03:08:12 PM </td>
+                                <td>REM99529118</td>
+                                <td>#03012023103444344456470857278 </td>
+                                <td>79988785446846156</td>
+                                <td>2201202306140214208736616198 </td>
+                                <td>Ravi Sehgal </td>
+                                <td>2342342342 </td>
+                                <td>84474 NPR </td>
+                                <td>1000 AUD </td>
+                                <td><span class="text-success">Credit</span></td>
+                                <td>1067.04 </td>
+                                <td>88.92 </td>
+                                <td>88.92 </td>
+                                <td>1243.04 </td>
+                                <td>ApiTransaction </td>
+                                <td>Prefund </td>
+                                <td>94230.96 </td>
+                                <td>95474 </td>
+                                <td>Fixed </td>
+                                <td>Pending </td>
+                                <td><span class="badge badge-soft-success px-2">Success</span></td>
+                                <td>2401:4900:1f34:54a9:b08b:5e9c:9cb1:fa03 </td>
+                                <td>Admin</td>
+                                <td name="buttons">
+                                    <div class=" float-center">
+                                        <button type="button" class="btn btn-sm btn-soft-success btn-circle me-2" data-bs-toggle="modal" data-bs-target="#exampleModalLogin">
+                                            <i class="dripicons-preview"></i>
+                                        </button>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+</div><!-- container -->
+<!--modal-->
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="exampleModalLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalDefaultLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">Settlement Report Detail</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+                <div class="card-body p-0 auth-header-box mb-3">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+
+                            <tbody>
+                                <tr>
+                                    <td><span>Date :</span></td>
+                                    <td><span>22-Jan-2023 11:58:16 AM</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Merchant Member Id :</span></td>
+                                    <td><span class="tb-lead">10009</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Merchant Unique Id :</span></td>
+                                    <td><span class="tb-lead">REM99529118</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Transaction Id :</span></td>
+                                    <td><span><strong style="color: #f98c45">#22012023061316131612250903277</strong></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Gateway Transaction Id :</span></td>
+                                    <td><span>786465465465</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Parent Transaction Id :</span></td>
+                                    <td><span></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Merchant Name :</span></td>
+                                    <td><span>Ravi Sehgal</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Merchant Contact No. :</span></td>
+                                    <td><span>2342342342</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>From Currency:</span></td>
+                                    <td><span class="tb-lead">NPR</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>From Amount:</span></td>
+                                    <td><span class="tb-lead">1000</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>To Currency:</span></td>
+                                    <td><span class="tb-lead"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>To Amount:</span></td>
+                                    <td><span class="tb-lead">0</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Sign : </span></td>
+                                    <td><span class="tb-status text-success">Credit</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Beneficiary Account No. :</span></td>
+                                    <td><span></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Beneficiary Bank Name :</span></td>
+                                    <td><span></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Beneficiary Branch Name :</span></td>
+                                    <td><span></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Service Charge :</span></td>
+                                    <td><span>0</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Conversion Rate :</span></td>
+                                    <td><span>0</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Converted Amount :</span></td>
+                                    <td><span>0</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Wallet Type :</span></td>
+                                    <td><span>Prefund</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Type :</span></td>
+                                    <td><span>LoadWallet</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Remarks:</span></td>
+                                    <td><span>test</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Gateway Status:</span></td>
+                                    <td><span></span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Status :</span></td>
+                                    <td><span class="tb-status text-success">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Ip Address :</span></td>
+                                    <td><span>2401:4900:1f34:54a9:b08b:5e9c:9cb1:fa03</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span>Status :</span></td>
+                                    <td><span>lorem ipsum lorem ipsum</span></td>
+                                </tr>
+                            </tbody>
+                        </table><!--end /table-->
+                    </div>
+                    <div class="mt-4">
+                        <div class="button-items">
+                            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div><!--end modal-body-->
+
+        </div><!--end modal-content-->
+    </div><!--end modal-dialog-->
+</div><!--end modal-->
+<!--modal-->
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="bankDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalDefaultLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">Remittance Bank Detail</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+
+                <div class="card-body p-0">
+
+                    <form class="form-horizontal auth-form" action="">
+
+                        <div class="form-group mb-2">
+                            <label class="form-label" for="userpassword">Merchant Name</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Sarita Baidhya" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label" for="userpassword">Bank Name</label>
+                            <select class="form-select" id="exampleFormControlSelect1">
+                                <option>Select Bank</option>
+                                <option>...</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label" for="userpassword">Account Number</label>
+                            <div class="input-group">
+                                <input type="Password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Is Active</label>
+                        </div>
+
+                        <div class="form-group mb-0 row mt-4">
+                            <div class="button-items">
+                                <button type="button" class="btn btn-primary " data-bs-dismiss="modal">Submit</button>
+                                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">View List</button>
+                            </div>
+
+                        </div> <!--end form-group-->
+                    </form><!--end form-->
+                </div><!--end card-body-->
+
+            </div><!--end modal-body-->
+
+        </div><!--end modal-content-->
+    </div><!--end modal-dialog-->
+</div><!--end modal-->
+<!--modal-->
+
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="showapi" tabindex="-1" role="dialog" aria-labelledby="exampleModalDefaultLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">API Key/Password</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+                <div class="card-body p-0">
+                    <form class="form-horizontal auth-form" action="">
+                        <div class="form-group mb-2">
+                            <label class="form-label" for="userpassword">API KEY </label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" disabled value=" 7coT04zS3FhFub6iNM0piZ/NWlxkDTiXXe9InCHJZr8=">
+                            </div>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label" for="userpassword">API Pasword</label>
+                            <input type="text" class="form-control" disabled value="VLMDS2VTD05WV8Z">
+                        </div>
+                        <div class="form-group mb-0 row mt-4">
+                            <div class="button-items">
+                                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
+                    </form><!--end form-->
+                </div><!--end card-body-->
+            </div>
+        </div><!--end card-body-->
+    </div><!--end modal-body-->
+</div>
+<!--modal-->
+
+
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="showkey" tabindex="-1" role="dialog" aria-labelledby="exampleModalDefaultLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">API Key/Password</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+                <div class="card-body p-0">
+                    <form class="form-horizontal auth-form" action="">
+                        <div class="form-group mb-2">
+                            <label class="form-label" for="userpassword">PUBLIC KEY </label>
+                            <div class="card bg-soft-secondary">
+                                <p>MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAphoKIqn6EGatmNDWsRddzl+wPS+lZ9873UYU5YDojryJ7M9ZOwK5wonIlNtA/JvK3P0n7+8zYhUW9Jocvna7gvKL1/xUtlBGsu3hLfHiSMvqzC+x2OAGKZNx2eTnxvRiAiLbOdhdIyZu7YB/AagWwf20+o3kSG0GHNXutMh+lQCHNMjsU4JyJ+7lk1hc9nJmOjXjO1vi5J9B/YkubyogGrFTD9Z4dfxGbDKoTW3m88u4B5HQR7L76StFCDfvDjOixrMzC4eklOoSW8tqKOC9D/XIaUOmtzVkvOSo3jN3JinE9y6YB6qK19BclmBcVgk7wEBux9N5S479vaRHOkj29QIDAQAB</p>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group mb-2">
+                            <label class="form-label" for="userpassword">Private Key:</label>
+                            <div class="card bg-soft-secondary">
+                                <p>MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAphoKIqn6EGatmNDWsRddzl+wPS+lZ9873UYU5YDojryJ7M9ZOwK5wonIlNtA/JvK3P0n7+8zYhUW9Jocvna7gvKL1/xUtlBGsu3hLfHiSMvqzC+x2OAGKZNx2eTnxvRiAiLbOdhdIyZu7YB/AagWwf20+o3kSG0GHNXutMh+lQCHNMjsU4JyJ+7lk1hc9nJmOjXjO1vi5J9B/YkubyogGrFTD9Z4dfxGbDKoTW3m88u4B5HQR7L76StFCDfvDjOixrMzC4eklOoSW8tqKOC9D/XIaUOmtzVkvOSo3jN3JinE9y6YB6qK19BclmBcVgk7wEBux9N5S479vaRHOkj29QIDAQAB</p>
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group mb-0 row mt-4">
+                            <div class="button-items">
+                                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
+                    </form><!--end form-->
+                </div><!--end card-body-->
+            </div>
+        </div><!--end card-body-->
+    </div><!--end modal-body-->
+</div>
+<!--modal-->
+
+<div class="modal fade bd-example-modal-sm" id="resetKey" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="mb-1">Are you sure?</h3>
+                <p class="mb-0 text-muted">You won't be able to revert this!</p>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="updtaeFree" tabindex="-1" role="dialog" aria-labelledby="exampleModalDefaultLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">Add Free Balance </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+
+                <div class="card-body p-0">
+
+                    <form class="form-horizontal auth-form" action="">
+                        <div class="row">
+
+                            <div class="col-md-6 form-group mb-2">
+                                <label class="form-label" for="userpassword">Type</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Fee Account Balance" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="exampleFormControlSelect1">Select Sign</label>
+                                <select class="form-select" id="exampleFormControlSelect1">
+                                    <option>Debit</option>
+                                    <option>Credit</option>
+
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 form-group mb-2">
+                                <label class="form-label" for="userpassword">Amount</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Enter Amount">
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group mb-2">
+                                <label class="form-label" for="userpassword">TXn Id</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Enter Txn Id">
+                                </div>
+                            </div>
+                            <div class="col-md-12 form-group mb-2">
+                                <label class="form-label" for="userpassword">Remarks</label>
+                                <textarea name="" id="" cols="30" rows="3" class="form-control"></textarea>
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <label for="validationCustom05" class="form-label">Upload receipt </label>
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" id="inputGroupFile01">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group mb-0 row mt-4">
+                                <div class="button-items">
+                                    <button type="button" class="btn btn-primary " data-bs-dismiss="modal">Submit</button>
+                                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+                                </div>
+
+                            </div>
+                    </form><!--end form-->
+                </div><!--end card-body-->
+
+            </div><!--end modal-body-->
+
+        </div><!--end modal-content-->
+    </div><!--end modal-dialog-->
+</div><!--end modal-->
+<!--modal showkey-->
+@section Scripts {
+    <script src="https://cdn.datatables.net/fixedheader/3.1.2/js/dataTables.fixedHeader.min.js"></script>
+}

@@ -1,0 +1,584 @@
+﻿@using Mpmt.Core.Dtos.AdminDashboard
+@model AdminDashboardDetails
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="page-title">Analytics</h4>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active">Dashboard</li>
+                            </ol>
+                        </div>
+                        <div class="col-auto align-self-center">
+                            <a class="btn btn-sm btn-primary" onclick="ShowPopUp('@Url.Action("AdminChangePassword","AdminDashboard")','Change Password','modal-dialog modal-md')">
+                                <i data-feather="lock" class="align-self-center icon-xs icon-dual me-1"></i> Change Password
+                            </a>
+                            <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
+                                <span class="ay-name" id="Day_Name">Today:</span>&nbsp; <span class="" id="Select_date">@DateTime.Now</span>
+                                <i data-feather="calendar" class="align-self-center icon-xs ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Transaction Volume</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-2">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-dark btn-sm active" id="btn-1M" onclick="filterData('1M')" title="Current month">1M</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-dark btn-sm" id="btn-6M" onclick="filterData('6M')" title="Last six month">6M</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-dark btn-sm" id="btn-1Y" onclick="filterData('1Y')" title="Last one year">1Y</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-dark btn-sm" id="btn-YTD" onclick="filterData('YTD')" title="Year till date">YTD</button>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-dark btn-sm" id="btn-ALL" onclick="filterData('ALL')" title="Yearwise">ALL</button>
+                        </div>
+                        <br>
+                        <br />
+                        <div class="chart-container">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Partner Balance</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-2 pt-0">
+                        <div id="partnerBalanceContainer">
+                            <partial name="_PartnerBalanceDashboardTable" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header pb-0 pt-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Top 10 Partners</h4>
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="form-group m-2">
+                                    <select id="topPartnerList" class="form-control">
+                                        <option value="DAILY">Daily</option>
+                                        <option value="WEEKLY">Weekly</option>
+                                        <option value="MONTHLY">Monthly</option>
+                                        <option value="YTD">YTD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-2 pt-0">
+                        <div id="topPartnerListContainer">
+                            <partial name="_PartnersDashboardTable" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header pb-0 pt-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Payment Mode</h4>
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="form-group m-2">
+                                    <select id="paymentMode" class="form-control">
+                                        <option value="DAILY">Daily</option>
+                                        <option value="WEEKLY">Weekly</option>
+                                        <option value="MONTHLY">Monthly</option>
+                                        <option value="YTD">YTD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pb-0 pt-0">
+                        <div id="paymentModeContainer">
+                            <partial name="_PaymentModeDashboardTable" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header pb-0 pt-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Transaction Status</h4>
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="form-group m-2">
+                                    <select id="timeframe" class="form-control">
+                                        <option value="DAILY">Daily</option>
+                                        <option value="WEEKLY">Weekly</option>
+                                        <option value="MONTHLY">Monthly</option>
+                                        <option value="YTD">YTD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-2 d-flex justify-content-center">
+                        @if (Model.dashboardTransactionStatus != null && Model.dashboardTransactionStatus.Count > 0)
+                        {
+                            <div id="chartContainer" style="height: 270px;">
+                                <canvas id="myDoughnutChart"></canvas>
+                            </div>
+                            <h5 id="noDataMessage" class="text-danger" style="display: none;">No Transaction data</h5>
+                        }
+                        else
+                        {
+                            <div id="chartContainer" style="height: 270px; display: none;">
+                                <canvas id="myDoughnutChart"></canvas>
+                            </div>
+                            <h5 id="noDataMessage" class="text-danger">No Transaction data</h5>
+                        }
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header pb-0 pt-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Threshold Transactions</h4>
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="form-group m-2">
+                                    <select id="thresholdTransaction" class="form-control">
+                                        <option value="DAILY">Daily</option>
+                                        <option value="WEEKLY">Weekly</option>
+                                        <option value="MONTHLY">Monthly</option>
+                                        <option value="YTD">YTD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-2">
+                        <div id="thresholdTransactionContainer">
+                            <partial name="_ThresholdTransactionTable" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header pb-0 pt-0">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Top 10 Agents</h4>
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="form-group m-2">
+                                    <select id="topAgentList" class="form-control">
+                                        <option value="DAILY">Daily</option>
+                                        <option value="WEEKLY">Weekly</option>
+                                        <option value="MONTHLY">Monthly</option>
+                                        <option value="YTD">YTD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-2 pt-0">
+                        <div id="topAgentListContainer">
+                            <partial name="_AgentsDashboardTable" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header pb-1 pt-1">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Top 10 Payout Location wise</h4>
+                            </div>
+                            <div class="col-md-auto">
+                                <div class="form-group m-2">
+                                    <select id="topAgentLocationList" class="form-control">
+                                        <option value="DAILY">Daily</option>
+                                        <option value="WEEKLY">Weekly</option>
+                                        <option value="MONTHLY">Monthly</option>
+                                        <option value="YTD">YTD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-2 pt-0">
+                        <div id="topAgentLocationListContainer">
+                            <partial name="_AgentsLocationDashboardTable" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        $('#topPartnerList').on('change', function () {
+            debugger;
+            var selectedPeriod = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetTopPartnerList", "AdminDashboard")',
+                type: 'GET',
+                data: { period: selectedPeriod },
+                success: function (response) {
+                    $('#topPartnerListContainer').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('An error occurred: ' + error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $('#topAgentList').on('change', function () {
+            debugger;
+            var selectedPeriod = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetTopAgentList", "AdminDashboard")',
+                type: 'GET',
+                data: { period: selectedPeriod },
+                success: function (response) {
+                    $('#topAgentListContainer').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('An error occurred: ' + error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $('#topAgentLocationList').on('change', function () {
+            debugger;
+            var selectedPeriod = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetTopAgentLocationList", "AdminDashboard")',
+                type: 'GET',
+                data: { period: selectedPeriod },
+                success: function (response) {
+                    $('#topAgentLocationListContainer').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('An error occurred: ' + error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $('#paymentMode').on('change', function () {
+            debugger;
+            var selectedPeriod = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetPaymentMode", "AdminDashboard")',
+                type: 'GET',
+                data: { period: selectedPeriod },
+                success: function (response) {
+                    $('#paymentModeContainer').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('An error occurred: ' + error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $('#thresholdTransaction').on('change', function () {
+            debugger;
+            var selectedPeriod = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetThresholdTransaction", "AdminDashboard")',
+                type: 'GET',
+                data: { period: selectedPeriod },
+                success: function (response) {
+                    $('#thresholdTransactionContainer').html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('An error occurred: ' + error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function filterData(filterOption) {
+            // Remove active class from all buttons
+            var buttons = document.querySelectorAll('.btn-group .btn');
+            buttons.forEach(function (btn) {
+                btn.classList.remove('active');
+            });
+
+            // Add active class to the clicked button
+            var activeButton = document.getElementById('btn-' + filterOption);
+            activeButton.classList.add('active');
+
+            // Make an AJAX request to the Index action with the selected filter option
+            $.ajax({
+                url: '@Url.Action("Index", "AdminDashboard")',
+                type: 'POST',
+                data: { filterOption: filterOption },
+                success: function (response) {
+                    // Update the chart with the new data
+                    myChart.data.labels = response.labels;
+                    myChart.data.datasets[0].data = response.transactionData;
+                    myChart.data.datasets[1].data = response.volumeData;
+                    myChart.data.frequencies = response.frequency;
+                    myChart.update();
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors here
+                }
+            });
+        }
+    </script>
+
+    <script>
+        let myDoughnutChart;
+
+        // Function to initialize or update chart data
+        function updateChartData(newData) {
+            debugger;
+            const colorMappings = {
+                'Success': '#35e099',
+                'Initiated': '#FFC107',
+                'Cancelled': '#F44336'
+            };
+
+            const backgroundColours = newData.labels.map(label => colorMappings[label] || '#000000'); // Default to black if label not found
+
+            if (newData.labels.length === 0) {
+                // Hide chart and show message if there's no data
+                document.getElementById('chartContainer').style.display = 'none';
+                document.getElementById('noDataMessage').style.display = 'block';
+            } else {
+                // Show chart and hide message if data is available
+                document.getElementById('chartContainer').style.display = 'block';
+                document.getElementById('noDataMessage').style.display = 'none';
+
+                if (myDoughnutChart) {
+                    // Update the existing chart
+                    myDoughnutChart.data.labels = newData.labels;
+                    myDoughnutChart.data.datasets[0].data = newData.data;
+                    myDoughnutChart.data.datasets[0].backgroundColor = backgroundColours;
+                    myDoughnutChart.update();
+                } else {
+                    // Create a new chart
+                    const chartData = {
+                        labels: newData.labels,
+                        datasets: [{
+                            label: 'No. of Txn',
+                            data: newData.data,
+                            backgroundColor: backgroundColours
+                        }]
+                    };
+
+                    const config = {
+                        type: 'doughnut',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            cutout: '80%',
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        boxWidth: 22,
+                                        boxHeight: 6
+                                    }
+                                },
+                                title: {
+                                    display: false,
+                                    text: 'No. of Txn'
+                                }
+                            }
+                        }
+                    };
+
+                    myDoughnutChart = new Chart(
+                        document.getElementById('myDoughnutChart'),
+                        config
+                    );
+                }
+            }
+        }
+
+        // Event listener for dropdown change
+        $('#timeframe').on('change', function (event) {
+            const selectedTimeframe = $(this).val();
+            $.ajax({
+                url: '@Url.Action("TransactionStatus", "AdminDashboard")', // Change to your controller and action
+                type: 'POST',
+                data: { timeframe: selectedTimeframe },
+                success: function (result) {
+                    updateChartData(result);
+                },
+                error: function (err) {
+                    console.error('Error fetching chart data', err);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        // Create gradient for Transaction dataset
+        var gradientTransaction = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientTransaction.addColorStop(0, 'rgba(0, 143, 251, 0.5)');
+        gradientTransaction.addColorStop(1, 'rgba(0, 143, 251, 0)');
+
+        // Create gradient for Volume dataset
+        var gradientVolume = ctx.createLinearGradient(0, 0, 0, 400);
+        gradientVolume.addColorStop(0, 'rgba(0, 227, 150, 0.5)');
+        gradientVolume.addColorStop(1, 'rgba(0, 227, 150, 0)');
+
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.Labels)),
+                frequencies: @Html.Raw(Json.Serialize(Model.Frequency)),
+                datasets: [{
+                    label: 'No. of Txn',
+                    yAxisID: 'y1',
+                    data: @Html.Raw(Json.Serialize(Model.TransactionData)),
+                    borderColor: 'rgba(0, 143, 251, 1)',
+                    backgroundColor: gradientTransaction,
+                    fill: true // Enable fill
+                }, {
+                    label: 'Txn. Volume',
+                    yAxisID: 'y2',
+                    data: @Html.Raw(Json.Serialize(Model.VolumeData)),
+                    borderColor: 'rgba(0, 227, 150, 1)',
+                    backgroundColor: gradientVolume,
+                    fill: true // Enable fill
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            min: 0
+                        },
+                        title: {
+                            display: true,
+                            text: 'Transaction'
+                        },
+                        grid: {
+                            display: false,
+                            drawOnChartArea: false
+                        }
+                    },
+                    y2: {
+                        type: 'linear',
+                        position: 'right',
+                        ticks: {
+                            min: 100000
+                        },
+                        title: {
+                            display: true,
+                            text: 'Volume ( NPR )'
+                        },
+                        grid: {
+                            display: false,
+                            drawOnChartArea: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom', // Position the legend below the chart
+                        labels: {
+                            boxWidth: 18,
+                            boxHeight: 0,
+                            padding: 15,
+                            useBorderRadius: true,
+                            borderRadius: 0
+                        }
+                    }
+                },
+                onClick: function (event, elements) {
+                    if (elements.length > 0) {
+                        var freq = @Html.Raw(Json.Serialize(Model.Frequency));
+                        var index = elements[0].index;
+                        var label = myChart.data.labels[index];
+                        // var frequency = freq[index];
+                        var frequency = myChart.data.frequencies[index];
+                        var transactionValue = myChart.data.datasets[0].data[index];
+                        var volumeValue = myChart.data.datasets[1].data[index];
+
+                        // Make an AJAX request to another action
+                        $.ajax({
+                            url: '@Url.Action("TransactionReportsRedirection", "AdminDashboard")',
+                            type: 'POST',
+                            data: { label: label, transactionValue: transactionValue, volumeValue: volumeValue, StartDate: frequency },
+                            success: function (response) {
+                                if (response.redirectUrl) {
+                                    window.location.href = response.redirectUrl;
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle errors here
+                            }
+                        });
+                    }
+                },
+                onHover: function (event, chartElement) {
+                    event.native.target.style.cursor = chartElement.length ? 'pointer' : 'default';
+                }
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            const initialData = {
+                labels: @Html.Raw(Json.Serialize(Model.dashboardTransactionStatus.Select(s => s.StatusName))),
+                data: @Html.Raw(Json.Serialize(Model.dashboardTransactionStatus.Select(s => s.TotalTrans))) };
+            updateChartData(initialData);
+        });
+    </script>
+}

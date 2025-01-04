@@ -1,0 +1,93 @@
+﻿@using Mpmt.Core.Dtos.FeeFundRequest;
+@model IEnumerable<FeeAccount>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Setting</a></li>
+                            <li class="breadcrumb-item active">Fee Account</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                        <form id="formFeeAccountfilter" class="row row-cols-lg-auto align-items-end">
+                            <div class="col-12">
+                                <label class="form-label mb-0" for="inlineFormSelectPref">Source Currency</label>
+                                <select name="sourceCurrency" class="form-select" asp-items="@ViewBag.Currency" id="validationTooltip04" required>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <button id="btnFeeAccountfilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h4 class="card-title">Fee Account</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="FeeAccountTableWrapper" class="table-responsive">
+                            <partial name="_FeeAccountList" model="@Model" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("GetFeeAccount", "Wallets")',
+                selector: '#FeeAccountTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formFeeAccountfilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+                $('#formFeeAccountfilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnFeeAccountfilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+    }

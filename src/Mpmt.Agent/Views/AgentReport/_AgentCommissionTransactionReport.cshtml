@@ -1,0 +1,96 @@
+﻿@using Mpmt.Core.Dtos.AgentReport;
+@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+
+@model PagedList<AgentCommissionTransactionReport>
+
+@{
+    var sn = 1;
+    decimal totalRec = 0.0m;
+    decimal totalCommision = 0.0m;  
+}
+
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Created Date</th>
+                <th>Transcation Id</th>
+                <th>Remit Transcation Id</th>
+                <th>Sender Name</th>
+                <th>Sender Contact</th>
+                <th>Sender Country</th>
+                <th>Sender Email</th>
+                <th>Recipient Name</th>
+                <th>Recipient Contact</th>
+                <th>Recipient Address</th>
+                <th>Agent Code</th>
+                <th>Agent Name</th>
+                <th>Organization Name</th>
+                <th>Payment Type</th>
+                <th>Receiving Amount(NPR)</th>
+                <th>Commission</th>
+                <th>Transaction Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@sn</td>
+                    <td>@item.CreatedNepaliDate</td>
+                    <td>@item.TransactionId</td>
+                    <td>@item.RemitTransactionId</td>
+
+                    <td>@item.SenderName</td>
+                    <td>@item.SenderContactNumber</td>
+                    <td>@item.SenderCountry</td>
+                    <td>@item.SenderEmail</td>
+                    <td>@item.RecipientName</td>
+                    <td>@item.RecipientContactNumber</td>
+                    <td>@item.RecipientAddress</td>
+
+                    <td>@item.AgentCode</td>
+                    <td>@item.AgentName</td>
+                    <td>@item.OrganizationName</td>
+                    <td>@item.PaymentType</td>
+                    <td class="sumColumn">@item.ReceivingAmountNPR</td>
+                    <td>@item.Commission</td>
+                    <td>@item.TransactionType</td>
+                    <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("ViewCommissionDetail", "AgentReport", new { TransactionId = item.TransactionId })', 'Commission Detail')">View Detail</a></td>
+                </tr>
+                sn = sn + 1;
+                totalRec = totalRec + Convert.ToDecimal(item.ReceivingAmountNPR ?? "0.00");
+                totalCommision = totalCommision + Convert.ToDecimal(item.Commission);
+            }
+        </tbody>
+        <thead class="table table-striped dataTable nowrap">
+            <tr>
+                <th>Total (NPR):</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>@totalRec</th>
+                <th>@totalCommision</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

@@ -1,0 +1,250 @@
+﻿@using Mpmt.Core.Dtos.PartnerReport
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Models.RMP;
+@model PagedList<RemitSettlementReport>
+
+@{
+    var txFilter = ViewBag.TransactionFilter as RemitTxnReportFilter;
+}
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Global Setting</a></li>
+                            <li class="breadcrumb-item active">Reports</li>
+                        </ol>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="formReportsFilter" class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" name="StartDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" name="EndDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" id="transactionId" name="TransactionId" class="form-control" placeholder="Transaction Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" id="agentTrackerId" name="TrackerId" class="form-control" placeholder="Tracker Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" id="partnerId" name="PartnerCode" class="form-control" placeholder="Partner Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="transactionType">Transaction Type</label>
+                                    <select name="TransactionType" class="form-select" id="transactionType" required>
+                                        <option value="">Select TransactionType</option>
+                                        <option value="LOADWALLET">LOADWALLET</option>
+                                        <option value="WALLETCONVERSION">WALLETCONVERSION</option>
+                                        <option value="COMMISSION">COMMISSION</option>
+                                        <option value="APITRANSACTION">APITRANSACTION</option>
+                                        <option value="PARTNERTRANSACTION">PARTNERTRANSACTION</option>
+                                    </select>
+                                </div>
+                              
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="type">Type</label>
+                                    <select name="Type" class="form-select" id="type" required>
+                                        <option value="" selected>Select Type</option>
+                                        <option value="REMIT">Remit</option>
+                                        <option value="FEE">Fee</option>
+                                        <option value="COMMISSION">Commission</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="sourceCurrency">Source Currency</label>
+                                    <select name="SourceCurrency" class="form-select" id="sourceCurrency" asp-items="@ViewBag.SCurrency" required>
+                                        <option value="" selected>Select Currency</option>
+                                    </select>
+                                </div>
+                                @*<div class="col-12">
+                                    <label class="form-label mb-0" for="inlineformselectpref">destination currency</label>
+                                    <select name="destinationcurrency" class="form-select" id="validationtooltip04" asp-items="@viewbag.dcurrency" required>
+                                        <option value="" selected>select currency</option>
+                                    </select>
+                                </div>*@
+                                <div class="col-12">
+                                    <button type="button" id="btnReportsFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h4 class="card-title">Remit Settlement Reports</h4>
+                        </div>
+                        <div class="col-4">
+                            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                                <button id="btnRemitSettlementTransactionexportexcell" class="btn btn-primary">  Export to Excel</button>
+                                <button id="btnRemitSettlementTransactionexportcsv" class="btn btn-primary"> Export to CSV</button>
+                                <button id="btnRemitSettlementTransactionexportPdf" class="btn btn-primary"> Export to Pdf</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="ReportsTableWrapper" class="table-responsive">
+                        <partial name="_RemitSettlementReport" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+
+    <script>
+        document.addEventListener('keypress', function (event) {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if (keycode == '13') {
+                // Enter key is pressed
+                document.getElementById('btnReportsFilter').click();
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("RemitSettlementReport", "Reports")',
+                selector: '#ReportsTableWrapper'
+            });
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formReportsFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+            addUsersPageHandlers();
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+                $('#formReportsFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                $('#btnReportsFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+
+                // $('#transactionId').on('keypress', function (e) {
+                //     if (e.which == 13) {
+                //         e.preventDefault();
+                //         Pagination.getData();
+                //         return false;
+                //     }
+                // });
+
+                // $('#agentTrackerId').on('keypress', function (e) {
+                //     if (e.which == 13) {
+                //         e.preventDefault();
+                //         Pagination.getData();
+                //         return false;
+                //     }
+                // });
+
+                // $('#partnerId').on('keypress', function (e) {
+                //     if (e.which == 13) {
+                //         e.preventDefault();
+                //         Pagination.getData();
+                //         return false;
+                //     }
+                // });
+
+                // $('#signType').on('change', function (e) {
+                //     e.preventDefault();
+                //     Pagination.getData();
+                //     return false;
+                // });
+
+                // $('#transactionType').on('change', function (e) {
+                //     e.preventDefault();
+                //     Pagination.getData();
+                //     return false;
+                // });
+
+                // $('#type').on('change', function (e) {
+                //     e.preventDefault();
+                //     Pagination.getData();
+                //     return false;
+                // });
+
+                // $('#sourceCurrency').on('change', function (e) {
+                //     e.preventDefault();
+                //     Pagination.getData();
+                //     return false;
+                // });
+
+                $('#btnRemitSettlementTransactionexportexcell').on('click', function (e) {
+
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1
+
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportRemitSettlementtoexcell", "Reports")');
+
+                    return false;
+                });
+                $('#btnRemitSettlementTransactionexportcsv').on('click', function (e) {
+
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+
+                    }
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportRemitSettlementToCsv", "Reports")');
+
+                    return false;
+                });
+                $('#btnRemitSettlementTransactionexportPdf').on('click', function (e) {
+                    e.preventDefault();
+                    var paramsA = {
+                        Export: 1,
+
+                    };
+                    Pagination.ExportDataWithPagination('GET', paramsA, '@Url.Action("ExportRemitSettlementtoPdf", "Reports")');
+                    return false;
+                });
+            }
+        });
+    </script>
+}

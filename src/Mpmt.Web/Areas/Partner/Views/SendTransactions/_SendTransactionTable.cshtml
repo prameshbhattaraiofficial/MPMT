@@ -1,0 +1,96 @@
+﻿@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Dtos.Transaction;
+@using Mpmt.Core.Models.RMP;
+@model PagedList<RemitTransactionList>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive">
+    <table class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Date </th>
+                <th>Amount </th>
+                <th>Source Currency </th>
+                <th>Destination Currency </th>
+                <th>Service Charge </th>
+                <th>Partner Service Charge </th>
+                <th>Send Amount </th>
+                <th>Sender Details</th>
+                <th>Receiver Details</th>
+                <th>Payment Type</th>
+                <th>Payment Details</th>
+
+                <th> Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.TransactionDateString</td>
+                    <td>@item.Amount</td>
+                    <td>@item.SourceCurrency</td>
+                    <td>@item.DestinationCurrency</td>
+                    <td>@item.ServiceCharge.Substring(0,item.ServiceCharge.Length-2)</td>
+                    <td>@item.PartnerServiceCharge.ToString("N2")</td>
+                    <td>@item.SendAmount.ToString("N2")</td>
+                    <td>
+                        @if (actors.FirstOrDefault(x => x.Action == "SenderDetail")?.Permission ?? false)
+                        {
+                            <a onclick="ShowPopUp('@Url.Action("SenderDetail","SendTransactions",new {TransactionId = item.TransactionId})','Sender Detail','.modal-sm')" data-bs-toggle="modal" data-bs-target="#sender" class="text-primary">@item.SenderDtl</a>
+                        }
+                    </td>
+                    <td>
+                        @if (actors.FirstOrDefault(x => x.Action == "ReciverDetail")?.Permission ?? false)
+                        {
+                            <a onclick="ShowPopUp('@Url.Action("ReciverDetail","SendTransactions",new {TransactionId = item.TransactionId})','Reciver  Detail','.modal-sm')" data-bs-toggle="modal" data-bs-target="#receivermodal" class="text-primary">@item.ReceiverDtl</a>
+                        }</td>
+                    <td>@item.PaymentType </td>
+                    <td>
+                        @if (actors.FirstOrDefault(x => x.Action == "PaymentDetail")?.Permission ?? false)
+                        {
+                            <a onclick="ShowPopUp('@Url.Action("PaymentDetail","SendTransactions",new {TransactionId = item.TransactionId})','Payment  Detail','.modal-sm')" data-bs-toggle="modal" data-bs-target="#transaction" class="text-primary">Payment Detail</a>
+                        }
+                    </td>
+
+
+                    <td>
+                        @if(item.Status.ToUpper()=="SUCCESS")
+                        {
+                            <span class="badge rounded-pill bg-success">@item.Status</span>
+                        }
+                        else if (item.Status.ToUpper() == "INITIATED")
+                        {
+                            <span class="badge rounded-pill bg-info">@item.Status</span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill bg-danger">@item.Status</span>
+                        }
+                       
+                    </td>
+
+                    @* <td name="buttons">
+                <button type="button" class="btn btn-sm btn-soft-success btn-circle me-2" data-bs-toggle="modal" data-bs-target="#Transaction">
+                <i class="dripicons-preview"></i>
+                </button>
+                </td> *@
+                    <td>
+                        @if (actors.FirstOrDefault(x => x.Action == "ViewDetail")?.Permission ?? false)
+                        {
+                    <a onclick="ShowPopUp('@Url.Action("ViewDetail","SendTransactions",new {TransactionId = item.TransactionId})','Transaction Details','.modal-sm')" data-bs-toggle="modal" data-bs-target="#sender" class="text-primary"><i class="dripicons-preview"></i></a>
+                        }</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

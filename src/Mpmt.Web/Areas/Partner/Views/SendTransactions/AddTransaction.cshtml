@@ -1,0 +1,1482 @@
+﻿@using Mpmt.Web.Areas.Partner.Models.SendTransactions;
+@model AddTransactionModel
+<ul id="formErrorsWrapper">
+    @if (!string.IsNullOrEmpty(ViewBag.Error))
+    {
+        <li class="text-danger">@ViewBag.Error</li>
+    }
+</ul>
+<div asp-validation-summary="All" class="text-danger"></div>
+
+@* <div class="modal" id="addnew" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="exampleModalDefaultLogin" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title m-0" id="exampleModalDefaultLogin">Add Transaction</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div><!--end modal-header-->
+            <div class="modal-body">
+                <div class="card-body p-0 auth-header-box mb-3">
+                    <!-- FORM HERE -->
+                </div>
+            </div><!--end modal-body-->
+
+        </div><!--end modal-content-->
+    </div><!--end modal-dialog-->
+</div><!--end modal--> *@
+
+@{
+    var sourceCurrencyDdl = (SelectList)ViewBag.SourceCurrencyDdl;
+    var destCurrencyDdl = (SelectList)ViewBag.DestCurrencyDdl;
+    var countryDdl = (SelectList)ViewBag.CountryDdl;
+    var recipientCountryDdl = (SelectList)ViewBag.RecipientCountryDdl;
+    var senderCountryDdl = (SelectList)ViewBag.SenderCountryDdl;
+    var recipientProvinceDdl = (SelectList)ViewBag.RecipientProvinceDdl;
+    var relationshipDdl = (SelectList)ViewBag.RelationshipDdl;
+    var transferPurposeDdl = (SelectList)ViewBag.TransferPurposeDdl;
+    var recipientTypeDdl = (SelectList)ViewBag.RecipientTypeDdl;
+    var payoutTypeDdl = (SelectList)ViewBag.PayoutTypeDdl;
+    var walletsDdl = (SelectList)ViewBag.WalletsDdl;
+    var bankListDdl = (SelectList)ViewBag.BankListDdl;
+    var documentTypeDdl = (SelectList)ViewBag.DocumentTypeDdl;
+    var senderOccupation = (SelectList)ViewBag.senderOccupationDdl;
+    var sourceOfIncome = (SelectList)ViewBag.sourceOfIncomeDdl;
+}
+<style>
+    .card-item-checked {
+        box-shadow: 0 0 1px 1px #05409a;
+        background: rgba(23, 97, 253, 0.08) !important;
+    }
+</style>
+<style>
+    .Reciverbox {
+        padding: 15px;
+        overflow-y: auto;
+        height: 500px;
+    }
+</style>
+
+
+
+<form id="addTransactionForm" onsubmit="btnSubmit.disabled = true; return true;" method="post" class="form-horizontal form-wizard-wrapper">
+    @Html.AntiForgeryToken()
+    <div id="formStep1" class="modal-form-step">
+        <ul id="formErrorsWrapper">
+            @if (!string.IsNullOrEmpty(ViewBag.Error))
+            {
+                <li class="text-danger">@ViewBag.Error</li>
+            }
+            @if (!string.IsNullOrEmpty(ViewBag.EmptyWalletCurrency))
+            {
+                <li class="text-danger">@ViewBag.EmptyWalletCurrency</li>
+            }
+        </ul>
+        <h3>Convert amount</h3>
+        <fieldset>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card report-card">
+                        <div class="card-body">
+                            <div class="align-self-center mb-2">
+                                <label class="form-label" for="userpassword">Payout Type</label>
+                                <select id="paymentType" class="form-select form-select-md" asp-for="PaymentType" asp-items="payoutTypeDdl"></select>
+                                <span asp-validation-for="PaymentType" class="text-danger"></span>
+                            </div>
+                            <div class="row d-flex justify-content-center bg-soft-primary ptb-10">
+                                <div class="col">
+                                    <p class="text-dark mb-0 fw-semibold">
+                                        You send
+                                        <input id="sourceAmount" asp-for="SendingAmount" type="text" class="form-control w-50">
+                                        <span asp-validation-for="SendingAmount" class="text-danger"></span>
+                                    </p>
+
+                                </div>
+                                <div class="col-auto align-self-center">
+                                    <select id="sourceCurrency" asp-for="SourceCurrency" asp-items="@sourceCurrencyDdl" class="form-select form-select-md"></select>
+                                    <span asp-validation-for="SourceCurrency" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="help-activity-height" data-simplebar="init" style="height: 200px;">
+                                <div class="simplebar-wrapper" style="margin: 0px;">
+                                    <div class="simplebar-height-auto-observer-wrapper">
+                                        <div class="simplebar-height-auto-observer"></div>
+                                    </div>
+                                    <div class="simplebar-mask">
+                                        <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                                            <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden;">
+                                                <div class="simplebar-content" style="padding: 0px;">
+                                                    <div class="activity">
+                                                        <div class="activity-info">
+                                                            <div class="icon-info-activity">
+                                                                <i class="las la-dot-circle bg-soft-primary"></i>
+                                                            </div>
+                                                            <div class="activity-info-text">
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <h5 class="text-muted mb-0 font-13 "><span id="totalFees">0.0 AUD</span></h5>
+                                                                    <span class="text-muted font-14">Total fees</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="activity-info">
+                                                            <div class="icon-info-activity">
+                                                                <i class="las la-dot-circle bg-soft-primary"></i>
+                                                            </div>
+                                                            <div class="activity-info-text">
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <h5 class="text-muted mb-0 font-13 "><span id="netSendingAmount">0.0 AUD</span></h5>
+                                                                    <span class="text-muted font-14">Amount we'll convert</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="activity-info">
+                                                            <div class="icon-info-activity">
+                                                                <i class="las la-dot-circle bg-soft-primary"></i>
+                                                            </div>
+                                                            <div class="activity-info-text">
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <h5 class="text-muted mb-0 font-13 "><span id="conversionRate">0.0 AUD</span></h5>
+                                                                    <span class="text-muted font-14">Conversion rate</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div><!--end analytics-dash-activity-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="simplebar-placeholder" style="width: auto; height: 135px;"></div>
+                                </div>
+                                <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
+                                    <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
+                                </div>
+                                <div class="simplebar-track simplebar-vertical" style="visibility: hidden;">
+                                    <div class="simplebar-scrollbar" style="height: 0px; display: none;"></div>
+                                </div>
+                            </div><!--end card-body-->
+
+                            <div class="row d-flex justify-content-center bg-soft-primary ptb-10">
+                                <div class="col">
+                                    <p class="text-dark mb-0 fw-semibold">Recipient gets</p>
+                                 @*    <h3 id="receivingAmount" class="m-0"></h3> *@
+                                    <input type="text" id="receivingAmount" class="form-control w-50" />
+                                </div>
+                                <div class="col-auto align-self-center">
+                                    <select id="destinationCurrency" asp-for="DestinationCurrency" asp-items="destCurrencyDdl" class="form-select form-select-md align-middle"></select>
+                                    <span asp-validation-for="DestinationCurrency" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-center bg-soft-primary ptb-10">
+                                <input type="hidden" id="hfNetSendingAmount" />
+                                <input type="hidden" id="hfServiceCharge" />
+                                <input type="hidden" id="hfPartnerServiceCharge" />
+                                <input type="hidden" id="hfConversionRate" />
+                                <input type="hidden" id="hfNetRecievingAmountNPR" />
+                            </div>
+                       
+                        </div><!--end card-->
+                    </div>
+                </div>
+            </div>
+        </fieldset><!--end fieldset-->
+    </div>
+    <div id="formStep2" class="modal-form-step">
+        <h3> Sender </h3>
+        <fieldset>
+            <label class="col-md-3 my-1 form-label pl-2">Choose Sender Details</label>
+            <div class="row mb-3">
+
+                <div class="col-md-12 ml-15">
+
+                    <div id="senderRadioButtonsContainer" class="radio-buttons">
+                        <div class="radio-button" id="btnRadioExistingSender"> <i class="far fa-address-book pr-5"></i>From Existing Sender</div>
+                        <div class="radio-button active" id="btnRadioCreateNewSender"><i class="fas fa-user-plus pr-5"></i> Create New Sender</div>
+                    </div>
+
+                    <div id="existingSenderContent" class="hidden">
+                        <input id="existingSenderMemberId" type="hidden" asp-for="MemberId" class="form-control validate">
+                        <input id="existingSenderCheck" type="checkbox" asp-for="ExistingSender" class="form-control" hidden>
+
+                        <div class="row">
+                            <div class="col-md-5 mb-4">
+                                <label class="form-label">Member ID</label>
+                                <input id="searchFieldMemberId" type="text" name="searchFieldMemberId" class="form-control" placeholder="ex: 456231">
+                            </div>
+                            <div class="col-md-5 mb-4">
+                                <label class="form-label">Full Name</label>
+                                <input id="searchFieldFullName" type="text" name="searchFieldFullName" class="form-control" placeholder="ex: John Doe">
+                            </div>
+                            <div class="col-md-2 mb-4 d-flex justify-content-center align-items-end">
+                                <button id="btnSearchExistingSender" type="button" class="btn btn-primary">Search</button>
+                            </div>
+                            <div>
+                                <span asp-validation-for="MemberId" class="text-danger"></span>
+                            </div>
+                            <div id="existingSenderListContainer" class="row">
+                                <div class="my-2 col-md-12 d-flex justify-content-center align-items-center">
+                                    <p>No records found.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="newSenderContent">
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label" asp-for="SenderFirstName">First Name</label>
+                                <div class="input-group">
+                                    <input type="text" id="senderFirstName" asp-for="SenderFirstName" class="form-control" placeholder="">
+                                </div>
+                                <span asp-validation-for="SenderFirstName" class="text-danger"></span>
+                                <div class="form-check">
+                                    <input id="senderNoFirstNameCheck" class="form-check-input" asp-for="NoSenderFirstName" type="checkbox">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        No First Name
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label" asp-for="SenderLastName">Last Name <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" id="senderLastName" asp-for="SenderLastName" class="form-control" placeholder="">
+                                </div>
+                                <span asp-validation-for="SenderLastName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label" for="senderContactNumber">Contact <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" id="senderContactNumber" maxlength="15" asp-for="SenderContactNumber" class="form-control" placeholder="e.g.9812345678">
+                                </div>
+                                <span asp-validation-for="SenderContactNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label" asp-for="SenderEmail">Email <span class="text-danger">*</span></label>
+                                <div class="input-group has-validation">
+                                    <input type="ema" id="senderEmail" asp-for="SenderEmail" class="form-control" aria-describedby="inputGroupPrepend">
+                                </div>
+                                <span asp-validation-for="SenderEmail" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="SenderCountryCode">Country  <span class="text-danger">*</span></label>
+                                <select class="form-select" id="senderCountry" asp-for="SenderCountryCode" asp-items="senderCountryDdl">
+                                    <option value="0" selected>--Select--</option>
+                                </select>
+                                <span asp-validation-for="SenderCountryCode" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6  form-group mb-2">
+                                <label class="form-label" asp-for="SenderCity">City</label>
+                                <input class="form-control" id="senderCity" asp-for="SenderCity" placeholder="" />
+                                <span asp-validation-for="SenderCity" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6  form-group mb-2">
+                                <label class="form-label" asp-for="SenderAddress">Full Address  <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" id="senderAddress" asp-for="SenderAddress" class="form-control" placeholder="">
+                                </div>
+                                <span asp-validation-for="SenderAddress" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6  form-group mb-2">
+                                <label class="form-label" asp-for="SenderRelationshipId">Relationship with Receiver <span class="text-danger">*</span></label>
+                                <select class="form-select" id="senderRelationshipWithReceiver" asp-for="SenderRelationshipId" asp-items="relationshipDdl">
+                                    <option value="0" selected>--Select--</option>
+                                </select>
+                                <span asp-validation-for="SenderRelationshipId" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="DocumentType">Document Type <span class="text-danger">*</span></label>
+                                <select class="form-select" id="documentType" asp-for="DocumentType" asp-items="documentTypeDdl">
+                                    <option value="0" selected>--Select--</option>
+                                </select>
+                                <span asp-validation-for="DocumentType" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6  form-group mb-2">
+                                <label class="form-label" asp-for="DocumentNumber">Document Number <span class="text-danger">*</span></label>
+                                <input class="form-control" id="documentNumber" asp-for="DocumentNumber" placeholder="" />
+                                <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" asp-for="SenderOccupation">Sender Occupation <span class="text-danger">*</span></label>
+                                <select class="form-select" id="senderOccupation" asp-for="SenderOccupation" asp-items="senderOccupation">
+                                    <option value="0" selected>--Select--</option>
+                                </select>
+                                <span asp-validation-for="SenderOccupation" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 form-group mb-2">
+                                <label class="form-label" asp-for="SourceOfIncome">Source of income <span class="text-danger">*</span></label>
+                                <select class="form-select" id="sourceOfIncome" asp-for="SourceOfIncome" asp-items="sourceOfIncome">
+                                    <option value="0" selected>--Select--</option>
+                                </select>
+                                <span asp-validation-for="SourceOfIncome" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 form-group mb-2">
+                                <label class="form-label" asp-for="SenderPurposeId">Purpose Of Remitance <span class="text-danger">*</span></label>
+                                <select class="form-select" id="senderTransactionPurpose" asp-for="SenderPurposeId" asp-items="transferPurposeDdl">
+                                    <option value="0" selected>--Select--</option>
+                                </select>
+                                <span asp-validation-for="SenderPurposeId" class="text-danger"></span>
+                            </div>
+                            <div id="senderRemarksWrapper" class="col-md-12 form-group mb-2">
+                                <label class="form-label" asp-for="SenderRemarks">Remarks</label>
+                                <div class="input-group">
+                                    <input type="text" asp-for="SenderRemarks" class="form-control" placeholder="">
+                                </div>
+                                <span asp-validation-for="SenderRemarks" class="text-danger"></span>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset><!--end fieldset-->
+
+    </div>
+    <div id="formStep3" class="modal-form-step">
+        <h3>Receiver </h3>
+        <fieldset>
+            <div class="row">
+                <div id="receiverRadioButtonsContainer" class="col-md-12 ml-15">
+                    <div class="radio-buttons">
+                        <div class="radio-button" id="btnRadioExistingReceiver"> <i class="far fa-address-book pr-5"></i>From Existing Receiver</div>
+                        <div class="radio-button active" id="btnRadioCreateNewReceiver"><i class="fas fa-user-plus pr-5"></i> Create New Receiver</div>
+                    </div>
+                    <input id="existingReciverRecipentId" type="hidden" asp-for="RecipientId" class="form-control validate">
+                    <input id="existingReciverCheck" type="checkbox" asp-for="ExistingRecipient" class="form-control" hidden>
+                    <div id="existingReceiverContent" class="hidden">
+
+                        <div id="existingReciverListContainer" class="row Reciverbox">
+                            <div class="my-2 col-md-12 d-flex justify-content-center align-items-center">
+                                <p>No records found.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="newReceiverContent">
+                        <div class="row">
+                            <div class="col-md-12 mb-2">
+                                <div class="card  card-body  mb-2">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <label class="form-label" asp-for="RecipientType">Select Receipient Type</label>
+                                            <select id="recipientType" class="form-select" asp-for="RecipientType" asp-items="recipientTypeDdl">
+                                            </select>
+                                            <span asp-validation-for="RecipientType" class="text-danger"></span>
+                                        </div>
+
+                                        <div id="recipientFirstNameWrapper" class="col-md-6 mb-2">
+                                            <label class="form-label" asp-for="RecipientFirstName">First Name</label>
+                                            <div class="input-group">
+                                                <input id="recipientFirstName" type="text" class="form-control" asp-for="RecipientFirstName" placeholder="">
+                                            </div>
+                                            <span asp-validation-for="RecipientFirstName" class="text-danger"></span>
+                                            <div class="form-check">
+                                                <input id="recipientNoFirstNameCheck" class="form-check-input" asp-for="NoRecipientFirstName" type="checkbox">
+                                                <label class="form-check-label" for="flexCheckDefault">
+                                                    No First Name
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div id="recipientLastNameWrapper" class="col-md-6 mb-2">
+                                            <label class="form-label" asp-for="RecipientLastName">Last Name <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input id="recipientLastName" type="text" asp-for="RecipientLastName" class="form-control" placeholder="">
+                                            </div>
+                                            <span asp-validation-for="RecipientLastName" class="text-danger"></span>
+                                        </div>
+
+                                        <div id="jointAccountFirstNameWrapper" class="col-md-6 mb-2">
+                                            <label class="form-label" asp-for="JointAccountFirstName">First Name of Joint Account Holder</label>
+                                            <div class="input-group">
+                                                <input id="jointAccountFirstName" type="text" class="form-control" asp-for="JointAccountFirstName" placeholder="">
+                                            </div>
+                                            <span asp-validation-for="JointAccountFirstName" class="text-danger"></span>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="jointAccountNoFirstNameCheck" class="form-check-input" asp-for="NoJointAccountFirstName">
+                                                <label class="form-check-label" asp-for="NoJointAccountFirstName">
+                                                    No First Name
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div id="jointAccountLastNameWrapper" class="col-md-6 mb-2">
+                                            <label class="form-label" asp-for="JointAccountLastName">Last Name of Joint Account Holder</label>
+                                            <div class="input-group">
+                                                <input id="jointAccountLastName" type="text" class="form-control" asp-for="JointAccountLastName" placeholder="">
+                                            </div>
+                                            <span asp-validation-for="JointAccountLastName" class="text-danger"></span>
+                                        </div>
+                                        <div id="businessNameWrapper" class="col-md-6 mb-2">
+                                            <label class="form-label" asp-for="BusinessName">Business Name</label>
+                                            <div class="input-group">
+                                                <input id="businessName" type="text" class="form-control" asp-for="BusinessName" placeholder="">
+                                            </div>
+                                            <span asp-validation-for="BusinessName" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label" asp-for="RecipientContactNumber">Contact <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text" id="inputGroupPrepend">+977</span>
+                                                <input type="text" class="form-control" data-val-maxlength-max="10" asp-for="RecipientContactNumber" onkeypress="allowNumbersOnly(event)" placeholder="">
+                                            </div>
+                                            <span asp-validation-for="RecipientContactNumber" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6 form-group mb-2">
+                                            <label class="form-label" asp-for="RecipientDateOfBirth">Date Of Birth <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input id="recipientDateOfBirth" type="date" class="form-control" asp-for="RecipientDateOfBirth"
+                                                       max="@DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd")" min="@DateTime.Now.AddYears(-130).ToString("yyyy-MM-dd")">
+                                                @* <span class="input-group-text"><i class="ti ti-calendar font-16"></i></span> *@
+                                            </div>
+                                            <span asp-validation-for="RecipientDateOfBirth" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label" asp-for="RecipientCountryCode">Country <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="recipientCountry" asp-for="RecipientCountryCode" asp-items="recipientCountryDdl">
+                                                @* <option value="0" selected>--Select--</option> *@
+                                            </select>
+                                            <span asp-validation-for="RecipientCountryCode" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6  form-group mb-2">
+                                            <label class="form-label" asp-for="RecipientProvinceCode">State/ Province</label>
+                                            <select class="form-select" id="recipientProvince" asp-for="RecipientProvinceCode" asp-items="recipientProvinceDdl">
+                                                <option value="0" selected>--Select--</option>
+                                            </select>
+                                            <span asp-validation-for="RecipientProvinceCode" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6  form-group mb-2">
+                                            <label class="form-label" asp-for="RecipientDistrictCode">District/ City</label>
+                                            <select class="form-select" id="recipientDistrict" asp-for="RecipientDistrictCode">
+                                                <option value="0" selected>--Select--</option>
+                                            </select>
+                                            <span asp-validation-for="RecipientDistrictCode" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6 form-group mb-2">
+                                            <label class="form-label" asp-for="RecipientLocalBodyCode">Municipality/ Gaun-Palika</label>
+                                            <select class="form-select" id="recipientLocalBody" asp-for="RecipientLocalBodyCode">
+                                                <option value="0" selected>--Select--</option>
+                                            </select>
+                                            <span asp-validation-for="RecipientLocalBodyCode" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="col-md-6  form-group mb-2">
+                                            <label class="form-label" asp-for="RecipientAddress">Full Address <span class="text-danger">*</span></label>
+                                            <div class="input-group">
+                                                <input id="recipientAddress" type="text" class="form-control" asp-for="RecipientAddress" placeholder="">
+                                            </div>
+                                            <span asp-validation-for="RecipientAddress" class="text-danger"></span>
+                                        </div>
+                                        <div class="col-md-6 form-group mb-2">
+                                            <label class="form-label" asp-for="RecipientRelationshipId">Relationship <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="recipientRelationshipId" asp-for="RecipientRelationshipId" asp-items="relationshipDdl">
+                                                <option value="0" selected>--Select--</option>
+                                            </select>
+                                            <span asp-validation-for="RecipientRelationshipId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </fieldset><!--end fieldset-->
+
+    </div>
+    <div id="formStep4" class="modal-form-step">
+        <h3>Bank Details </h3>
+        <fieldset>
+            <div class="row ">
+                <div id="paymentTypeStep4Wrapper" class="col-md-6  form-group mb-2">
+                    <label class="form-label" asp-for="PaymentType">Payout Type</label>
+                    <select class="form-control" id="paymentTypeStep4"  asp-for="PaymentType" asp-items="payoutTypeDdl">
+                        @* <option selected value="0">Choose option</option> *@
+                    </select>
+@*                     <input id="paymentTypeStep5" type="text" class="form-control" asp-for="PaymentType" value="">
+ *@                    <span asp-validation-for="PaymentType" class="text-danger"></span>
+                </div>
+                <div id="recipientBankCodeWrapper" class="col-md-6 mb-2 PrefundingContainer" style="display: block;">
+                    <label class="form-label">Bank Name <span class="text-danger">*</span></label>
+                    <select id="recipientBankCode" class="form-select" asp-for="BankCode" asp-items="bankListDdl">
+                        <option value="0" selected>--Select--</option>
+                    </select>
+                    <span asp-validation-for="BankCode" class="text-danger"></span>
+                </div>
+                <div id="recipientAccountBranchWrapper" class="col-md-6 mb-2 PrefundingContainer" style="display: block;">
+                    <label class="form-label" asp-for="Branch">Branch <span class="text-danger">*</span></label>
+                    <input id="recipientAccountBranch" type="text" asp-for="Branch" class="form-control" value="">
+                    <span asp-validation-for="Branch" class="text-danger"></span>
+                </div>
+                @*                 <div class="col-md-6 mb-2 PrefundingContainer" style="display: block;">
+                <label class="form-label">Bank Code</label>
+                <input type="text" class="form-control" placeholder="0155">
+                </div> *@
+                <div id="recipientAccountHolderNameWrapper" class="col-md-6 mb-2 PrefundingContainer" style="display: block;">
+                    <label class="form-label" asp-for="AccountHolderName">Account Name <span class="text-danger">*</span></label>
+                    <input id="recipientAccountHolderName" type="text" class="form-control" asp-for="AccountHolderName" value="">
+                    <span asp-validation-for="AccountHolderName" class="text-danger"></span>
+                </div>
+                <div id="recipientAccountNumberWrapper" class="col-md-6 mb-2 PrefundingContainer" style="display: block;">
+                    <label class="form-label" asp-for="AccountNumber">Account Number <span class="text-danger">*</span></label>
+                    <input id="recipientAccountNumber" type="text" class="form-control" asp-for="AccountNumber" value="">
+                    <span asp-validation-for="AccountNumber" class="text-danger"></span>
+                </div>
+
+                <div id="chooseWalletDdlWrapper" class="ConsContainer col-md-6 mb-2" style="display: none;">
+                    <label class="form-label">Choose Wallet</label>
+                    <select class="form-select" id="chooseWalletDdl" asp-for="WalletCode" asp-items="walletsDdl">
+                        @* <option selected value="0">Choose Wallet</option> *@
+                    </select>
+                    <span asp-validation-for="WalletCode" class="text-danger"></span>
+                </div>
+                <div id="walletNumberWrapper" class="ConsContainer col-md-6 mb-2" style="display: none;">
+                    <label class="form-label" asp-for="WalletNumber">Wallet Number <span class="text-danger">*</span></label>
+                    <input id="walletNumber" type="text" asp-for="WalletNumber" class="form-control" value="">
+                    <span asp-validation-for="WalletNumber" class="text-danger"></span>
+                </div>
+                <div id="walletHolderNameWrapper" class="ConsContainer col-md-6 mb-2" style="display: none;">
+                    <label class="form-label" asp-for="WalletHolderName">Wallet Holder Name <span class="text-danger">*</span></label>
+                    <input id="walletHolderName" type="text" asp-for="WalletHolderName" class="form-control" value="">
+                    <span asp-validation-for="WalletHolderName" class="text-danger"></span>
+                </div>
+            </div><!--end form-->
+        </fieldset><!--end fieldset-->
+
+    </div>
+    <div id="formStep5" class="modal-form-step">
+        <h3>Review </h3>
+        <fieldset>
+            <div class="table-responsive">
+                <table class="table table-hover mb-3 table-sm borderless">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:50%">Transfer Details</th>
+                            <th>
+                                <a onclick="FormStepper.showStep(1)" class="text-primary">
+                                    Edit
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td><span>You Send:</span></td>
+                            <td><span id="revSendingAmount">0.0 AUD</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Total Fee:</span></td>
+                            <td><span id="revTotalFee" class="tb-lead">0.0 AUD</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Amount we'll convert :</span></td>
+                            <td><span id="revNetSendingAmount" class="tb-lead">0.0 AUD</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Conversion Rate :</span></td>
+                            <td><span id="revConversionRate">91.5</span></td>
+                        </tr>
+                        <tr>
+                            <td><span>You Get:</span></td>
+                            <td><span><strong id="revReceivingAmount" style="color: #f98c45">0.0 NPR</strong></span></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+            <div class="table-responsive">
+                <table class="table table-hover  table-sm borderless">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width:50%">Recipient details </th>
+                            <th>
+                                <a onclick="FormStepper.showStep(4)" class="text-primary">
+                                    Edit
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span>Bank Name:</span></td>
+                            <td><span id="revBankName"></span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Account Number:</span></td>
+                            <td><span id="revAccNo" class="tb-lead"></span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Account Holder :</span></td>
+                            <td><span id="revAccHolder" class="tb-lead"></span></td>
+                        </tr>
+                        <tr>
+                            <td><span>Branch Address :</span></td>
+                            <td><span id="revBankBranch"></span></td>
+                        </tr>
+
+                    </tbody>
+                </table><!--end /table-->
+            </div>
+        </fieldset><!--end fieldset-->
+
+    </div>
+    <div id="formStep6" class="modal-form-step">
+        <h3>Confirm </h3>
+        <fieldset>
+            <div class="earning-data text-center">
+                <img src="~/partner/assets/images/remit-icon.png" alt="" class="money-bag " height="130">
+                <h6 class="earn-money mb-1 font-15">
+                    MyPay Remit Australia won't take money from your bank automatically
+                </h6>
+                <p class="text-muted font-13 mb-4">
+                    You'll need to do this bit yourself to pay by bank transfer
+                </p>
+            </div>
+            <input type="hidden" id="processRefId" value="@Guid.NewGuid().ToString()" disabled />
+            <ul class="list-inline mb-0 ">
+                <li class="list-inline-item mb-2 text-muted">
+                    <span><i class="fas fa-map-marker-alt me-2 font-14"></i></span>We'll give your our bank details.
+                </li>
+                <li class="list-inline-item mb-2 text-muted">
+                    <span><i class="far fa-envelope me-2 font-14"></i></span>
+                    You'll need to use your bank to transfer the money to MyPay Remit Australia
+                </li>
+                <li class="list-inline-item mb-2 text-muted">
+                    <span><i class="far fa-envelope me-2 font-14"></i></span>
+                    Once we receive the money, we'll start the transfer.
+                </li>
+                <div class="mb-2 mt-3">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="termsAndConditionsCheck">
+                        <label class="form-check-label font-14" for="termsAndConditionsCheck">Yes,I Understand and accept to the terms and conditions.</label>
+                    </div>
+                </div>
+            </ul>
+        </fieldset><!--end fieldset-->
+    </div>
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-primary" id="btnPrev" onclick="showFormPrevStep()">Previous</a>
+        <a class="btn btn-primary ms-2" id="btnNext" onclick="showFormNextStep()">Next</a>
+        <button class="btn btn-primary ms-2" id="btnSubmit" type="submit">Submit</button>
+    </div>
+</form><!--end form-->
+<script>
+    $('#senderContactNumber').on('keydown', function (e) {
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+            return;
+        }
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+
+    // const senderFirstNameInput = document.getElementById("senderFirstName");
+    // const senderLastNameInput = document.getElementById("senderLastName");
+
+    // senderFirstNameInput.addEventListener("keypress", function (event) {
+    //     const keyCode = event.which || event.keyCode;
+    //     const char = String.fromCharCode(keyCode);
+
+    //     // Allow letters (a-z, A-Z) and space
+    //     const allowedPattern = /^[a-zA-Z\s]+$/;
+
+    //     if (!allowedPattern.test(char)) {
+    //         event.preventDefault();
+    //     }
+    // });
+
+    const inputElements = document.querySelectorAll("#senderFirstName, #senderLastName, #recipientFirstName, #recipientLastName");
+
+    function handleAlphabetKeyPress(event) {
+        const char = String.fromCharCode(event.which || event.keyCode);
+        const allowedPattern = /^[a-zA-Z\s]+$/;
+
+        if (!allowedPattern.test(char)) {
+            event.preventDefault();
+        }
+    }
+
+    inputElements.forEach(element => element.addEventListener("keypress", handleAlphabetKeyPress));
+    
+    function removeValidationErrorMessage(fieldSelector) {
+        let nameAttr = $(fieldSelector).attr('name');
+        if (nameAttr)
+            nameAttr = nameAttr[0].toLowerCase() + nameAttr.substring(1);
+
+        let errorMsgId = '#' + nameAttr + '-error';
+        $(errorMsgId).remove();
+    }
+    function allowNumbersOnly(e) {
+        var code = (e.which) ? e.which : e.keyCode;
+        if (code > 31 && (code < 48 || code > 57)) {
+            e.preventDefault();
+        }
+    }
+    jQuery.validator.addMethod("customEmail", function (value, element) {
+        return /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/.test(value);
+    }, 'Please enter a valid email address.');
+
+    jQuery.validator.addMethod("customMobile", function (value, element) {
+        return /^(\+977)?[9][6-8]\d{8}$/.test(value);
+    }, 'Entered contact number is not valid.');
+
+    jQuery.validator.addMethod("forSelect", function (value, element, param) {
+        return value != "0" && value != "";;
+    }, 'Please select an option.');
+
+    var AddTxnFormValidator = {
+        SenderFirstName: {
+            required: true,
+            messages: {
+                required: 'First name is required.'
+            }
+        },
+        SenderLastName: {
+            required: true,
+            messages: {
+                required: 'Last name is required.'
+            }
+        },
+        SenderRemarks: {
+            required: true,
+            messages: {
+                required: 'Remarks is required.'
+            }
+        },
+        SenderAddress: {
+            required: true,
+            messages: {
+                required: 'Sender full address is required.'
+            }
+        },
+        SenderEmail: {
+            required: true,
+            customEmail: true,
+            messages: {
+                required: 'Email is required.',
+                customEmail: 'Please enter a valid email address.'
+            }
+        },
+        SenderCountryCode: {
+            forSelect: true,
+            messages: {
+                forSelect: 'Please select a country.'
+            }
+        },
+        SenderRelationshipId: {
+            forSelect: true,
+            messages: {
+                forSelect: 'Please select a relationship.'
+            }
+        },
+        SenderOccupation: {
+            forSelect: true,
+            messages: {
+                forSelect: 'Please select a sender occupation.'
+            }
+        },
+        SourceOfIncome: {
+            forSelect: true,
+            messages: {
+                forSelect: 'Please select a provider source of income.'
+            }
+        },
+        SenderContactNumber: {
+            required: true,
+            messages: {
+                required: 'Contact number is required.'
+            }
+        },
+
+        DocumentNumber: {
+            required: true,
+            messages: {
+                required: 'Document number is required.'
+            }
+        },
+        DocumentType: {
+            forSelect: true,
+            messages: {
+                forSelect: 'Please select a document type'
+            }
+        },
+        SenderPurposeId: {
+            forSelect: true,
+            messages: {
+                forSelect: 'Please select a purpose.'
+            }
+        },
+        RecipientFirstName: {
+            required: true,
+            messages: {
+                required: 'First name is required.'
+            }
+        },
+        RecipientLastName: {
+            required: true,
+            messages: {
+                required: 'Last name is required.'
+            }
+        },
+        RecipientContactNumber: {
+            required: true,
+            customMobile: true,
+            messages: {
+                required: 'Mobile number is required.',
+                customMobile: 'Entered contact number is not valid.'
+            }
+        },
+        RecipientDateOfBirth: {
+            required: true,
+            dateISO: true,
+            messages: {
+                required: 'Please select date of birth.',
+                dateISO: 'Please select valid date of birth.'
+            }
+        },
+        JointAccountFirstName: {
+            required: true,
+            messages: {
+                required: 'First name is required.',
+            }
+        },
+        JointAccountLastName: {
+            required: true,
+            messages: {
+                required: 'Last name is required.',
+            }
+        },
+        BusinessName: {
+            required: true,
+            messages: {
+                required: 'Business name is required.',
+            }
+        },
+        RecipientAddress: {
+            required: true,
+            messages: {
+                required: 'Recipient full address is required.',
+            }
+        },
+
+        RecipientRelationshipId: {
+            forSelect: true,
+            messages: {
+                forSelect: 'Please select a relationship.'
+            }
+        },
+        BankCode: {
+            forSelect: true,
+            messages: {
+                forSelect: 'Please select a bank.'
+            }
+        },
+        Branch: {
+            required: true,
+            messages: {
+                required: 'Please enter a branch name.'
+            }
+        },
+        AccountHolderName: {
+            required: true,
+            messages: {
+                required: 'Please enter a account name.'
+            }
+        },
+        AccountNumber: {
+            required: true,
+            messages: {
+                required: 'Please enter a account number.'
+            }
+        }
+    };
+</script>
+<script>
+    AddTxnFormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddTransaction", "SendTransactions")',
+        processIdUrl: '@Url.Action("GetProcessId", "SendTransactions")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#addTransactionForm'
+    }, function () {
+
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>
+<script>
+    FormStepper.init({
+        formSelector: '#addTransactionForm',
+        validateSteps: true,
+        validationSkipSteps: [5],
+        validators: [
+            {
+                step: 2,
+                selectorValidationSummary: '#formErrorsWrapper',
+                list: [
+                    {
+                        validator: function () {
+                            if (TxnSummaryContext && !TxnSummaryContext.existingSender)
+                                return true;
+
+                            return $('#existingSenderMemberId').val().trim() !== '';
+                        },
+                        message: 'Please select a sender.'
+                    }
+                ]
+            },
+            {
+                step: 3,
+                selectorValidationSummary: '#formErrorsWrapper',
+                list: [
+                    {
+                        validator: function () {
+                            if (TxnSummaryContext && !TxnSummaryContext.existingReciver)
+                                return true;
+
+                            return $('#existingReciverRecipentId').val().trim() !== '';
+
+                        },
+                        message: 'Please select a Receiver.'
+                    }
+                ]
+            }
+        ],
+        currentStep: 1,
+        totalSteps: 6,
+    });
+
+    function showFormPrevStep() {
+        FormStepper.prev(function () {
+            if (FormStepper.settings.currentStep === 2) {
+                clearExistingSenderSelection();
+                clearErrorMessages();
+            }
+        });
+    }
+
+    function showFormNextStep() {
+        FormStepper.next(function () {
+            clearErrorMessages();
+
+            if (FormStepper.settings.currentStep === 4) {
+                switch (TxnSummaryContext.paymentType) {
+                    case "WALLET": {
+                        // wallet
+                        let walletName = $('#addTransactionForm #chooseWalletDdl').find(":selected").text();
+                        let walletHolder = $('#addTransactionForm #walletHolderName').val();
+                        let walletNumber = $('#addTransactionForm #walletNumber').val();
+                        setTxnSummaryContext({
+                            bankName: walletName,
+                            accountHolder: walletHolder,
+                            accountNumber: walletNumber,
+                            branch: ""
+                        });
+                        break;
+                    }
+                    case "CASH": {
+                        // cashout
+                        setTxnSummaryContext({
+                            bankName: "Cashout",
+                            accountHolder: "",
+                            accountNumber: "",
+                            branch: ""
+                        });
+                        break;
+                    }
+                    default: {
+                        // bank transfer
+                        let bankName = $('#addTransactionForm #recipientBankCode').find(":selected").text();
+                        let accountHolder = $('#addTransactionForm #recipientAccountHolderName').val();
+                        let accountnumber = $('#addTransactionForm #recipientAccountNumber').val();
+                        let branch = $('#addTransactionForm #recipientAccountBranch').val();
+                        setTxnSummaryContext({
+                            bankName: bankName,
+                            accountHolder: accountHolder,
+                            accountNumber: accountnumber,
+                            branch: branch
+                        });
+                    }
+                }
+                // set txn review data
+                setTxnSummaryViewData();
+            }
+        });
+    }
+
+    function setTxnSummaryViewData() {
+
+        $('#addTransactionForm #revSendingAmount').text(TxnSummaryContext.sendingAmount + ' ' + TxnSummaryContext.sourceCurrency);
+        $('#addTransactionForm #revTotalFee').text(TxnSummaryContext.serviceCharge + ' ' + TxnSummaryContext.sourceCurrency);
+        $('#addTransactionForm #revNetSendingAmount').text(TxnSummaryContext.netSendingAmount + ' ' + TxnSummaryContext.sourceCurrency);
+        $('#addTransactionForm #revConversionRate').text(TxnSummaryContext.conversionRate);
+        $('#addTransactionForm #revReceivingAmount').text(TxnSummaryContext.receivingAmountNPR + ' ' + TxnSummaryContext.destinationCurrency);
+        $('#addTransactionForm #revBankName').text(TxnSummaryContext.bankName);
+        $('#addTransactionForm #revAccHolder').text(TxnSummaryContext.accountHolder);
+        $('#addTransactionForm #revAccNo').text(TxnSummaryContext.accountNumber);
+        $('#addTransactionForm #revBankBranch').text(TxnSummaryContext.branch);
+    }
+</script>
+
+<script>
+    function handleRecipientType(value) {
+        switch (value) {
+            case "joint":
+                hideFormSection("#addTransactionForm #businessNameWrapper");
+                showFormSection("#addTransactionForm #jointAccountFirstNameWrapper");
+                showFormSection("#addTransactionForm #jointAccountLastNameWrapper");
+                break;
+            case "charity":
+                hideFormSection("#addTransactionForm #jointAccountFirstNameWrapper");
+                hideFormSection("#addTransactionForm #jointAccountLastNameWrapper");
+                showFormSection("#addTransactionForm #businessNameWrapper");
+                break;
+            default:
+                // default => someone
+                hideFormSection("#addTransactionForm #businessNameWrapper");
+                hideFormSection("#addTransactionForm #jointAccountFirstNameWrapper");
+                hideFormSection("#addTransactionForm #jointAccountLastNameWrapper");
+        }
+    }
+
+    function handlePayoutType(value) {
+        switch (value.toUpperCase()) {
+            case "WALLET":
+                // wallet
+                hideFormSection("#addTransactionForm #recipientBankCodeWrapper");
+                hideFormSection("#addTransactionForm #recipientAccountBranchWrapper");
+                hideFormSection("#addTransactionForm #recipientAccountNumberWrapper");
+                hideFormSection("#addTransactionForm #recipientAccountHolderNameWrapper");
+                showFormSection("#addTransactionForm #chooseWalletDdlWrapper");
+                showFormSection("#addTransactionForm #walletNumberWrapper");
+                showFormSection("#addTransactionForm #walletHolderNameWrapper");
+                break;
+            case "CASH":
+                // cashout
+                hideFormSection("#addTransactionForm #chooseWalletDdlWrapper");
+                hideFormSection("#addTransactionForm #walletNumberWrapper");
+                hideFormSection("#addTransactionForm #walletHolderNameWrapper");
+                hideFormSection("#addTransactionForm #recipientBankCodeWrapper");
+                hideFormSection("#addTransactionForm #recipientAccountBranchWrapper");
+                hideFormSection("#addTransactionForm #recipientAccountNumberWrapper");
+                hideFormSection("#addTransactionForm #recipientAccountHolderNameWrapper");
+                break;
+            default:
+                // bank transfer 'BANK'
+                hideFormSection("#addTransactionForm #chooseWalletDdlWrapper");
+                hideFormSection("#addTransactionForm #walletNumberWrapper");
+                hideFormSection("#addTransactionForm #walletHolderNameWrapper");
+                showFormSection("#addTransactionForm #recipientBankCodeWrapper");
+                showFormSection("#addTransactionForm #recipientAccountBranchWrapper");
+                showFormSection("#addTransactionForm #recipientAccountNumberWrapper");
+                showFormSection("#addTransactionForm #recipientAccountHolderNameWrapper");
+        }
+    }
+
+    function handleSenderTransactionPurpose(value) {
+        let selectorSenderRemarks = '#addTransactionForm #SenderRemarks';
+        if (value.toUpperCase() === "OTHER" || value.toUpperCase() === "OTHERS") {
+            showFormSection("#addTransactionForm #senderRemarksWrapper");
+            $(selectorSenderRemarks).rules("add", AddTxnFormValidator['SenderRemarks']);
+            $(selectorSenderRemarks).focus();
+        } else {
+            $(selectorSenderRemarks).rules("remove");
+            hideFormSection("#addTransactionForm #senderRemarksWrapper");
+        }
+    }
+
+    function handlePayoutTypeValueSync(value,text) {
+        const selectorPaymentTypeStep4Wrapper = '#addTransactionForm #paymentTypeStep4Wrapper';
+        enableFormFields(selectorPaymentTypeStep4Wrapper);
+        $('#addTransactionForm #paymentTypeStep4').val(value);
+        // $('#addTransactionForm #paymentTypeStep5').val(text);
+        disableFormFields(selectorPaymentTypeStep4Wrapper);
+    }
+
+    function handleRecipientNameSync(value) {
+        const recipientAccountHolderNameWrapper = '#addTransactionForm #recipientAccountHolderNameWrapper';
+        enableFormFields(recipientAccountHolderNameWrapper);
+        $('#addTransactionForm #recipientAccountHolderName').val(value);
+        disableFormFields(recipientAccountHolderNameWrapper);
+    }
+    function handleWalletRecipientNameSync(value) {
+        const recipientAccountHolderNameWrapper = '#addTransactionForm #walletHolderNameWrapper';
+        enableFormFields(recipientAccountHolderNameWrapper);
+        $('#addTransactionForm #walletHolderName').val(value);
+        disableFormFields(recipientAccountHolderNameWrapper);
+    }
+
+    function getTransactionChargeAmount(clearErrors = true) {
+        if (clearErrors) {
+            clearErrorMessages();
+        }
+
+        let data = getTxnChargeDetailsPayload();
+        getSenderTxnChargeDetails('@Url.Action("GetConversionAmt", "SendTransactions")', data);
+    }
+
+    function getTransactionChargeAmountForNeptoOther(clearErrors = true) {
+        debugger;
+        if (clearErrors) {
+            clearErrorMessages();
+        }
+
+        let data = getTxnChargeDetailsPayloadForNepToOthers();
+        ConvertAmmountRecevingToSender('@Url.Action("GetConversionRateForNepali", "SendTransactions")', data);
+    }
+
+
+    function initializeFormDefaults() {
+        // Transaction purpose
+        let valSenderTransactionPurpose = $("#addTransactionForm #senderTransactionPurpose").find(":selected").text();
+        handleSenderTransactionPurpose(valSenderTransactionPurpose);
+
+        // Recipient type
+        let valRecipientType = $("#addTransactionForm #recipientType").val();
+        handleRecipientType(valRecipientType);
+
+        let valCurrentPayoutType = $('#addTransactionForm #paymentType').val();
+        let valCurrentPayoutText = $('#addTransactionForm #paymentType option:selected').text();
+        handlePayoutTypeValueSync(valCurrentPayoutType, valCurrentPayoutText);
+
+        let valRecipientName = $('#addTransactionForm #recipientLastName')
+        handleRecipientNameSync(valRecipientName);
+
+        $('#addTransactionForm #btnSubmit').prop('disabled', true);
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        // set form defaults
+
+        // initial form sections hiding
+        hideFormSection("#addTransactionForm #existingSenderContent");
+        hideFormSection("#addTransactionForm #existingReceiverContent");
+
+        // receiver form step default view
+        hideFormSection("#addTransactionForm #businessNameWrapper");
+        hideFormSection("#addTransactionForm #jointAccountFirstNameWrapper");
+        hideFormSection("#addTransactionForm #jointAccountLastNameWrapper");
+
+        initializeFormDefaults();
+
+        getTransactionChargeAmount(clearErrors = false);
+
+        var txnChargeDelayTimer;
+        $('#addTransactionForm #sourceAmount').on('input', function () {
+            clearTimeout(txnChargeDelayTimer);
+            if ($('#sourceAmount').val() >= 10) {
+                txnChargeDelayTimer = setTimeout(function () {
+                    getTransactionChargeAmount();
+                }, 1500);
+            }
+        });
+
+        getTransactionChargeAmountForNeptoOther(clearErrors = false);
+        $('#addTransactionForm #receivingAmount').on('input', function () {
+            debugger;
+            clearTimeout(txnChargeDelayTimer);
+            if ($('#receivingAmount').val() >= 10) {
+                txnChargeDelayTimer = setTimeout(function () {
+                    getTransactionChargeAmountForNeptoOther();
+                }, 1500);
+            }
+
+            // if ($('#sourceAmount').val() >= 10) {
+            //     txnChargeDelayTimer = setTimeout(function () {
+            //         getTransactionChargeAmount();
+            //     }, 1500);
+            // }
+        });
+
+        $('#addTransactionForm #paymentType').on('change', function () {
+            let currentVal = $(this).val();
+            handlePayoutTypeValueSync(currentVal);
+            handlePayoutType(currentVal);
+
+            getTransactionChargeAmount();
+        });
+
+        $('#addTransactionForm #recipientLastName').on('change', function () {
+            var valueFName = $('#addTransactionForm #recipientFirstName').val();
+            var valueWalletOrBank = $('#addTransactionForm #paymentTypeStep4').val();
+            if (valueFName == "" || valueFName == null) {
+                if (valueWalletOrBank == "BANK") {
+                    let recpName = $(this).val();
+                    handleRecipientNameSync(recpName);
+                }
+                else {
+                    let recpName = $(this).val();
+                    handleWalletRecipientNameSync(recpName);
+                }
+
+            }
+            else {
+                if (valueWalletOrBank == "BANK") {
+                    let recpName = $('#recipientFirstName').val() + ' ' + $(this).val();
+                    handleRecipientNameSync(recpName);
+                }
+                else {
+                    let recpName = $('#recipientFirstName').val() + ' ' + $(this).val();
+                    handleWalletRecipientNameSync(recpName);
+                }
+
+            }
+        });
+
+        $('#addTransactionForm #destCurrency').on('change', function () {
+            getTransactionChargeAmount();
+        });
+
+        $('#addTransactionForm #sourceCurrency').on('change', function () {
+            getTransactionChargeAmount();
+        });
+
+        $("#addTransactionForm #recipientProvince").on('change', function () {
+            $("#recipientLocalBody").html('<option value="0" selected>--Select--</option>');
+            CascadeDropdown('/partner/sendtransactions/getrecipientdistrictlist', '?provinceCode=' + $(this).val(), 'addTransactionForm #recipientDistrict');
+        });
+
+        $("#addTransactionForm #recipientDistrict").on('change', function () {
+            CascadeDropdown('/partner/sendtransactions/getrecipientlocallevellist', '?districtCode=' + $(this).val(), 'addTransactionForm #recipientLocalBody');
+        });
+
+        // Transaction purpose
+        $("#addTransactionForm #senderTransactionPurpose").on('change', function () {
+            let currentVal = $(this).find('option:selected').text();
+            handleSenderTransactionPurpose(currentVal);
+        });
+
+        // Recipient Type
+        $("#addTransactionForm #recipientType").on('change', function () {
+            let currentVal = $(this).val();
+            handleRecipientType(currentVal);
+        });
+
+        $('#addTransactionForm #termsAndConditionsCheck').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#addTransactionForm #btnSubmit').prop('disabled', false);
+                $('#btnPrev').addClass('disabled');
+            } else {
+                $('#addTransactionForm #btnSubmit').prop('disabled', true);
+                $('#btnPrev').removeClass('disabled');
+            }
+        });
+
+        $('#addTransactionForm #senderNoFirstNameCheck').on('change', function () {
+
+            let selectorSenderFirstName = '#addTransactionForm #senderFirstName';
+            if ($(this).is(':checked')) {
+                removeValidationErrorMessage(selectorSenderFirstName);
+                $(selectorSenderFirstName).rules("remove");
+                $(selectorSenderFirstName).val('');
+                $(selectorSenderFirstName).prop('disabled', true);
+            } else {
+                $(selectorSenderFirstName).rules("add", AddTxnFormValidator['SenderFirstName']);
+                $(selectorSenderFirstName).prop('disabled', false);
+                $(selectorSenderFirstName).focus();
+            }
+        });
+
+        $('#addTransactionForm #recipientNoFirstNameCheck').on('change', function () {
+
+            let selectorRecipientFirstName = '#addTransactionForm #recipientFirstName';
+            if ($(this).is(':checked')) {
+                removeValidationErrorMessage(selectorRecipientFirstName);
+                $(selectorRecipientFirstName).rules("remove");
+                $(selectorRecipientFirstName).val('');
+                $(selectorRecipientFirstName).prop('disabled', true);
+            } else {
+                $(selectorRecipientFirstName).prop('disabled', false);
+                $(selectorRecipientFirstName).rules("add", AddTxnFormValidator['RecipientFirstName']);
+                $(selectorRecipientFirstName).focus();
+            }
+        });
+
+        $('#addTransactionForm #jointAccountNoFirstNameCheck').on('change', function () {
+
+            let selectorJointAccountFirstName = '#addTransactionForm #jointAccountFirstName';
+            if ($(this).is(':checked')) {
+                removeValidationErrorMessage(selectorJointAccountFirstName);
+                $(selectorJointAccountFirstName).rules("remove");
+                $(selectorJointAccountFirstName).val('');
+                $(selectorJointAccountFirstName).prop('disabled', true);
+            } else {
+                $(selectorJointAccountFirstName).prop('disabled', false);
+                $(selectorJointAccountFirstName).rules("add", AddTxnFormValidator['JointAccountFirstName']);
+                $(selectorJointAccountFirstName).focus();
+            }
+        });
+
+        // TODO: move to a method
+        $('#addTransactionForm  #senderEmail').rules("add", AddTxnFormValidator['SenderEmail']);
+        $('#addTransactionForm  #senderLastName').rules("add", AddTxnFormValidator['SenderLastName']);
+        $('#addTransactionForm  #senderCountry').rules("add", AddTxnFormValidator['SenderCountryCode']);
+        $('#addTransactionForm  #senderAddress').rules("add", AddTxnFormValidator['SenderAddress']);
+        $('#addTransactionForm  #senderContactNumber').rules("add", AddTxnFormValidator['SenderContactNumber']);
+        $('#addTransactionForm  #senderRelationshipWithReceiver').rules("add", AddTxnFormValidator['SenderRelationshipId']);
+        $('#addTransactionForm  #senderOccupation').rules("add", AddTxnFormValidator['SenderOccupation']);
+        $('#addTransactionForm  #sourceOfIncome').rules("add", AddTxnFormValidator['SourceOfIncome']);
+        $('#addTransactionForm  #documentNumber').rules("add", AddTxnFormValidator['DocumentNumber']);
+        $('#addTransactionForm  #documentType').rules("add", AddTxnFormValidator['DocumentType']);
+        $('#addTransactionForm  #senderTransactionPurpose').rules("add", AddTxnFormValidator['SenderPurposeId']);
+        $('#addTransactionForm  #recipientFirstName').rules("add", AddTxnFormValidator['RecipientFirstName']);
+        $('#addTransactionForm  #recipientLastName').rules("add", AddTxnFormValidator['RecipientLastName']);
+        $('#addTransactionForm  #RecipientContactNumber').rules("add", AddTxnFormValidator['RecipientContactNumber']);
+        $('#addTransactionForm  #jointAccountFirstName').rules("add", AddTxnFormValidator['JointAccountFirstName']);
+        $('#addTransactionForm  #jointAccountLastName').rules("add", AddTxnFormValidator['JointAccountLastName']);
+        $('#addTransactionForm  #businessName').rules("add", AddTxnFormValidator['BusinessName']);
+        $('#addTransactionForm  #recipientDateOfBirth').rules("add", AddTxnFormValidator['RecipientDateOfBirth']);
+        $('#addTransactionForm  #recipientAddress').rules("add", AddTxnFormValidator['RecipientAddress']);
+        $('#addTransactionForm  #recipientRelationshipId').rules("add", AddTxnFormValidator['RecipientRelationshipId']);
+        $('#addTransactionForm  #recipientBankCode').rules("add", AddTxnFormValidator['BankCode']);
+        $('#addTransactionForm  #recipientAccountBranch').rules("add", AddTxnFormValidator['Branch']);
+        $('#addTransactionForm  #recipientAccountHolderName').rules("add", AddTxnFormValidator['AccountHolderName']);
+        $('#addTransactionForm  #recipientAccountNumber').rules("add", AddTxnFormValidator['AccountNumber']);
+
+    });
+</script>
+<script>
+    function setExistingSenderSelection(memberId) {
+        if (memberId) {
+            $('#addTransactionForm #existingSenderMemberId').val(memberId);
+        }
+    }
+    function setExistingReciverSelection(RecipientId) {
+        if (RecipientId) {
+            $('#addTransactionForm #existingReciverRecipentId').val(RecipientId);
+        }
+    }
+
+    function clearExistingSenderSelection() {
+        $('#addTransactionForm #existingSenderListContainer .sender-item > .card').removeClass('card-item-checked');
+        $('#addTransactionForm #existingSenderMemberId').val('');
+    }
+
+    function clearExistingReciverSelection() {
+        $('#addTransactionForm #existingReceiverContent .sender-item > .card').removeClass('card-item-checked');
+        $('#addTransactionForm #existingReciverRecipentId').val('');
+    }
+
+    function enableExistingSenderMode() {
+        $('#addTransactionForm #existingSenderCheck').prop('checked', true);
+        clearExistingSenderSelection();
+        setTxnSummaryContext({ existingSender: true });
+    }
+
+    function enableExistingReciverMode() {
+        $('#addTransactionForm #existingReciverCheck').prop('checked', true);
+        clearExistingReciverSelection();
+        setTxnSummaryContext({ existingReciver: true });
+    }
+
+    function disableExistingSenderMode() {
+        $('#addTransactionForm #existingSenderCheck').prop('checked', false);
+        clearExistingSenderSelection();
+        setTxnSummaryContext({ existingSender: false });
+    }
+
+    function disableExistingReciverMode() {
+        $('#addTransactionForm #existingReciverCheck').prop('checked', false);
+        clearExistingReciverSelection();
+        setTxnSummaryContext({ existingReciver: false });
+    }
+
+    function getExistingSenderSearchData() {
+        let memberId = $('#addTransactionForm #searchFieldMemberId').val();
+        let memberFullName = $('#addTransactionForm #searchFieldFullName').val();
+
+        return {
+            MemberId: memberId,
+            FullName: memberFullName
+        };
+    }
+
+    function renderExistingReciverList(data) {
+        clearExistingReciverSelection();
+
+        if (!data)
+            data = {};
+
+        getExistingReciverList('/partner/sendtransactions/GetExistingReciverList', data);
+    }
+
+    function renderExistingSenderList(data) {
+        clearExistingSenderSelection();
+
+        if (!data)
+            data = {};
+
+        getExistingSenderList('/partner/sendtransactions/getexistingsenderlist', data);
+    }
+
+    $(document).ready(function () {
+        $('#addTransactionForm #btnRadioExistingSender').on('click', function () {
+
+            $('#senderRadioButtonsContainer .radio-button').removeClass('active');
+            $(this).addClass('active');
+
+            hideFormSection("#addTransactionForm #newSenderContent");
+            showFormSection("#addTransactionForm #existingSenderContent");
+            clearErrorMessages();
+            enableExistingSenderMode();
+            renderExistingSenderList({});
+        });
+
+        $('#addTransactionForm #btnRadioCreateNewSender').on('click', function () {
+
+            $('#senderRadioButtonsContainer .radio-button').removeClass('active');
+            $(this).addClass('active');
+
+            hideFormSection("#addTransactionForm #existingSenderContent");
+            showFormSection("#addTransactionForm #newSenderContent");
+            disableExistingSenderMode();
+            clearErrorMessages();
+        });
+
+        $('#addTransactionForm #btnSearchExistingSender').on('click', function () {
+
+            let searchaData = getExistingSenderSearchData();
+            renderExistingSenderList(searchaData);
+            clearExistingSenderSelection();
+        });
+
+        $('#addTransactionForm #btnRadioExistingReceiver').on('click', function () {
+
+            $('#receiverRadioButtonsContainer .radio-button').removeClass('active');
+            $(this).addClass('active');
+
+            hideFormSection("#addTransactionForm #newReceiverContent");
+            showFormSection("#addTransactionForm #existingReceiverContent");
+            var memberid = $('#addTransactionForm #existingSenderMemberId').val();
+            clearErrorMessages();
+            enableExistingReciverMode();
+            renderExistingReciverList({ MemberId: memberid });
+        });
+
+        $('#addTransactionForm #btnRadioCreateNewReceiver').on('click', function () {
+
+            $('#receiverRadioButtonsContainer .radio-button').removeClass('active');
+            $(this).addClass('active');
+
+            hideFormSection("#addTransactionForm #existingReceiverContent");
+            showFormSection("#addTransactionForm #newReceiverContent");
+            disableExistingReciverMode();
+            clearErrorMessages();
+        });
+    });
+
+</script>

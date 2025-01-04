@@ -1,0 +1,132 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Models.RMP;
+@model PagedList<AgentUserModel>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Agent Details</a></li>
+                            <li class="breadcrumb-item active">Agent List</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                        <form id="formAgentFilter" class="row row-cols-lg-auto align-items-end">
+                            <div class="col-12 mb-3">
+                                <label class="visually-hidden">Username</label>
+                                <div class="input-group">
+                                    <input type="text" name="UserName" class="form-control" placeholder="Username">
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="visually-hidden">Email</label>
+                                <div class="input-group">
+                                    <input type="text" name="Email" class="form-control" placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label mb-0">District</label>
+                                <select class="form-select" name="DistrictCode" asp-items="@ViewBag.District" required>
+                                    <option selected value="">-SELECT-</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label mb-0">User Status</label>
+                                <select class="form-select" name="UserStatus" required>
+                                    <option value="" selected>-SELECT-</option>
+                                    <option value="1">Active</option>
+                                    <option value="0">Inactive</option>
+                                </select>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <button id="btnAgentFilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Agent List</h4>
+                        </div>
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                @if (User.Claims.FirstOrDefault(c => c.Type == "UserType")?.Value == "SuperAgent")
+                                {
+                                    <a onclick="ShowPopUp('@Url.Action("AddAgent","Agent")','Add Agent')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                        <i class="las la-plus ms-1"></i> Add Agent
+                                    </a>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="AgentTableWrapper" class="table-responsive">
+                        <partial name="_AgentList" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @* <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script> *@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script src="~/js/admin/admin.partners.js" asp-append-version="true"></script>
+    <script src="~/js/site.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("Index", "Agent")',
+                selector: '#AgentTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formAgentFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+                $('#formAgentFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                $('#btnAgentFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}

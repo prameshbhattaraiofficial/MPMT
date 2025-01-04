@@ -1,0 +1,88 @@
+﻿@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Transaction
+@model PagedList<CommisionTransction>
+@{
+    var sn = 1;
+    decimal totalSendAmt = 0.0m;
+    decimal totalRecAmt = 0.0m;
+    var nooftxn = 0;
+}
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Sender Txn Date</th>
+                <th>Receiver Txn Date</th>
+                <th>Transcation Id</th>
+                <th>Parent Transcation Id</th>
+                <th>Partner Code</th>
+                <th>Partner Full Name</th>
+                <th>Source Currency</th>
+                <th>Destination Currency</th>
+                <th>Payment Type</th>
+                <th>Commisson Amount</th>
+                <th>Previous WalletBalance</th>
+                <th>Current WalletBalance</th>
+                <th>Send Ammount</th>
+                <th>Reciving Ammount</th>
+               @* <th>Service Charge (USD)</th>*@
+                <th>Status</th>
+                @* <th>Payment Details</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>@item.SN</td>
+                    <td>@item.SenderTransactionDateString</td>
+                    <td>@item.ReceiverTransactionDateString</td>
+                    <td>@item.TransactionId</td>
+                    <td>@item.ParentTransactionId</td>
+                    <td>@item.PartnerId</td>
+                    <td>@item.PartnerFullName</td>
+                    <td>@item.SourceCurrency</td>
+                    <td>@item.DestinationCurrency</td>
+                    <td>@item.PaymentType</td>
+                    <td>@item.CommisionAmount.ToString("N2")</td>
+                    <td>@item.PreviousWalletBalance.ToString("N2")</td>
+                    <td>@item.CurrentWalletBalance.ToString("N2")</td>
+                    <td>@item.SendAmount.ToString("N2")</td>
+                    <td>@item.ReceiveAmount.ToString("N2")</td>
+                    <td>@item.Status</td>
+                    @* <td><a class="btn btn-sm btn-soft-info btn-circle me-2" onclick="ShowPopUp('@Url.Action("PaymentDetail", "Reports", new { TransactionId = item.ParentTransactionId })', 'Payment Detail')">View Detail</a></td> *@
+                </tr>
+                sn = sn + 1;
+                nooftxn = nooftxn + 1;
+                totalSendAmt = totalSendAmt + Convert.ToDecimal(item.SendAmount.ToString() ?? "0.00");
+                totalRecAmt = totalRecAmt + Convert.ToDecimal(item.ReceiveAmount.ToString() ?? "0.00");
+            }
+        </tbody>
+        <thead class="table table-striped dataTable nowrap">
+            <tr>
+                <th>Total :</th>
+                <th></th>
+                <th></th>
+                <th>No of Transaction : @nooftxn</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>@totalSendAmt </th>
+                <th>@totalRecAmt </th>
+                <th></th>
+                
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

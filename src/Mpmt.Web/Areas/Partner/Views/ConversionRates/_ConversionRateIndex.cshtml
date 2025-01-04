@@ -1,0 +1,49 @@
+﻿@using Mpmt.Core.Dtos.ConversionRate
+@using Mpmt.Core.Models.RMP;
+@model List<PartnerConversionRate>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive">
+    <table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>SN </th>
+                <th>Source Currency</th>
+                <th>Destination Currency</th>
+                <th>Unit Value</th>
+                <th>Min Rate</th>
+                <th>Max Rate</th>
+                <th>Current Rate</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Count != 0)
+            {
+                @foreach (var value in Model.Select((item, index) => new { item, index }))
+                {
+                    <tr>
+                        <td>@(value.index + 1)</td>
+                        <td>@value.item.SourceCurrency</td>
+                        <td>@value.item.DestinationCurrency</td>
+                        <td>@value.item.UnitValue</td>
+                        <td>@value.item.MinRate.ToString("N2")</td>
+                        <td>@value.item.MaxRate.ToString("N2")</td>
+                        <td>@value.item.CurrentRate.ToString("N2")</td>
+                        <td name="buttons">
+                            <div class=" float-center">
+                                @if (actors.FirstOrDefault(x => x.Action == "ViewConversionRate")?.Permission ?? false)
+                                {
+                                    @* <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("AddConversionRate", "ConversionRates", new { SourceCurrency = value.item.SourceCurrency, DestinationCurrency = value.item.DestinationCurrency})', 'Add Conversion Rate','modal-dialog modal-xl')" title="Add Conversion Rates"> <i class="dripicons-pencil" aria-hidden="true"></i></a> *@
+                                    <a style="cursor:pointer" class="btn btn-sm btn-soft-warning btn-circle me-2" onclick="ShowPopUp('@Url.Action("ViewConversionRate", "ConversionRates", new { SourceCurrency = value.item.SourceCurrency, DestinationCurrency = value.item.DestinationCurrency})', 'Conversion Rate','modal-dialog modal-xl')" title="View Conversion Rate"> <i class="dripicons-preview" aria-hidden="true"></i></a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

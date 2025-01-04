@@ -1,0 +1,94 @@
+﻿@using Mpmt.Core.Domain.Partners.Senders;
+@model IEnumerable<ExistingRecipients>
+
+@{
+    <div class="my-2 col-md-12 d-flex justify-content-center align-items-center">
+        <input type="text" id="inputReciverField"  class="form-control" placeholder="Search by name">
+    </div>
+    if (!Model.Any())
+    {
+        <div class="my-2 col-md-12 d-flex justify-content-center align-items-center">
+            <p>No records found.</p>
+        </div>
+    }
+    else
+    {
+        foreach (var reciver in Model)
+        {
+            <div class="col-lg-4 Reciver-item" id="@reciver.RecipientId" style="display:block">
+                <input type="radio" class="card-input-element" value="@reciver.RecipientId" />
+                <div class=" card card panel-default card-input">
+                    <div class="card-body">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col">
+                                <div class="media">
+                                    <a class="" href="#">
+                                        <div class="avatar-box thumb-sm align-self-center me-2">
+                                            <span class="avatar-title bg-soft-primary rounded-circle"><i class="far fa-user"></i></span>
+                                        </div>
+                                    </a>
+                                    <div class="media-body align-self-center ms-2">
+                                        <p class="font-14 font-weight-semibold mb-0">@reciver.FullName</p>
+                                        <p class="mb-0 font-12 text-muted">#@reciver.RecipientId</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="list-unstyled personal-detail mt-2">
+                                <li class=""><b class="text-muted"> A/c </b> : @reciver.AccountNumber</li>
+                                <li class=""><b class="text-muted"> Bank </b> : @reciver.BankName</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        const selectorReciverItem = '#addTransactionForm #existingReceiverContent .Reciver-item';
+        $(selectorReciverItem).on('click', function () {
+            debugger
+            let RecipientId = $(this).attr('id');
+            //let RecipientId = $(selectorReciverItem + ' input[type="radio"]').val();
+            
+            setExistingReciverSelection(RecipientId);
+            $(selectorReciverItem + ' > .card').removeClass('card-item-checked');
+            $(this).find('.card').addClass('card-item-checked');
+            FormStepper.isStepValid();
+        });
+    });
+</script>
+<script>
+   
+    const inputField = document.getElementById('inputReciverField');
+    var modelData = @Html.Raw(Json.Serialize(Model));
+    console.log(modelData);
+  
+    inputField.addEventListener('input', function () {
+ 
+       var searchTerm = inputField.value.toLowerCase();
+        var filteritem = modelData.filter(item => item.fullName.toLowerCase().includes(searchTerm));
+        console.log(filteritem);
+      
+        const elementsToHide = document.querySelectorAll('.Reciver-item');
+
+        
+        elementsToHide.forEach(element => {
+            element.style.display = 'none';
+        });
+        filteritem.forEach((item) => {
+           
+            var fieldToHide = document.getElementById(item.recipientId);
+
+            if (fieldToHide) {
+              
+                fieldToHide.style.display = 'block';
+            }
+        });
+
+        
+    });
+</script>

@@ -1,0 +1,129 @@
+﻿@using Mpmt.Core.Dtos.ConversionRate
+@using Mpmt.Core.Models.RMP;
+@model List<PartnerConversionRate>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Global Setting</a></li>
+                            <li class="breadcrumb-item active">Conversion Rate</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                        <!-- <form id="formServiceChargefilter" class="row row-cols-lg-auto align-items-center">
+                             <div class="row mb-3">
+                                 <div class="col-3 mb-3 form-control-wrap focused">
+                                     <label name="FromDate" class="form-label-outlined" for="inlineFormSelectPref">Start Date</label>
+                                     <input name="FromDate" type="date" class="form-control">
+                                 </div>
+                                 <div class="col-3 mb-3 form-control-wrap focused">
+                                     <label name="ToDate" class="form-label-outlined" for="inlineFormSelectPref">End Date</label>
+                                     <input name="ToDate" type="date" class="form-control">
+                                 </div>
+                                 <div class="col-3 mb-3 form-control-wrap focused">
+                                     <label name="ChargeCategory" class="form-label-outlined" for="inlineFormSelectPref"> Category</label>
+                                     <select name="ChargeCategory" class="form-select" id="validationTooltip04" asp-items="@ViewBag.ChargeCategory" required>
+                                     </select>
+                                 </div>
+                                 <div class="col-3 mb-3 form-control-wrap focused">
+                                     <label name="PaymentType" class="form-label-outlined" for="inlineFormSelectPref"> Payment Type</label>
+                                     <select name="PaymentType" class="form-select" id="validationTooltip04" asp-items="@ViewBag.PaymentType" required>
+                                     </select>
+                                 </div>
+                                 <div class="col-3 mb-3 form-control-wrap focused">
+                                     <label class="form-label-outlined" for="inlineFormSelectPref">Source Currency</label>
+                                     <select name="SourceCurrency" class="form-select" id="validationTooltip04" asp-items="@ViewBag.Currency" required>
+                                     </select>
+                                 </div>
+                                 <div class="col-3 mb-3 form-control-wrap focused">
+                                     <label class="form-label-outlined" for="inlineFormSelectPref">Destination Currency</label>
+                                     <select name="DestinationCurrency" class="form-select" id="validationTooltip04" asp-items="@ViewBag.Currency" required>
+                                     </select>
+                                 </div>
+                                 <div class="col-3 mb-3">
+                                     <button id="btnServiceChargefilter" type="button" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                 </div>
+                             </div>
+                         </form> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="card-title">Conversion Rate</h4>
+                    </div>
+                    @* <div class="col-auto">
+                    <div class="add-btn">
+                    <a onclick="ShowPopUp('@Url.Action("AddConversionRate","ConversionRates")','Add Conversion Rate','modal-dialog modal-xl')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                    <i class="las la-plus ms-1"></i> Add Conversion Rate
+                    </a>
+                    </div>
+                    </div> *@
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="ConversionRateTableWrapper" class="table-responsive">
+                    <partial name="_ConversionRateIndex" model="@Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("Index", "ConversionRates")',
+                selector: '#ConversionRateTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#formConversionRatefilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+            addPaginationHandlers();
+
+            function addUsersPageHandlers() {
+                $('#formConversionRatefilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnConversionRatefilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+}

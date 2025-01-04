@@ -1,0 +1,280 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <Compile Remove="Areas\Admin\Data\**" />
+    <Compile Remove="Areas\Partner\Data\**" />
+    <Content Remove="Areas\Admin\Data\**" />
+    <Content Remove="Areas\Partner\Data\**" />
+    <EmbeddedResource Remove="Areas\Admin\Data\**" />
+    <EmbeddedResource Remove="Areas\Partner\Data\**" />
+    <Folder Include="wwwroot\js\Hubs\" />
+    <Folder Include="wwwroot\UserContent\Admin\CurrencyImage\" />
+    <Folder Include="wwwroot\UserContent\Partners\LicenseDocument\" />
+    <None Remove="Areas\Admin\Data\**" />
+    <None Remove="Areas\Partner\Data\**" />
+    <!--<Content Remove="wwwroot\js\imageupload.js" />
+    <Content Remove="wwwroot\nepali.datepicker.v3\jquery-ui.min.js" />
+    <Content Remove="wwwroot\nepali.datepicker.v3\js\nepali.datepicker.v3.min.js" />-->
+
+    <None Remove="Areas\Admin\Views\Action\eqcdfqc1.dzg~" />
+
+    <None Remove="output.xlsx" />
+
+    <PackageReference Include="AllOverIt.Csv" Version="7.2.0" />
+
+    <PackageReference Include="CsvHelper" Version="31.0.1" />
+
+    <PackageReference Include="EPPlus" Version="7.0.9" />
+
+    <PackageReference Include="GoogleAuthenticator" Version="3.1.0" />
+    <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+
+
+
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
+
+    <PackageReference Include="Harvest.Chosen" Version="1.4.2" />
+
+    <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.4.3" />
+
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="9.0.0-preview.3.24172.13" />
+
+    <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.0" />
+
+    <PackageReference Include="Microsoft.Office.Interop.Word" Version="15.0.4797.1004" />
+
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+
+    <PackageReference Include="OfficeOpenXml.Core.ExcelPackage" Version="1.0.0" />
+
+    <PackageReference Include="OfficeOpenXml.Extends" Version="1.0.6" />
+    <ProjectReference Include="..\Mpmt.Services\Mpmt.Services.csproj" />
+    <Folder Include="Areas\Admin\Models\Partners\" />
+    <Folder Include="Factories\" />
+    <Folder Include="Mvc\" />
+    <Folder Include="Views\Account\" />
+    <Folder Include="wwwroot\images\Admin\FundRequestVoucherImage\" />
+    <Folder Include="wwwroot\images\Partners\Companylogo\" />
+    <Folder Include="wwwroot\UserContent\Admin\AdminProfileImage\" />
+    <None Include="Areas\Partner\Views\ConversionRates\_ViewServiceCharge.cshtml" />
+    <None Include="wwwroot\assets\fonts\dripicons-v2.svg" />
+    <None Include="wwwroot\assets\fonts\fa-brands-400.svg" />
+    <None Include="wwwroot\assets\fonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\assets\fonts\fa-regular-400.svg" />
+    <None Include="wwwroot\assets\fonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\assets\fonts\fa-solid-900.svg" />
+    <None Include="wwwroot\assets\fonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\assets\fonts\feather144f.svg" />
+    <None Include="wwwroot\assets\fonts\inter-bold46a7.woff2" />
+    <None Include="wwwroot\assets\fonts\inter-light46a7.woff2" />
+    <None Include="wwwroot\assets\fonts\inter-medium46a7.woff2" />
+    <None Include="wwwroot\assets\fonts\inter-regular46a7.woff2" />
+    <None Include="wwwroot\assets\fonts\la-brands-400.svg" />
+    <None Include="wwwroot\assets\fonts\la-brands-400.woff2" />
+    <None Include="wwwroot\assets\fonts\la-regular-400.svg" />
+    <None Include="wwwroot\assets\fonts\la-regular-400.woff2" />
+    <None Include="wwwroot\assets\fonts\la-solid-900.svg" />
+    <None Include="wwwroot\assets\fonts\la-solid-900.woff2" />
+    <None Include="wwwroot\assets\fonts\materialdesignicons-webfonta5da.woff2" />
+    <None Include="wwwroot\assets\fonts\themify9f24.svg" />
+    <None Include="wwwroot\assets\fonts\typicons.svg" />
+    <None Include="wwwroot\assets\images\error.svg" />
+    <None Include="wwwroot\assets\images\logo" />
+    <None Include="wwwroot\assets\images\small\atom.svg" />
+    <None Include="wwwroot\assets\images\small\blocks.svg" />
+    <None Include="wwwroot\assets\images\small\cobweb.svg" />
+    <None Include="wwwroot\assets\images\small\rgb.svg" />
+    <None Include="wwwroot\assets\images\wallet.svg" />
+    <None Include="wwwroot\assets\images\widgets\calendar.svg" />
+    <None Include="wwwroot\assets\js\app.js" />
+    <None Include="wwwroot\assets\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\assets\js\feather.min.js" />
+    <None Include="wwwroot\assets\js\jquery.core.js" />
+    <None Include="wwwroot\assets\js\jquery.min.js" />
+    <None Include="wwwroot\assets\js\metismenu.min.js" />
+    <None Include="wwwroot\assets\js\moment.js" />
+    <None Include="wwwroot\assets\js\simplebar.min.js" />
+    <None Include="wwwroot\assets\js\waves.js" />
+    <None Include="wwwroot\assets\pages\jquery.analytics_dashboard.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.animate.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.apexcharts.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.calendar.js" />
+    <None Include="wwwroot\assets\pages\jquery.chartjs.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.clipboard.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.datatable.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.dragula.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.flot.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-editor.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-repeater.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-upload.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-wizard.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-xeditable.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.forms-advanced.js" />
+    <None Include="wwwroot\assets\pages\jquery.gmaps.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.idle-timer.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.jvectormap.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.leaflet-map.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.lightbox.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.morris.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.nastable.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.profile.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.projects_new.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.projects_overview.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.rangeslider.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.rating.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.responsive-table.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.sales_dashboard.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.sweet-alert.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.tabledit.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.task.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.timeout.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.treeview.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.validation.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.widgets.init.js" />
+    <None Include="wwwroot\js\imageupload.js" />
+    <None Include="wwwroot\js\Roles\AssignRole.js" />
+
+    <None Include="wwwroot\lib\chosen\docsupport\init.js" />
+    <None Include="wwwroot\lib\chosen\docsupport\init.proto.js" />
+    <None Include="wwwroot\lib\chosen\docsupport\jquery-1.12.4.min.js" />
+    <None Include="wwwroot\lib\chosen\docsupport\jquery-3.2.1.min.js" />
+    <None Include="wwwroot\lib\chosen\docsupport\prism.js" />
+    <None Include="wwwroot\lib\chosen\docsupport\prototype-1.7.0.0.js" />
+    <None Include="wwwroot\nepali.datepicker.v3\jquery-ui.min.js" />
+    <None Include="wwwroot\nepali.datepicker.v3\js\nepali.datepicker.v3.min.js" />
+    <None Include="wwwroot\partner\assets\fonts\dripicons-v2.svg" />
+    <None Include="wwwroot\partner\assets\fonts\fa-brands-400.svg" />
+    <None Include="wwwroot\partner\assets\fonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\fa-regular-400.svg" />
+    <None Include="wwwroot\partner\assets\fonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\fa-solid-900.svg" />
+    <None Include="wwwroot\partner\assets\fonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\feather144f.svg" />
+    <None Include="wwwroot\partner\assets\fonts\inter-bold46a7.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\inter-light46a7.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\inter-medium46a7.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\inter-regular46a7.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\la-brands-400.svg" />
+    <None Include="wwwroot\partner\assets\fonts\la-brands-400.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\la-regular-400.svg" />
+    <None Include="wwwroot\partner\assets\fonts\la-regular-400.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\la-solid-900.svg" />
+    <None Include="wwwroot\partner\assets\fonts\la-solid-900.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\materialdesignicons-webfonta5da.woff2" />
+    <None Include="wwwroot\partner\assets\fonts\themify9f24.svg" />
+    <None Include="wwwroot\partner\assets\fonts\typicons.svg" />
+    <None Include="wwwroot\partner\assets\images\error.svg" />
+    <None Include="wwwroot\partner\assets\images\logo" />
+    <None Include="wwwroot\partner\assets\images\small\atom.svg" />
+    <None Include="wwwroot\partner\assets\images\small\blocks.svg" />
+    <None Include="wwwroot\partner\assets\images\small\cobweb.svg" />
+    <None Include="wwwroot\partner\assets\images\small\rgb.svg" />
+    <None Include="wwwroot\partner\assets\images\widgets\calendar.svg" />
+    <None Include="wwwroot\partner\assets\js\app.js" />
+    <None Include="wwwroot\partner\assets\js\bootstrap-select.min.js" />
+    <None Include="wwwroot\partner\assets\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\partner\assets\js\feather.min.js" />
+    <None Include="wwwroot\partner\assets\js\form-select-custom.js" />
+    <None Include="wwwroot\partner\assets\js\jquery.core.js" />
+    <None Include="wwwroot\partner\assets\js\jquery.min.js" />
+    <None Include="wwwroot\partner\assets\js\metismenu.min.js" />
+    <None Include="wwwroot\partner\assets\js\moment.js" />
+    <None Include="wwwroot\partner\assets\js\simplebar.min.js" />
+    <None Include="wwwroot\partner\assets\js\waves.js" />
+    <None Include="wwwroot\partner\assets\pages\form-select-custom.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.analytics_dashboard.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.animate.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.apexcharts.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.calendar.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.chartjs.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.clipboard.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.datatable.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.dragula.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.flot.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.form-editor.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.form-repeater.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.form-upload.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.form-wizard.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.form-xeditable.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.forms-advanced.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.gmaps.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.idle-timer.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.jvectormap.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.leaflet-map.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.lightbox.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.morris.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.nastable.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.profile.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.projects_new.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.projects_overview.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.rangeslider.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.rating.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.responsive-table.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.sales_dashboard.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.sweet-alert.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.tabledit.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.task.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.timeout.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.treeview.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.validation.init.js" />
+    <None Include="wwwroot\partner\assets\pages\jquery.widgets.init.js" />
+    <None Include="wwwroot\partner\assets\plugins\daterangepickers\daterangepicker.js" />
+    <None Include="wwwroot\partner\assets\plugins\multi-select\js\jquery.multi-select.js" />
+    <None Include="wwwroot\partner\assets\plugins\multi-select\js\jquery.quicksearch.js" />
+    <None Include="wwwroot\partner\assets\plugins\select2\js\select2.full.min.js" />
+    <None Include="wwwroot\partner\assets\plugins\select2\select2.min.js" />
+    <None Include="wwwroot\plugins\clipboard\clipboard.min.js" />
+    <None Include="wwwroot\plugins\datatables\buttons.bootstrap5.min.js" />
+    <None Include="wwwroot\plugins\datatables\buttons.colVis.min.js" />
+    <None Include="wwwroot\plugins\datatables\buttons.html5.min.js" />
+    <None Include="wwwroot\plugins\datatables\buttons.print.min.js" />
+    <None Include="wwwroot\plugins\datatables\dataTables.bootstrap5.min.js" />
+    <None Include="wwwroot\plugins\datatables\dataTables.buttons.min.js" />
+    <None Include="wwwroot\plugins\datatables\dataTables.responsive.min.js" />
+    <None Include="wwwroot\plugins\datatables\jquery.dataTables.min.js" />
+    <None Include="wwwroot\plugins\datatables\jszip.min.js" />
+    <None Include="wwwroot\plugins\datatables\pdfmake.min.js" />
+    <None Include="wwwroot\plugins\datatables\responsive.bootstrap4.min.js" />
+    <None Include="wwwroot\plugins\datatables\vfs_fonts.js" />
+    <None Include="wwwroot\plugins\daterangepicker\daterangepicker.js" />
+    <None Include="wwwroot\plugins\dragula\dragula.min.js" />
+    <None Include="wwwroot\pnotify\js\notify-event.js" />
+    <None Include="wwwroot\pnotify\js\pnotify.custom.min.js" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\Partner\Views\ConversionRates\_ViewServiceCharge.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Partner\Views\ConversionRates\_ViewServiceCharge.cshtml" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\ProgressBar.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\imageupload.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <COMReference Include="{444541a0-f621-4463-986a-52d1589e5b5d}">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>10</VersionMajor>
+      <Guid>444541a0-f621-4463-986a-52d1589e5b5d</Guid>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Config\RateLimit\ipratelimit.generalrules.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,110 @@
+﻿@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Dtos.Partner;
+@using Mpmt.Core.Models.RMP;
+@model PagedList<RemitPartnerRegister>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="table-responsive tableFixHead">
+    <table id="datatable-buttons78" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Registered Date</th>
+                <th>Full Name</th>
+                <th>Shortname</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Position</th>
+                <th>Mobile No.</th>
+                <th>Remarks</th>
+                <th>TemporaryLocked Till Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Items.Count() <= 0)
+            {
+                <tr></tr>
+                <tr></tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-danger" style="font-size:16px;">
+                        No Record Found
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <style>
+                    tr.active {
+                        background: #ccc;
+                    }
+
+                    .tableFixHead {
+                        overflow-y: auto;
+                        height: 500px;
+                    }
+
+                        .tableFixHead thead th {
+                            position: sticky;
+                            top: 0px;
+                        }
+                </style>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.SN</td>
+                        <td> @item.RegisteredDate </td>
+                        <td> @item.FullName </td>
+                        <td> @item.Shortname </td>
+                        <td> @item.Email </td>
+                        <td> @item.Address </td>
+                        <td> @item.Post </td>
+                        <td> @item.MobileNumber </td>
+                        <td> @item.Remarks </td>
+                        <td> @item.TemporaryLockedTillDate </td>
+                        <td> @item.IsActive </td>
+                        <td name="buttons">
+                            <div class=" float-center">
+                                <button type="button" class="btn btn-sm btn-soft-warning btn-circle me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="dripicons-dots-3" aria-hidden="true"></i></button>
+                                <div class="dropdown-menu">
+                                    @if (actors.FirstOrDefault(x => x.Action == "RemitPartnerRegistrationDetails")?.Permission ?? false)
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("RemitPartnerRegistrationDetails", "RemitPartnerRegistration", new  { Email = item.Email})', 'Remit Registration Detail','modal-dialog modal-xl')"><i class="dripicons-preview" aria-hidden="true"></i>&emsp;View Details</a>
+
+                                    }
+                                    @if (actors.FirstOrDefault(x => x.Action == "ApprovedRemitPartnerRegistration")?.Permission ?? false)
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("ApprovedRemitPartnerRegistration", "RemitPartnerRegistration", new { id = item.Id, email = item.Email })', 'Approve Remit Registration','modal-dialog modal-md')"><i class="dripicons-checkmark" aria-hidden="true"></i>&emsp;Approve</a>
+                                    }
+                                    @if (actors.FirstOrDefault(x => x.Action == "RejectRemitPartnerRegistration")?.Permission ?? false)
+                                    {
+                                        <a class="dropdown-item" onclick="ShowPopUp('@Url.Action("RejectRemitPartnerRegistration", "RemitPartnerRegistration", new { id = item.Id, email = item.Email})', 'Reject Remit Registration','modal-dialog modal-md')"><i class="dripicons-trash" aria-hidden="true"></i>&emsp;Reject</a>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+</script>
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

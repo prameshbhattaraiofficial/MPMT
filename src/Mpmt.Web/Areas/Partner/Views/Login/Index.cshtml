@@ -1,0 +1,139 @@
+﻿@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>MyPay Remit - Partner Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="~/partner/assets/images/logo-sm.png">
+
+    <!-- App css -->
+    <link href="~/partner/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/partner/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/partner/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="account-body accountbg">
+
+    <!-- Log In page -->
+    <div class="container">
+        <div class="row vh-100 d-flex justify-content-center">
+            <div class="col-12 align-self-center">
+                <div class="row">
+                    <div class="col-lg-4 mx-auto">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="text-center p-3">
+                                    <a href="index.php" class="logo logo-admin">
+                                        <img src="~/partner/assets/images/logo.png" height="50" alt="logo" class="auth-logo">
+                                    </a>
+                                    <p class="text-muted  mb-0">Sign in to continue to MyPay Remit Partner-Login</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="p-3">
+                                    <form class="form-horizontal auth-form" method="post" asp-area="partner" asp-controller="Login" asp-action="Index">
+                                        <ul>
+                                            @if (ViewBag.Error is not null)
+                                            {
+                                                <li class="text-danger">@ViewBag.Error</li>
+                                            }
+                                        </ul>
+                                        <div class="form-group mb-2">
+                                            <label class="form-label" for="username">Username or Email</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="UsernameOrEmail" id="username" placeholder="Enter username">
+                                            </div>
+                                        </div><!--end form-group-->
+
+                                        <div class=" mb-2 form-control-wrap focused">
+                                            <label class="form-label" for="userpassword">Password<span style="color:firebrick">*</span></label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="mdi mdi-lock"></i></span>
+                                                <input name="Password" id="userpassword" type="password" class="form-control" placeholder="Password">
+                                                <!-- Eye icon toggle -->
+                                                <span class="input-group-text toggle-password">
+                                                    <i class="mdi mdi-eye-off-outline" onclick="togglePassword()"></i>
+                                                </span>
+                                            </div>
+                                            <span  class="text-danger"></span>
+                                        </div>
+
+
+                                        <div class="form-group mb-2">
+                                            <label class="form-label" for="userCode">Code</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="Code" id="Code" placeholder="Enter Code">
+                                            </div>
+                                            <span class="form-label" style="font-size: 0.6em;">If you haven't received the code yet, please leave this field blank.</span>
+                                        </div><!--end form-group-->
+                                        <div class="form-group row my-3">
+                                            <div class="col-sm-6">
+                                                <div class="custom-control custom-switch switch-success">
+                                                    <input type="checkbox" class="custom-control-input" name="RememberMe" id="customSwitchSuccess">
+                                                    <label class="form-label text-muted" for="customSwitchSuccess">Remember me</label>
+                                                </div>
+                                            </div><!--end col-->
+                                            <div class="col-sm-6 text-end">
+                                                @* <a href="auth-recover-pw.php" class="text-muted font-13"><i class="dripicons-lock"></i> Forgot password?</a> *@
+                                                <a asp-area="partner" asp-controller="Login" asp-action="ForgotPassword" class="text-muted font-13"><i class="dripicons-lock"></i> Forgot password?</a>
+                                            </div><!--end col-->
+                                        </div><!--end form-group-->
+
+                                        <div class="form-group mb-0 row">
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary w-100 waves-effect waves-light">Log In <i class="fas fa-sign-in-alt ms-1"></i></button>
+                                            </div><!--end col-->
+                                        </div> <!--end form-group-->
+                                    </form><!--end form-->
+                                    <a class="btn btn-primary w-100 waves-effect waves-light" asp-action="signup" asp-controller="Registration" asp-area="partner">Register Partner <i class="fas fa-user-plus"></i></a>
+                                    
+                                </div>
+                            </div><!--end card-body-->
+                            <div class="card-body bg-light-alt text-center">
+                                <span class="text-muted d-none d-sm-inline-block">
+                                    MyPay Remit ©
+                                    <script>
+                                        document.write(new Date().getFullYear())
+                                    </script>
+                                </span>
+                            </div>
+                        </div><!--end card-->
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end col-->
+        </div><!--end row-->
+    </div><!--end container-->
+    <!-- End Log In page -->
+    <!-- jQuery  -->
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.querySelector('[name="Password"]');
+            var toggleIcon = document.querySelector('.toggle-password i');
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.classList.remove('mdi-eye-off-outline');
+                toggleIcon.classList.add('mdi-eye-outline');
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.classList.remove('mdi-eye-outline');
+                toggleIcon.classList.add('mdi-eye-off-outline');
+            }
+        }
+     </script>
+
+    <script src="~/partner/assets/js/jquery.min.js"></script>
+    <script src="~/partner/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/partner/assets/js/waves.js"></script>
+    <script src="~/partner/assets/js/feather.min.js"></script>
+    <script src="~/partner/assets/js/simplebar.min.js"></script>
+    @await Component.InvokeAsync("Notyf")
+</body>
+</html>

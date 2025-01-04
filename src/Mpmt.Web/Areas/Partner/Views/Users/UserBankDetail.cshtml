@@ -1,0 +1,32 @@
+﻿@using Mpmt.Core.Domain.Partners.Senders;
+@model SenderDto
+
+<h3>Bank Details</h3>
+<fieldset>
+    <div class="row">
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Bank Name</label>
+            <input type="text" class="form-control" value="@Model.BankName" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Branch</label>
+            <input type="text" class="form-control" value="@Model.Branch" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Bank Code</label>
+            <input type="text" class="form-control" value="@Model.BankCode" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">A/c Holder Name</label>
+            <input type="text" class="form-control" value="@Model.AccountHolderName" disabled>
+        </div>
+        <div class="col-md-6 mb-2">
+            <label class="form-label">A/c Number</label>
+            <input type="text" class="form-control" value="@Model.AccountNumber" disabled>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+    </div>
+</fieldset>

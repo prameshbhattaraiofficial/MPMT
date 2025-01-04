@@ -1,0 +1,389 @@
+﻿@using Mpmt.Core.Dtos.PartnerSignUp;
+@{
+    Layout = null;
+}
+@model SignUpStep1
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>MyPay Remit Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+    <meta content="" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link rel="shortcut icon" href="~/assets/images/logo-sm.png">
+    <link rel="stylesheet" href="~/plugins/jquery-steps/jquery.steps.css">
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css">
+    <link href="~/css/progressbar.css" rel="stylesheet" />
+
+    <style>
+        .form-group.row {
+            display: flex;
+            flex-wrap: nowrap;
+        }
+
+        .form-group .col-md-4 {
+            position: relative;
+        }
+
+            .form-group .col-md-4 .form-control {
+                margin-bottom: 5px;
+            }
+
+        .error-message {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body class="account-body accountbg">
+    <!-- Log In page -->
+    <div class="container">
+        <div class="row vh-100 d-flex justify-content-center">
+            <div class="col-12 align-self-center">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="card">
+                            <div class="card-body p-0 ">
+                                <div class="p-3 text-center">
+                                    <a href="index.php" class="logo logo-admin text-center">
+                                        <img src="~/assets/images/logo.png" height="50" alt="logo" class="auth-logo">
+                                    </a>
+                                    <p class="text-muted  mb-0">Please fill up additional details for further process.</p>
+                                </div>
+                            </div>
+                            <section class="step-wizard">
+                                <ul class="step-wizard-list">
+                                    <li class="step-wizard-item">
+                                        <span class="progress-count">1</span>
+                                        <span class="progress-label">User Details</span>
+                                    </li>
+                                    <li class="step-wizard-item">
+                                        <span class="progress-count">2</span>
+                                        <span class="progress-label">Company Details</span>
+                                    </li>
+                                    <li class="step-wizard-item  current-item">
+                                        <span class="progress-count ">3</span>
+                                        <span class="progress-label">Director Details</span>
+                                    </li>
+                                    <li class="step-wizard-item">
+                                        <span class="progress-count">4</span>
+                                        <span class="progress-label">Document Details</span>
+                                    </li>
+                                </ul>
+                            </section>
+                            <div class="card-body p-0">
+
+                                <div class="p-3">
+                                    @{
+                                        var a = "@";
+                                    }
+                                    <form id="form-horizontal" class="form-horizontal form-wizard-wrapper register" asp-action="Step1" asp-controller="Registration" method="post">
+                                        @if (ViewBag.Error is not null)
+                                        {
+                                            <li class="text-danger">@ViewBag.Error</li>
+                                        }
+                                        <h3 class="text-start">Director Details</h3>
+                                        <input asp-for="Email" readonly hidden />
+                                        <input asp-for="Token" readonly hidden />
+                                        <div class="col-md-12 text-start">
+
+                                            <div id="listitem" class="repeater-default">
+                                                <div id="listitem-0" data-repeater-list="car">
+                                                    @{
+                                                        int i = 0;
+                                                    }
+                                                    @if (Model.Directors.Count == 0)
+                                                    {
+                                                        <div data-repeater-item="">
+                                                            <div class="form-group row">
+                                                                <div class="col-md-4 ">
+                                                                    <label class="form-label">Full Name <span class="text-danger">*</span></label>
+
+                                                                    <input type="text" class="form-control"
+                                                                           value=""
+                                                                           data-val="true"
+                                                                           data-val-required="Name is required"
+                                                                           id="Directors_@i __FirstName"
+                                                                           name="Directors[@i].FirstName"
+                                                                           placeholder="Director Name"
+                                                                           required>
+                                                                    <span class="text-danger"></span>
+                                                                </div>
+
+                                                                <div class="col-md-4 ">
+                                                                    <label class="form-label">Contact <span class="text-danger">*</span></label>
+                                                                    <input type="text" value=""
+                                                                           class="form-control" data-val="true"
+                                                                           data-val-required="Phone Number is required"
+                                                                           id="Directors_@i __ContactNumber"
+                                                                           name="Directors[@i].ContactNumber"
+                                                                           placeholder="Director ContactNumber"
+                                                                           required>
+                                                                    <span class="text-danger"></span>
+                                                                </div>
+                                                                <div class="col-md-4 ">
+                                                                    <label for="validationCustomUsername" class="form-label">Email<span class="text-danger">*</span></label>
+                                                                    <input type="email" class="form-control" data-val="true"
+                                                                           value="" data-val-required="Email is required"
+                                                                           id="Directors_@i __Email"
+                                                                           name="Directors[@i].Email"
+                                                                           placeholder="Director Email"
+                                                                           required>
+                                                                    <h5 id="validEmail" class="text-danger error-message" style="display:none;">Invalid Email address</h5>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        i++;
+                                                    }
+                                                    else
+                                                    {
+                                                        @foreach (var director in Model.Directors)
+                                                        {
+                                                            <div data-repeater-item="">
+                                                                <div class="form-group row">
+                                                                    <div class="col-md-4 ">
+                                                                        <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                                                                        <input type="text" class="form-control"
+                                                                               value="@director.FirstName"
+                                                                               data-val="true"
+                                                                               data-val-required="Name is required"
+                                                                               id="Directors_@i __FirstName"
+                                                                               name="Directors[@i].FirstName" required>
+                                                                        <span class="text-danger error-message"></span>
+                                                                    </div>
+                                                                    <div class="col-md-4 ">
+                                                                        <label class="form-label">Contact <span class="text-danger">*</span></label>
+                                                                        <input type="text" value="@director.ContactNumber"
+                                                                               class="form-control" data-val="true"
+                                                                               data-val-required="Phone Number is required" id="Directors_@i __ContactNumber" name="Directors[@i].ContactNumber" required>
+                                                                        <span class="text-danger error-message"></span>
+                                                                    </div>
+                                                                    <div class="col-md-3 ">
+                                                                        <label for="validationCustomUsername" class="form-label">Email <span class="text-danger">*</span></label>
+                                                                        @* <span class="input-group-text" id="inputGroupPrepend">@a</span> *@
+                                                                        <input type="text" class="form-control" data-val="true"
+                                                                               data-val-regex="Please Enter the Valid Email Address"
+                                                                               value="@director.Email" data-val-required="Email is required"
+                                                                               id="Directors_@i __Email" name="Directors[@i].Email" required>
+                                                                        <span class="text-danger error-message"></span>
+                                                                    </div>
+                                                                    <div class="col-md-1 d-flex align-items-center">
+                                                                        <button onclick="removeelement('listitem-@i')" class="btn btn-sm btn-danger" data-repeater-delete="">
+                                                                            <i class="dripicons-trash"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            i++;
+                                                        }
+                                                    }
+                                                </div>
+                                                <div class="form-group mb-0 row">
+                                                    <div class="col-sm-12 text-start">
+                                                        <a onclick="Additem(@i)" data-repeater-create="" class="btn btn-soft-primary btn-sm">
+                                                            <span class="fas fa-plus"></span> Add Director
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <a class="btn btn-primary" asp-action="Step2" asp-controller="Registration" asp-route-Token="@Model.Token">
+                                                Previous
+                                            </a>
+                                            <button id="next" class="btn btn-primary" type="submit" onclick="return validatedirector()">Next</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="card-body bg-light-alt text-center border-top">
+                                <span class="text-muted d-none d-sm-inline-block">
+                                    MyPay Remit © <script>
+                                                      document.write(new Date().getFullYear())
+                                    </script>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/progressbar.js"></script>
+    <script>
+        function onimagechange(data, id, hideid) {
+            debugger
+            readURL(data, id);
+            $('#' + hideid).attr("hidden", true);
+        }
+        function readURL(input, id) {
+            debugger
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    $('#' + id).attr('src', e.target.result);
+                    $('#' + id).removeAttr('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
+    </script>
+
+    <script>
+        var count = 0;
+        function Additem(val) {
+            if (count == 0) {
+                count = val;
+            }
+            const listDiv = document.getElementById("listitem");
+            var data = count;
+            const directorTemplate = `<div id="listitem-${count}" data-repeater-list="car">
+                <div data-repeater-item="">
+                    <div class="form-group row">
+                        <div class="col-md-4 ">
+                                    <label  class="form-label">Full Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" value=""  data-val="true"
+                                        data-val-required="Name is required"
+                                        id="Directors_${count}__FirstName"
+                                        name="Directors[${count}].FirstName" required>
+                                    <span asp-validation-for="Directors[${count}].FirstName" class="text-danger error-message" ></span>
+                        </div>
+                        <div class="col-md-4 ">
+                                    <label class="form-label">Contact <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control"   data-val="true"
+                                    value=""  data-val-required="Phone Number is required"  id="Directors_${count}__ContactNumber" name="Directors[${count}].ContactNumber" required >
+                                    <span asp-validation-for="Directors[${count}].ContactNumber" class="text-danger error-message" ></span>
+                        </div>
+                        <div class="col-md-3 ">
+                                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                                    <input type="Email" class="form-control"  data-val="true"
+                                    data-val-required="Email is required" Value=""
+                                    id="Directors_${count}__Email" name="Directors[${count}].Email"  required>
+                                <span asp-validation-for="Directors[${count}].Email" class="text-danger error-message"></span>
+                        </div>
+                        <div class="col-md-1 d-flex align-items-center">
+                                <button onclick="removeelement('listitem-${count}')"class="btn btn-sm btn-danger" data-repeater-delete="">
+                                <i class="dripicons-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+                </div>`;
+            listDiv.insertAdjacentHTML("afterbegin", directorTemplate);
+            $.validator.unobtrusive.parse("#listitem");
+            count = count + 1;
+        }
+
+        function removeelement(divId) {
+            debugger
+            const divToRemove = document.getElementById(divId);
+
+            if (divToRemove) {
+                divToRemove.remove();
+            }
+        }
+
+    </script>
+    <!-- jQuery  -->
+    <script src="~/assets/js/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/js/waves.js"></script>
+    <script src="~/assets/js/feather.min.js"></script>
+    <script src="~/assets/js/simplebar.min.js"></script>
+    <script src="~/plugins/jquery-steps/jquery.steps.min.js"></script>
+    <script src="~/assets/pages/jquery.form-wizard.init.js"></script>
+
+    <!-- App js -->
+    <script src="~/assets/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js"></script>
+    <script src="~/plugins/repeater/jquery.repeater.min.js"></script>
+    <script src="~/assets/pages/jquery.form-repeater.js"></script>
+
+    <script>
+        function isValidEmail(email) {
+            const emailPattern = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/; // Proper regex pattern
+            return emailPattern.test(email);
+        }
+
+        function validatedirector() {
+            var isValid = true;
+            $('#listitem input[name^="Directors"][name$=".FirstName"]').each(function () {
+                var inputValue = $(this).val();
+                if (inputValue.trim() === '') {
+                    $(this).nextAll(".text-danger").remove();
+                    $(this).after("<span class='text-danger'>Director Name is Required</span>");
+                    isValid = false;
+                } else {
+                    $(this).nextAll(".text-danger").remove();
+                }
+            });
+
+            $('#listitem input[name^="Directors"][name$=".ContactNumber"]').each(function () {
+                var inputValue = $(this).val();
+                if (inputValue.trim() === '') {
+                    $(this).nextAll(".text-danger").remove();
+                    $(this).after("<span class='text-danger'>Director Phone Number is Required</span>");
+                    isValid = false;
+                } else {
+                    $(this).nextAll(".text-danger").remove();
+                }
+            });
+
+            $('#listitem input[name^="Directors"][name$=".Email"]').each(function () {
+                var inputValue = $(this).val();
+                if (inputValue.trim() === '') {
+                    $(this).nextAll(".text-danger").remove();
+                    $(this).after("<span class='text-danger'>Director Email is Required</span>");
+                    isValid = false;
+                } else if (!isValidEmail(inputValue)) {
+                    $(this).nextAll(".text-danger").remove();
+                    $(this).after("<span class='text-danger'>Please Enter a Valid Email Address</span>");
+                    isValid = false;
+                } else {
+                    $(this).nextAll(".text-danger").remove();
+                }
+            });
+
+            return isValid;
+        }
+
+        document.addEventListener('input', () => {
+            const nextButton = document.getElementById('next');
+            if (validatedirector()) {
+                nextButton.disabled = false;
+            } else {
+                nextButton.disabled = true;
+            }
+        });
+
+        $("#mobile_code").intlTelInput({
+            initialCountry: "in",
+            separateDialCode: true,
+            // utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.4/js/utils.js"
+        });
+
+        function test() {
+            $("#mobile_codes").intlTelInput({
+                initialCountry: "in",
+                separateDialCode: true,
+                // utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.4/js/utils.js"
+            });
+        }
+    </script>
+</body>
+</html>

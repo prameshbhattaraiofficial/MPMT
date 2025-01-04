@@ -1,0 +1,56 @@
+﻿@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Dtos.PartnerApplications;
+@using Mpmt.Core.Models.RMP;
+@model PagedList<PartnerApplicationsModel>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<div class="table-responsive">
+    <table id="datatable-buttons78" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Created Date</th>
+                <th>Full Name</th>
+                <th>Organization Name</th>
+                <th>Organization Email</th>
+                <th>Organization Contact</th>
+                <th>Designation</th>
+                <th>Country</th>
+                <th>Address</th>
+                @*<th>Message</th>*@
+                <th>Ip Address</th>
+                <th>IsReviewed</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td> @item.Sn </td>
+                    <td> @item.CreatedLocalDate </td>
+                    <td> @item.FullName </td>
+                    <td> @item.OrganizationName </td>
+                    <td> @item.OrganizationEmail </td>
+                    <td> @item.OrganizationContactNo </td>
+                    <td> @item.Designation </td>
+                    <td> @item.Country </td>
+                    <td> @item.Address </td>
+                    @*<td> @item.Message </td>*@
+                    <td> @item.IpAddress </td>
+                    <td> @item.IsReviewed </td>
+                    <td>
+                        <a onclick="ShowPopUp('@Url.Action("ViewPartnerApplicationsDetail","PartnerApplications",new {ApplicationId = item.ApplicationId, FullName = item.FullName, OrganizationName = item.OrganizationName, OrganizationEmail = item.OrganizationEmail, OrganizationContactNo = item.OrganizationContactNo, Designation = item.Designation, Country = item.Country, Address = item.Address, Message = item.Message, IpAddress = item.IpAddress, IsReviewed = item.IsReviewed, CreatedLocalDate = item.CreatedLocalDate})','Partner Applications Details','.modal-sm')" data-bs-toggle="modal" data-bs-target="#sender" title="View Detail" class="text-primary"><i class="dripicons-preview"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

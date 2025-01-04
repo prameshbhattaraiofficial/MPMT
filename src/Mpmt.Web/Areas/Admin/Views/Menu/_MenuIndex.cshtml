@@ -1,0 +1,200 @@
+﻿@using Mpmt.Core.Models.RMP;
+@using Mpmt.Core.ViewModel.Menu
+@model List<Menuwithchield>
+
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<style>
+    .__table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px auto;
+    }
+
+        .__table tr td {
+            padding: 5px;
+            font-weight: 800;
+        }
+
+        .__table tr.parent td {
+            cursor: pointer;
+        }
+
+        .__table tr.child td {
+            color: #24695C;
+            font-weight: 400;
+        }
+
+        .__table tr.child.hidden {
+            display: none;
+        }
+
+</style>
+
+
+
+
+<div class="table-responsive">
+    <table id="datatable" class="__table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+        <thead class="table-light">
+            <tr>
+                <th>Sn</th>
+                <th>Title</th>
+                <th>Menu Url</th>
+                <th>Parent Id</th>
+                <th>Display Order</th>
+     
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var menu in Model.OrderBy(m => m.DisplayOrder))
+            {
+
+
+                if (menu.Title == "Menu Manager")
+                {
+
+                    <tr class="parent" data-child="@menu.Id" onclick="changeclass(@menu.Id)" style="background-color:rgba(105 36 61 / 8%)">
+
+
+
+                        <td colspan="2">@menu.Title</td>
+                        <td>@menu.MenuUrl</td>
+                        <td> <i class="fa-solid fa-bars-staggered p-r-5"></i> @menu.child.Count()</td>
+                        <td>@menu.DisplayOrder</td>
+
+
+                        <td class="status">
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="parent" data-child="@menu.Id" onclick="changeclass(@menu.Id)">
+
+                        <td colspan="2" class="text-danger">@menu.Title</td>
+                        <td>@menu.MenuUrl</td>
+                        <td class="text-danger"><i class="dripicons-checklist"></i> @menu.child.Count()</td>
+                        <td>
+                            @if (actors.FirstOrDefault(x => x.Action == "UpdateMenuDisplayOrder")?.Permission ?? false)
+                            {
+                            <input style="width:60%" placeholder="@menu.DisplayOrder" type="number" onfocusout="changeDisplayOrder('@Url.Action("UpdateMenuDisplayOrder","Menu")','@menu.Id',this)" />
+                            }
+                        </td>
+                           
+                            <td>
+                            @{
+                               
+
+
+                                    @if (menu.Status == true)
+                                    {
+
+                                        <div class="form-check form-switch">
+                                        @if (actors.FirstOrDefault(x => x.Action == "UpdateMenuIsactive")?.Permission ?? false)
+                                        {
+                                            <input asp-for="@menu.Status" class="form-check-input bg-success" onclick="changeMenuIsactive('@Url.Action("UpdateMenuIsactive","Menu")','@menu.Id',this)" style="cursor: pointer" type="checkbox" id="menuActiveSwitch_@menu.Id">
+                                        
+                                        }
+                                    </div>
+
+
+
+                                }
+                                else
+                                {
+
+                                    <div class="form-check form-switch">
+                                        @if (actors.FirstOrDefault(x => x.Action == "UpdateMenuIsactive")?.Permission ?? false)
+                                        {
+                                            <input asp-for="@menu.Status" onclick="changeMenuIsactive('@Url.Action("UpdateMenuIsactive","Menu")','@menu.Id',this)" class="form-check-input bg-danger" type="checkbox" id="flexSwitchCheckDefault">
+                                        }
+                                    </div>
+
+                                    }
+                                
+                               
+                            }
+
+                        </td>
+                        <td class="status">
+                            @if (actors.FirstOrDefault(x => x.Action == "UpdateMenu")?.Permission ?? false)
+                            {
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdateMenu", "Menu", new {MenuId = menu.Id })', 'Update Menu')"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                            }     
+                          
+
+
+                        </td>
+                    </tr>
+                }
+                foreach (var child in menu.child.OrderBy(m => m.DisplayOrder))
+                {
+
+                    <tr class="child @menu.Id hidden ">
+                        <td><i class="dripicons-arrow-thin-right"></i></td>
+                        <td>@child.Title</td>
+                        <td>@child.MenuUrl</td>
+                        <td>@child.ParentId</td>
+                        <td>
+                            @if (actors.FirstOrDefault(x => x.Action == "UpdateMenuDisplayOrder")?.Permission ?? false)
+                            {
+                                <input style="width:60%" placeholder="@child.DisplayOrder" type="number" onfocusout="changeDisplayOrder('@Url.Action("UpdateMenuDisplayOrder","Menu")','@child.Id',this)" />
+                            }
+                        </td>
+                        <td>
+                            @{
+                                
+                                    @if (child.Status == true)
+                                    {
+
+                                        <div class="form-check form-switch">
+                                        @if (actors.FirstOrDefault(x => x.Action == "UpdateMenuIsactive")?.Permission ?? false)
+                                        {
+                                            <input asp-for="@child.Status" class="form-check-input bg-success" onclick="changeMenuIsactive('@Url.Action("UpdateMenuIsactive","Menu")','@child.Id',this)" style="cursor: pointer" type="checkbox" id="menuActiveSwitch_@child.Id">
+                                        
+                                        }
+                                    </div>
+
+
+
+                                }
+                                else
+                                {
+
+                                    <div class="form-check form-switch">
+                                        @if (actors.FirstOrDefault(x => x.Action == "UpdateMenuIsactive")?.Permission ?? false)
+                                        {
+                                            <input asp-for="@child.Status" onclick="changeMenuIsactive('@Url.Action("UpdateMenuIsactive","Menu")','@child.Id',this)" class="form-check-input bg-danger" type="checkbox" id="menuActiveSwitch_@child.Id">
+                                        }
+                                    </div>
+
+                                    }
+
+
+                            }
+
+                        </td>
+                        <td class="status">
+                            @if (actors.FirstOrDefault(x => x.Action == "UpdateMenu")?.Permission ?? false)
+                            {
+                                <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdateMenu", "Menu", new {MenuId = child.Id })', 'Update Menu')"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                            }
+                            @if (actors.FirstOrDefault(x => x.Action == "DeleteMenu")?.Permission ?? false)
+                            {
+                            <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="PopUPAjaxDelete('@Url.Action("DeleteMenu", "Menu", new { MenuId = child.Id })', 'Remove Menu')"> <i class="dripicons-trash" aria-hidden="true"></i></a>
+                            }  
+                        </td>
+                    </tr>
+                }
+            }
+
+        </tbody>
+    </table>
+</div>
+
+

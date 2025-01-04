@@ -1,0 +1,110 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!--<ItemGroup>
+    <Content Remove="wwwroot\js\form-select-custom.js" />
+    <Content Remove="wwwroot\js\imageupload.js" />
+    <Content Remove="wwwroot\pnotify\js\notify-event.js" />
+    <Content Remove="wwwroot\pnotify\js\pnotify.custom.min.js" />
+  </ItemGroup>-->
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\fonts\dripicons-v2.svg" />
+    <None Include="wwwroot\assets\fonts\fa-brands-400.svg" />
+    <None Include="wwwroot\assets\fonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\assets\fonts\fa-regular-400.svg" />
+    <None Include="wwwroot\assets\fonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\assets\fonts\fa-solid-900.svg" />
+    <None Include="wwwroot\assets\fonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\assets\fonts\feather144f.svg" />
+    <None Include="wwwroot\assets\fonts\inter-bold46a7.woff2" />
+    <None Include="wwwroot\assets\fonts\inter-light46a7.woff2" />
+    <None Include="wwwroot\assets\fonts\inter-medium46a7.woff2" />
+    <None Include="wwwroot\assets\fonts\inter-regular46a7.woff2" />
+    <None Include="wwwroot\assets\fonts\la-brands-400.svg" />
+    <None Include="wwwroot\assets\fonts\la-brands-400.woff2" />
+    <None Include="wwwroot\assets\fonts\la-regular-400.svg" />
+    <None Include="wwwroot\assets\fonts\la-regular-400.woff2" />
+    <None Include="wwwroot\assets\fonts\la-solid-900.svg" />
+    <None Include="wwwroot\assets\fonts\la-solid-900.woff2" />
+    <None Include="wwwroot\assets\fonts\materialdesignicons-webfonta5da.woff2" />
+    <None Include="wwwroot\assets\fonts\themify9f24.svg" />
+    <None Include="wwwroot\assets\fonts\typicons.svg" />
+    <None Include="wwwroot\assets\images\error.svg" />
+    <None Include="wwwroot\assets\images\logo" />
+    <None Include="wwwroot\assets\images\small\atom.svg" />
+    <None Include="wwwroot\assets\images\small\blocks.svg" />
+    <None Include="wwwroot\assets\images\small\cobweb.svg" />
+    <None Include="wwwroot\assets\images\small\rgb.svg" />
+    <None Include="wwwroot\assets\images\widgets\calendar.svg" />
+    <None Include="wwwroot\assets\js\app.js" />
+    <None Include="wwwroot\assets\js\bootstrap-select.min.js" />
+    <None Include="wwwroot\assets\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\assets\js\feather.min.js" />
+    <None Include="wwwroot\assets\js\jquery.core.js" />
+    <None Include="wwwroot\assets\js\jquery.min.js" />
+    <None Include="wwwroot\assets\js\metismenu.min.js" />
+    <None Include="wwwroot\assets\js\moment.js" />
+    <None Include="wwwroot\assets\js\simplebar.min.js" />
+    <None Include="wwwroot\assets\js\waves.js" />
+    <None Include="wwwroot\assets\pages\form-select-custom.js" />
+    <None Include="wwwroot\assets\pages\jquery.analytics_dashboard.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.animate.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.apexcharts.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.calendar.js" />
+    <None Include="wwwroot\assets\pages\jquery.chartjs.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.clipboard.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.datatable.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.dragula.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.flot.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-editor.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-repeater.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-upload.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-wizard.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.form-xeditable.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.forms-advanced.js" />
+    <None Include="wwwroot\assets\pages\jquery.gmaps.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.idle-timer.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.jvectormap.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.leaflet-map.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.lightbox.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.morris.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.nastable.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.profile.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.projects_new.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.projects_overview.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.rangeslider.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.rating.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.responsive-table.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.sales_dashboard.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.sweet-alert.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.tabledit.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.task.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.timeout.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.treeview.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.validation.init.js" />
+    <None Include="wwwroot\assets\pages\jquery.widgets.init.js" />
+    <None Include="wwwroot\js\form-select-custom.js" />
+    <None Include="wwwroot\js\imageupload.js" />
+    <None Include="wwwroot\nepali.datepicker.v3\jquery-ui.min.js" />
+    <None Include="wwwroot\nepali.datepicker.v3\js\nepali.datepicker.v3.min.js" />
+    <None Include="wwwroot\pnotify\js\notify-event.js" />
+    <None Include="wwwroot\pnotify\js\pnotify.custom.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="9.0.0-preview.3.24172.13" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mpmt.Services\Mpmt.Services.csproj" />
+  </ItemGroup>
+
+</Project>

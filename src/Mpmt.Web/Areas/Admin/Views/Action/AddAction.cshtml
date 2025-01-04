@@ -1,0 +1,61 @@
+﻿@using Mpmt.Core.Dtos.Action
+@model IUDAction
+
+<form id="ActionAddForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <div class="row">
+
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label" for="userpassword"> Action</label>
+            <div class="input-group">
+                <input asp-for="Action" type="text" class="form-control">
+            </div>
+        </div>
+
+ 
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label" for="userpassword"> Display Order</label>
+            <div class="input-group">
+                <input asp-for="DisplayOrder" type="text" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="form-check form-switch mb-2">
+        <input asp-for="IsActive" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Status</label>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit<i class="fas fa-paper-plane ms-1"></i></button>
+    </div>
+</form><!--end form-->
+<script>
+
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddAction", "Action")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#ActionAddForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        //new PNotify({
+        //    // title: 'Success ',
+        //    text: 'Rates Created Successfully',
+        //    type: 'success',
+        //    animation: {
+        //        effect_in: 'fade',
+        //        effect_out: 'slide'
+        //    }
+
+        //});
+        Pagination.getData();
+    });
+</script>

@@ -1,0 +1,63 @@
+﻿@using Mpmt.Core.Dtos.Banks
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<BankDetails>
+@{
+    int sn = 1;
+}
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<table id="datatable" class="table table-striped dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+    <thead class="table-light">
+        <tr>
+            <th>Sn</th>
+            <th>Bank Name</th>
+            <th>Bank Code</th>
+            <th>Branch Code</th>
+            <th>CountryCode</th>
+            <th>Status</th>        
+            <th>Action</th>
+
+        </tr>
+    </thead>
+
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+
+            <tr>
+                <td>@sn</td>
+                <td>@item.BankName</td>
+                <td>@item.BankCode</td>
+                <td>@item.BranchCode</td>
+                <td>@item.CountryCode</td>
+               
+                @if (item.IsActive == true)
+                {
+                    <td><span class="badge bg-soft-success px-2">Active</span></td>
+                }
+                else
+                {
+                    <td><span class="badge bg-soft-danger px-2">InActive</span></td>
+                }
+              
+                <td name="buttons">
+                    <div class=" float-center">
+                        @if (actors.FirstOrDefault(x => x.Action == "UpdateBank")?.Permission ?? false)
+                        {
+                     <a style="cursor:pointer" class="btn btn-sm btn-soft-success btn-circle me-2" onclick="ShowPopUp('@Url.Action("UpdateBank", "Bank", new { id = item.Id })', 'Update Bank')" title="Update Bank"> <i class="dripicons-pencil" aria-hidden="true"></i></a>
+                        }
+                        @if (actors.FirstOrDefault(x => x.Action == "DeleteBank")?.Permission ?? false)
+                        {
+                     <a style="cursor:pointer" class="btn btn-sm btn-soft-danger btn-circle" onclick="PopUPAjaxDelete('@Url.Action("DeleteBank", "Bank", new { id = item.Id })', 'Remove Bank')" title="Delete Bank"> <i class="dripicons-trash" aria-hidden="true"></i></a> 
+                        }
+                     </div>
+                </td>
+            </tr>
+             sn = sn + 1;
+        }
+    </tbody>
+</table>

@@ -1,0 +1,70 @@
+﻿@using Mpmt.Core.Dtos.FundType
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<FundTypeDetails>
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Setting</a></li>
+                            <li class="breadcrumb-item active">Fund Type List</li>
+                        </ol>
+                    </div>
+                    <div class="col-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Fund Type List</h4>
+                        </div>
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                @if (actors.FirstOrDefault(x => x.Action == "AddFundType")?.Permission ?? false)
+{
+                                <a onclick="ShowPopUp('@Url.Action("AddFundType","FundType")','Add Fund Type')" class="btn btn-primary btn-shadow-2 btn-sm text-white">
+                                    <i class="las la-plus ms-1"></i> Add Fund Type
+                                </a>
+}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="FundTypeTableWrapper" class="table-responsive">
+                        <partial name="_FundTypeIndex" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("FundTypeIndex", "FundType")',
+                selector: '#FundTypeTableWrapper'
+            });
+            addPaginationHandlers();
+        });
+    </script>
+}

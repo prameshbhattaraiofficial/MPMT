@@ -1,0 +1,352 @@
+﻿@using Mpmt.Core.ViewModel.User;
+@model AddUserViewModel
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <form id="UserForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+        <div id="userStep-1" style="display:block">
+            <h3>Personal Details</h3>
+            <fieldset>
+
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="FirstName" for="userpassword">First Name</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="FirstName" id="UserFirstName" onkeydown="return /[a-z]/i.test(event.key)" class="form-control">
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" id="isFirstNamePresent" onchange="Namechange('isFirstNamePresent','UserFirstName')" type="checkbox">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Continue without First Name
+                            </label>
+
+                        </div>
+
+
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="SurName" onkeydown="return /[a-z]/i.test(event.key)" for="userpassword">Last Name *</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="SurName" class="form-control" placeholder="Last Name">
+                        </div>
+                        <span asp-validation-for="SurName" class="text-danger"></span>
+                    </div>
+                    @* <div class="col-md-6 mb-2">
+                    <label class="form-label" asp-for="MobileNumber" for="userpassword">Phone Number</label>
+
+                    <div class="input-group">
+                    <input type="text" asp-for="MobileNumber" onkeydown="return isNumber(event)" class="form-control" placeholder="e.g.9860123456">
+
+                    </div>
+                    <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                    </div> *@
+                    <div class="col-md-6  mb-2">
+                        <label asp-for="MobileNumber" class="form-label">Phone Number *</label>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <select asp-for="CallingCode" class="form-select" asp-items="@ViewBag.CallingCode">
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                @* <input asp-for="MobileNumber" onkeydown="return isNumber(event)" type="text" class="form-control"> *@
+                                <input type="text" class="form-control" maxlength="10" asp-for="MobileNumber" onkeypress="return isNumber(event)" placeholder="" required>
+                            </div>
+                        </div>
+                        <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="Email">Email *</label>
+                        <div class="input-group has-validation">
+                            @*  <span class="input-group-text" id="inputGroupPrepend">
+                            @{
+                            var note = "@";
+                            }@note
+                            </span> *@
+                            <input type="text" asp-for="Email" class="form-control" aria-describedby="inputGroupPrepend">
+
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="GenderId" for="exampleFormControlSelect1">Gender</label>
+                        <select asp-for="GenderId" class="form-select" asp-items="@ViewBag.genderType">
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group mb-2">
+                        <label class="form-label" asp-for="DateOfBirth">Date of Birth *</label>
+                        <div class="input-group">
+                            <input type="date" asp-for="DateOfBirth" max="@DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd")" min="@DateTime.Now.AddYears(-130).ToString("yyyy-MM-dd")" class="form-control">
+
+                        </div>
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-md-6 form-group mb-2">
+                        <label class="form-label" asp-for="ProfileImage">Profile Image *</label>
+                        <div class="input-group">
+                            <input type="file" asp-for="ProfileImage" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimageAddchange(this,'ProfileImageid','ProfileImagetextid')">
+                        </div>
+                        <span id="ProfileImagetextid" class="text-danger" hidden></span>
+                        <img id="ProfileImageid" src="#" style="width:90px;" hidden>
+                        <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="CountryCode">Country</label>
+                        <select asp-for="CountryCode" class="form-select" asp-items="@ViewBag.Countryddl">
+                        </select>
+                        <span asp-validation-for="CountryCode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6  form-group mb-2">
+                        <label class="form-label" asp-for="Province">State</label>
+                        <input type="text" asp-for="Province" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="City">City *</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="City" class="form-control">
+
+                        </div>
+                        <span asp-validation-for="City" class="text-danger"></span>
+                        .
+                    </div>
+
+                    <div class="col-md-6  form-group mb-2">
+                        <label class="form-label" asp-for="Zipcode">Zip code/Post Code</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="Zipcode" class="form-control" placeholder="">
+                        </div>
+                        <span asp-validation-for="Zipcode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6  form-group mb-2">
+                        <label class="form-label" asp-for="OccupationId">Occupation</label>
+                        <select asp-for="OccupationId" class="form-select" asp-items="@ViewBag.occupationType">
+                        </select>
+                    </div>
+
+                </div>
+                <a class="btn btn-primary" onclick="showForm('1')">Next</a>
+            </fieldset><!--end fieldset-->
+        </div>
+        <div id="userStep-2" style="display:none">
+            <h3>Identity Details </h3>
+            <fieldset>
+                <div class="row ">
+                    <div class="col-md-6 position-relative mb-2">
+                        <label class="form-label">ID Type</label>
+                        <select asp-for="DocumentTypeId" class="form-select" id="DocumentTypedropdown" onchange="ChangeDocumentCharacter()" asp-items="@ViewBag.DocumentType">
+                        </select>
+                        <span asp-validation-for="DocumentTypeId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="DocumentNumber">ID Number *</label>
+                        <input type="text" asp-for="DocumentNumber" class="form-control">
+                        <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2" id="IssueDatediv">
+                        <label class="form-label" asp-for="IssuedDate">Issued Date *</label>
+                        <input type="date" asp-for="IssuedDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                        <span asp-validation-for="IssuedDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-2" id="ExpiryDatediv">
+                        <label class="form-label" asp-for="ExpiryDate">Expiry date</label>
+                        <input type="date" asp-for="ExpiryDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                        <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="IdFrontImg">ID Front *</label>
+                        <div class="input-group mb-3">
+                            <input type="file" asp-for="IdFrontImg" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimageAddchange(this,'IdFrontImgid','IdFrontImgtextid')">
+                        </div>
+                        <span id="IdFrontImgtextid" class="text-danger" hidden></span>
+                        <img id="IdFrontImgid" src="#" style="width:90px;" hidden>
+                        <span asp-validation-for="IdFrontImg" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2" id="backImage">
+                        <label class="form-label" asp-for="IdBackImg">ID Back *</label>
+                        <div class="input-group mb-3">
+                            <input type="file" asp-for="IdBackImg" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimageAddchange(this,'IdBackImgid','IdBackImgtextid')">
+                        </div>
+                        <span id="IdBackImgtextid" class="text-danger" hidden></span>
+                        <img id="IdBackImgid" src="#" style="width:90px;" hidden>
+                        <span asp-validation-for="IdBackImg" class="text-danger"></span>
+                    </div>
+                </div><!--end form-->
+            </fieldset><!--end fieldset-->
+            <a class="btn btn-primary" onclick="showForm('0')">Previous</a>
+            <a class="btn btn-primary" onclick="showForm('2')">Next</a>
+        </div>
+        <div id="userStep-3" style="display:none">
+            <h3>Bank Details</h3>
+            <fieldset>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="BankName">Bank Name *</label>
+                        <input type="text" class="form-control" asp-for="BankName" placeholder="e.g. NIC Asia Bank Pvt. Ltd.">
+                        <span asp-validation-for="BankName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="Branch">Branch *</label>
+                        <input type="text" class="form-control" asp-for="Branch" placeholder="Baneshwor">
+                        <span asp-validation-for="BankName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="BankCode">Bank Code *</label>
+                        <input type="text" asp-for="BankCode" class="form-control" placeholder="113">
+                        <span asp-validation-for="BankCode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="AccountHolderName">A/C Holder Name *</label>
+                        <input type="text" class="form-control" asp-for="AccountHolderName" placeholder="">
+                        <span asp-validation-for="AccountHolderName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="AccountNumber">A/C Number *</label>
+                        <input type="text" class="form-control" asp-for="AccountNumber" placeholder="02154815484">
+                        <span asp-validation-for="AccountNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6  form-group mb-2">
+                        <label class="form-label" asp-for="IncomeSourceId" for="userpassword">Income Source</label>
+                        <select asp-for="IncomeSourceId" class="form-select" asp-items="@ViewBag.IncomeSourceType">
+                        </select>
+                    </div>
+                </div>
+            </fieldset><!--end fieldset-->
+            <a class="btn btn-primary" onclick="showForm('1')">Previous</a>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form><!--end form-->
+</div>
+<script src="~/js/imageupload.js"></script>
+<script>
+    function Namechange(checkbodId, InputFieldId) {
+        var data = $('#' + checkbodId).is(":checked");
+        if (data) {
+            $('#' + InputFieldId).val('');
+            $('#' + InputFieldId).attr('disabled', 'disabled');
+        } else {
+            $('#' + InputFieldId).val('');
+            $('#' + InputFieldId).removeAttr('disabled');
+        }
+
+    }
+
+</script>
+
+@* <script>
+    $("#ExpiryDatediv").css("display", "none");
+    function citizenship() {
+        debugger;
+        var documenttype = $("#DocumentTypedropdown").val();
+        if (documenttype == 1 || documenttype == 6) {
+            $("#ExpiryDatediv").css("display", "none");
+            $("#IssueDatediv").css("display", "block");
+        }
+        else {
+            $("#ExpiryDatediv").css("display", "block");
+            $("#IssueDatediv").css("display", "block");
+        }
+    }
+</script> *@
+<script>
+    $("#ExpiryDatediv").css("display", "none");
+    function ChangeDocumentCharacter() {
+       var selectedvalue= $('#DocumentTypedropdown').val()        
+        $.ajax({
+            url: '/Partner/Users/GetCharacterByDocumentType',
+            type: "GET",
+            data: { documentTypeId: selectedvalue },
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                if (data.isExpirable.toLowerCase() == "true" && data.isBackImageRequired.toLowerCase() == "false") {
+                    $("#ExpiryDatediv").css("display", "block");
+                    $("#backImage").css("display", "none");
+                }
+                else if (data.isExpirable.toLowerCase() == "false" && data.isBackImageRequired.toLowerCase() == "true") {
+                    $("#ExpiryDatediv").css("display", "none");
+                    $("#backImage").css("display", "block");
+                }
+                else if (data.isExpirable.toLowerCase() == "true" && data.isBackImageRequired.toLowerCase() == "true") {
+                    $("#ExpiryDatediv").css("display", "block");
+                    $("#backImage").css("display", "block");
+                }
+                else {
+                    $("#ExpiryDatediv").css("display", "none");
+                    $("#backImage").css("display", "none");
+                }
+
+            },
+            error: function () {
+               
+            }
+        });
+
+    }
+</script>
+
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddUser", "Users")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#UserForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>
+
+<script>
+
+    function checkformonevalidation(sectionId) {
+        var $inputField = $("#" + sectionId + " input");
+        $.validator.unobtrusive.parse($inputField);
+        if ($inputField.valid()) {
+            return true
+        }
+        return false
+    }
+
+    function showForm(divId) {
+
+        if (divId == '1') {
+            var check = checkformonevalidation('userStep-1');
+            if (check) {
+                document.getElementById("userStep-1").style.display = "none"
+                document.getElementById("userStep-2").style.display = "block"
+                document.getElementById("userStep-3").style.display = "none"
+
+            }
+
+        }
+        if (divId == '2') {
+            var check = checkformonevalidation('userStep-2');
+            if (check) {
+                document.getElementById("userStep-1").style.display = "none"
+                document.getElementById("userStep-2").style.display = "none"
+                document.getElementById("userStep-3").style.display = "block"
+            }
+        }
+        if (divId == '0') {
+            debugger
+            var check = checkformonevalidation('userStep-1');
+
+            if (check) {
+                document.getElementById("userStep-1").style.display = "block"
+                document.getElementById("userStep-2").style.display = "none"
+                document.getElementById("userStep-3").style.display = "none"
+            }
+        }
+
+
+    }
+</script>

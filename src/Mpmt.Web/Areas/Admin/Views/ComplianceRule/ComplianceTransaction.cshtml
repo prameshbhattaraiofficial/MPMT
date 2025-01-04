@@ -1,0 +1,157 @@
+﻿@using Mpmt.Core.Dtos.PartnerReport
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Models.RMP;
+@model PagedList<RemitTxnReport>
+
+@{
+    var txFilter = ViewBag.TransactionFilter as RemitTxnReportFilter;
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Compliance</a></li>
+                            <li class="breadcrumb-item active">Compliance Transaction</li>
+                        </ol>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="formReportsFilter" class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Start Date</label>
+                                    <input type="date" name="StartDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">End Date</label>
+                                    <input type="date" name="EndDate" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="TransactionId" class="form-control" placeholder="Transaction Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="MerchantMobileNo" class="form-control" maxlength="10" onkeypress="return isNumber(event)" placeholder="Merchant Mobile">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="GatewayTxnId" class="form-control" placeholder="Gateway Transaction Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" name="TrackerId" class="form-control" placeholder="Tracker Id">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0 mt-2" for="inlineFormSelectPref">Sign Type</label>
+                                    <select name="SignType" class="form-select" id="validationTooltip04" required>
+                                        <option value="">Select Sign</option>
+                                        <option value="LOADWALLET">LOADWALLET</option>
+                                        <option value="WALLETCONVERSION">WALLETCONVERSION</option>
+                                        <option value="COMMISSION">COMMISSION</option>
+                                        <option value="APITRANSACTION">APITRANSACTION</option>
+                                        <option value="PARTNERTRANSACTION">PARTNERTRANSACTION</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Transaction Type</label>
+                                    <select name="TransactionType" class="form-select" id="validationTooltip04" required>
+                                        <option value="" selected>Select TransactionType</option>
+                                        <option value="DR">Debit</option>
+                                        <option value="CR">Credit</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Source Currency</label>
+                                    <select name="SourceCurrency" class="form-select" id="validationTooltip04" asp-items="@ViewBag.SCurrency" required>
+                                        <option value="" selected>Select Currency</option>
+                                    </select>
+                                </div>
+                                @*<div class="col-12">
+                                    <label class="form-label mb-0" for="inlineFormSelectPref">Destination Currency</label>
+                                    <select name="DestinationCurrency" class="form-select" id="validationTooltip04" asp-items="@ViewBag.DCurrency" required>
+                                        <option value="" selected>Select Currency</option>
+                                    </select>
+                                </div>*@
+                                <br />
+                                <div class="col-12">
+                                    <button type="button" id="btnReportsFilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Compliance Transaction Report </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="ReportsTableWrapper" class="table-responsive">
+                        <partial name="_ComplianceTransactionList" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("ComplianceTransaction", "ComplianceRule")',
+                selector: '#ReportsTableWrapper'
+            });
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                var usersFilterFormValues = $('#formReportsFilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+            addUsersPageHandlers();
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+                $('#formReportsFilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                $('#btnReportsFilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+        });
+    </script>
+    }

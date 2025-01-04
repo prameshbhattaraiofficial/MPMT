@@ -1,0 +1,122 @@
+﻿@using Mpmt.Core.Dtos.Employee
+@model IUDEmployee
+
+
+
+<form id="EmployeeAddForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+
+    <div class="row">
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label" for="userpassword">Full Name</label>
+            <div class="input-group">
+                <input asp-for="FullName" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label" for="userpassword">Username</label>
+            <div class="input-group">
+                <input asp-for="UserName" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label" for="userpassword">Email</label>
+            <div class="input-group">
+                <input asp-for="Email" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-6  mb-2">
+            <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
+            <div class="input-group">
+                <input asp-for="Password" maxlength="50" type="password" class="form-control" id="id_password"> &ensp;
+                <i id="togglePassword" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+            </div>
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+      @*   <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Confirm Password</label>
+            <div class="input-group">
+                <input asp-for="ConfirmPassword" type="password" class="form-control">
+            </div>
+        </div> *@
+        <div class="col-md-6  mb-2">
+            <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+            <div class="input-group">
+                <input asp-for="ConfirmPassword" type="password" class="form-control" id="id_confirm_password"> &ensp;
+                <i id="togglePasswordConfirm" class="mdi mdi-eye align-self-center font-16 icon-dual me-1"></i>
+            </div>
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 form-group mb-2">
+            <label class="form-label" for="userpassword">Department</label>
+            <div class="input-group">
+                <input asp-for="Department" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label" for="exampleFormControlSelect1">Select Role</label>
+            <select asp-for="RoleId" class="form-select" id="exampleFormControlSelect1" asp-items="ViewBag.AdminRoleddl">
+            </select>
+        </div>
+
+    </div>
+    <div class="form-check form-switch">
+        <input asp-for="IsActive" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Is Active</label>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit<i class="fas fa-paper-plane ms-1"></i></button>
+    </div>
+</form><!--end form-->
+<script>
+
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddEmployee", "Employee")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#EmployeeAddForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+
+        Pagination.getData();
+    });
+
+    $(document).ready(function () {
+
+        setupToggleButtons();
+    });
+
+    function setupToggleButtons() {
+        debugger;
+        const togglePass = document.querySelector('#togglePassword');
+        const togglePassConfirm = document.querySelector('#togglePasswordConfirm');
+        const pass = document.querySelector('#id_password');
+        const passConfirm = document.querySelector('#id_confirm_password');
+
+        togglePass.addEventListener('click', function (e) {
+            const type = pass.getAttribute('type') === 'password' ? 'text' : 'password';
+            pass.setAttribute('type', type);
+            togglePass.classList.toggle('mdi-eye');
+            togglePass.classList.toggle('mdi-eye-off');
+        });
+
+        togglePassConfirm.addEventListener('click', function (e) {
+            const type = passConfirm.getAttribute('type') === 'password' ? 'text' : 'password';
+            passConfirm.setAttribute('type', type);
+            togglePassConfirm.classList.toggle('mdi-eye');
+            togglePassConfirm.classList.toggle('mdi-eye-off');
+        });
+    }
+
+</script>

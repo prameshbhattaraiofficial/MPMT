@@ -1,0 +1,239 @@
+﻿@using Mpmt.Web.Areas.Partner.ViewModels
+@model RecipientsAddUpdateVm
+<div class="card-body p-0 auth-header-box mb-3">
+    <form id="FormRecipientUpdate" method="post" autocomplete="off">
+        <ul>
+            @if (ViewBag.Error is not null)
+            {
+                <li class="text-danger">@ViewBag.Error</li>
+            }
+        </ul>
+        <div class="row">
+            <input type="hidden" asp-for="SenderId" />
+            <input type="hidden" asp-for="Id" />
+
+            <div class="col-md-4 mb-2">
+                <label class="form-label" for="userpassword">First Name</label>
+                <div class="input-group">
+                    <input asp-for="FirstName" type="text" class="form-control" placeholder="jacob ">
+                </div>
+            </div>
+
+
+            <div class="col-md-4 mb-2">
+                <label class="form-label" for="userpassword">Last Name</label>
+                <div class="input-group">
+                    <input asp-for="SurName" type="text" class="form-control" placeholder=" ">
+                </div>
+
+                <div class="form-check">
+                    <input asp-for="IsSurNamePresent" class="form-check-input" type="checkbox" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        No surname
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">Gender</label>
+                <select asp-for="GenderId" class="form-select" id="exampleFormControlSelect1">
+                    <option value="1">Male</option>
+                    <option value="2">Female</option>
+                    <option value="3">Others</option>
+
+                </select>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label class="form-label" for="userpassword">Contact</label>
+                <div class="input-group">
+                    <input asp-for="MobileNumber" type="text" class="form-control" placeholder="e.g.984511541">
+                </div>
+            </div>
+
+
+            <div class="col-md-6 form-group mb-2">
+                <label class="form-label" for="exampleFormControlSelect1">Date Of Birth</label>
+                <div class="input-group">
+                    <input asp-for="DateOfBirth" type="date" class="form-control" name="DateOfBirth">
+                    <span class="input-group-text"><i class="ti ti-calendar font-16"></i></span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="exampleFormControlSelect1">Country</label>
+                <select asp-for="CountryCode" asp-items="ViewBag.Countryddl" class="form-select" id="exampleFormControlSelect1">
+                    <option>Choose Country</option>
+                </select>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">State</label>
+                <select asp-for="ProvinceCode" asp-items="ViewBag.stateddl" class="form-select" id="exampleFormControlSelect1">
+                </select>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">District</label>
+                <select asp-for="DistrictCode" class="form-select" asp-items="ViewBag.Districtddl" id="exampleFormControlSelect1">
+                </select>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">Local Body</label>
+                <select asp-for="LocalBodyCode" asp-items="ViewBag.LocalBodyddl" class="form-select" id="exampleFormControlSelect1">
+                </select>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">City</label>
+                <select asp-for="City" class="form-select" id="exampleFormControlSelect1">
+                    <option value="Kathmandu">Kathmandu</option>
+                    <option value="Bhaktapur">Bhaktapur</option>
+
+                </select>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">GMT</label>
+                <select asp-for="GMTTimeZone" class="form-select" asp-items="ViewBag.UtcTimeZoneddl" id="exampleFormControlSelect1">
+                </select>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">Zip code</label>
+                <div class="input-group">
+                    <input asp-for="Zipcode" type="text" class="form-control" placeholder="">
+                </div>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">Address</label>
+                <div class="input-group">
+                    <input asp-for="Address" type="text" class="form-control" placeholder="">
+                </div>
+            </div>
+
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">Source Symbol</label>
+                <select asp-for="SourceCurrency" asp-items="ViewBag.SourceCurrencyddl" class="form-select" id="exampleFormControlSelect1">
+                </select>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">Destination Symbol</label>
+                <select asp-for="DestinationCurrency" asp-items="ViewBag.DestinationCurrencyddl" class="form-select" id="exampleFormControlSelect1">
+                </select>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">Relationship</label>
+                <select asp-for="RelationshipId" asp-items="ViewBag.Relationshipddl" class="form-select" id="exampleFormControlSelect1">
+                </select>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" for="userpassword">Payout Type</label>
+                <select asp-for="PayoutTypeId" asp-items="ViewBag.Paymenttypeddl" class="form-select" id="payoutTypeSelect">
+                    <option disabled>Choose option</option>
+                </select>
+            </div>
+
+            <div id="bankIdContainer" hidden>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Bank Name</label>
+                        <select asp-for="BankName" asp-items="ViewBag.bankddl" class="form-select" id="exampleFormControlSelect1">
+                            <option>Choose Bank</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Branch</label>
+                        <input asp-for="Branch" type="text" class="form-control" placeholder="Newroad">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Bank Code</label>
+                        <input asp-for="BankCode" type="text" class="form-control" placeholder="0155">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">A/c Holder Name</label>
+                        <input asp-for="AccountHolderName" type="text" class="form-control" placeholder="Jacub Duffy">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">A/c Number</label>
+                        <input asp-for="AccountNumber" type="text" class="form-control" placeholder="02154815484">
+                    </div>
+                </div>
+            </div>
+
+            <div id="walletIdContainer" hidden>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Wallet</label>
+                        <select asp-for="WalletRegisteredName" class="form-select" id="exampleFormControlSelect1">
+                            <option>Choose Wallet</option>
+                            <option value="mypay">Mypay</option>
+                            <option value="nic">Nic Wallet</option>
+
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Wallet ID</label>
+                        <input asp-for="WalletId" type="text" class="form-control" placeholder="0215">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Wallet Number</label>
+                        <input asp-for="WalletName" type="text" class="form-control" placeholder="0155">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">A/c Holder Name</label>
+                        <input asp-for="AccountHolderName" type="text" class="form-control" placeholder="Sarita Baidhya">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Email ID</label>
+                        <input asp-for="Email" type="text" class="form-control" placeholder="saritabaidhyas@gmail.com">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mb-0 row mt-4">
+            <div class="button-items">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </form><!--end form-->
+</div>
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("RecipientsUpdate", "Recipient")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#FormRecipientUpdate'
+    }, function() {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>
+
+<script>
+
+    var dropdown = document.getElementById("payoutTypeSelect");
+    var previousValue = dropdown.value;
+    if (previousValue === "4") {
+        $("#bankIdContainer").removeAttr("hidden");
+        $("#bankIdContainer").show();
+        $("#walletIdContainer").hide();
+    } else if (previousValue === "6") {
+        $("#walletIdContainer").removeAttr("hidden");
+        $("#walletIdContainer").show();
+        $("#bankIdContainer").hide();
+    }
+
+    $("#payoutTypeSelect").on("change", function() {
+        var selectedValue = $(this).val();
+        debugger;
+        $("#bankIdContainer").hide();
+        $("#walletIdContainer").hide();
+
+        if (selectedValue === "4") {
+            $("#bankIdContainer").removeAttr("hidden");
+            $("#bankIdContainer").show();
+            $("#walletIdContainer").hide();
+        } else if (selectedValue === "6") {
+            $("#walletIdContainer").removeAttr("hidden");
+            $("#walletIdContainer").show();
+            $("#bankIdContainer").hide();
+        }
+    });
+</script>

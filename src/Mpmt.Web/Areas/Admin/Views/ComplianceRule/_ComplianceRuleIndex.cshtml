@@ -1,0 +1,102 @@
+﻿@using Mpmt.Core.Dtos.ComplianceRule
+@using Mpmt.Core.Dtos.Pagination
+@using Mpmt.Core.Dtos.Paging
+@using Mpmt.Core.Models.RMP
+@model PagedList<ComplianceRuleList>
+
+@{
+    var actors = ViewBag.actions as IEnumerable<ActionPermission> ?? new List<ActionPermission>();
+}
+
+<div class="table-responsive">
+    <table id="datatable-buttons156" class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>SN</th>
+                <th>Compliance Code</th>
+                <th>Compliance Rule</th>
+                <th>Description</th>
+                <th>Frequency</th>
+                <th>Count/Value</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var value in Model.Items)
+            {
+                <tr>
+                    <td>@value.SN</td>
+                    <td>@value.ComplianceCode</td>
+                    <td>@value.ComplianceRule</td>
+                    <td>@value.Description</td>
+                    <td class="col-md-2">
+                        <select asp-for="@value.Frequency" class="form-select Frequency" id="exampleFormControlSelect1" asp-items="ViewBag.getFrequency">
+                        </select>
+                    </td>
+                    <td><input class="form-control count" type="text" onchange="ChangeButtonColor(this)" value="@value.CountValue" onkeypress="return isNumber(event)" /></td>
+                    <td>
+                        <div class="form-check form-switch form-switch-success">
+                            <input asp-for="@value.IsActive" class="form-check-input isActive" onchange="ChangeButtonColor(this)" type="checkbox" value="@value.IsActive" id="customSwitchSuccess">
+                        </div>
+                    </td>
+                    <td name="buttons">
+                        <div class=" float-center">
+                            @if (actors.FirstOrDefault(x => x.Action == "UpdateComplianceRule")?.Permission ?? false)
+                            {
+                                <button type="button" class="btn btn-success submit" data-id="@value.Id">Save</button>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.submit').on('click', function () {
+            var row = $(this).closest('tr');
+            var id = row.find('[data-id]').data('id');
+            var countvalue = row.find('.count').val();
+            var frequency = row.find('.Frequency').val();
+            var isActive = row.find('.isActive').is(':checked');
+            $(this).removeClass('btn-danger').addClass('btn-success')
+
+            var data = {
+                Id: id,
+                CountValue: countvalue,
+                Frequency: frequency,
+                IsActive: isActive
+            };
+
+            $.ajax({
+                url: '@Url.Action("UpdateComplianceRule", "ComplianceRule")',
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $('td').click(function () {
+            $('tr').removeClass('active');
+            $(this).parent().addClass('active');
+        });
+    });
+
+    function ChangeButtonColor(event) {
+        var row = $(event).closest('tr');
+        row.find('.submit').removeClass('btn-success').addClass('btn-danger');
+    }
+</script>
+
+<partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />

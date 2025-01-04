@@ -1,0 +1,46 @@
+﻿@using Mpmt.Core.ViewModel.Occupation
+@model AddOccupationVm
+
+<form id="OccupationAddForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <div class="row">
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label">Occupation Name</label>
+            <div class="input-group">
+                <input asp-for="OccupationName" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-12 form-group mb-2">
+            <label class="form-label">Description</label>
+            <div class="input-group">
+                <textarea asp-for="Description" type="text" class="form-control"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="form-check form-switch mb-2">
+        <input asp-for="IsActive" class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+        <label class="form-check-label" for="flexSwitchCheckDefault">Is Active</label>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-sm btn-primary">Submit<i class="fas fa-paper-plane ms-1"></i></button>
+    </div>
+</form>
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("AddOccupation", "Occupation")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#OccupationAddForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>

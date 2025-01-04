@@ -1,0 +1,147 @@
+﻿@using Mpmt.Core.ViewModel.ServiceCharge
+@using Mpmt.Core.Dtos.ServiceCharge
+@model List<AddServiceChargeVm>
+
+<form id="ServiceChargeAddForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+    <ul>
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+    </ul>
+    <div class="row">
+        <div class="col-md-3 mb-2">
+            <label for="ChargeCategoryId">Charge Category</label>
+            <select class="form-select" id="ChargeCategoryId" name="ChargeCategoryId" asp-items="@ViewBag.ChargeCategory">              
+            </select>
+        </div>
+        <div class="col-md-3 mb-2">
+            <label for="SourceCurrency">Source Currency</label>
+            <select class="form-select" id="SourceCurrency" name="SourceCurrency" asp-items="@ViewBag.SCurrency">
+            </select>
+        </div>
+        <div class="col-md-3 mb-2">
+            <label for="DestinationCurrency">Destination Currency</label>
+            <select class="form-select" id="DestinationCurrency" name="DestinationCurrency" asp-items="@ViewBag.DestinationCurrency">
+            </select>
+        </div>
+        <div class="col-md-3 mb-2">
+            <label for="PaymentTypeId">Payment Type</label>
+            <select class="form-select" id="PaymentTypeId" name="PaymentTypeId" asp-items="@ViewBag.PaymentType">
+            </select>
+        </div>
+    </div>
+    <div class="card-body modal-overflow">
+        <table  class="table table-striped dataTable nowrap">
+            <thead class="table-light">
+                <tr>
+                    <th>Min Amt Slab</th>
+                    <th>Max Amt Slab</th>
+                    <th>Charge (%)</th>
+                    <th>Charge (Fixed)</th>
+                    <th>Min Charge</th>
+                    <th>Max Charge</th>
+                    <th>Commission (%)</th>
+                    <th>Commission Fixed</th>
+                    <th>Min Commission</th>
+                    <th>Max Commission</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="serviceChargeBody">
+                @if (Model != null)
+                {
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            <td><input class="form-control" asp-for="@Model[i].MinAmountSlab" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MaxAmountSlab" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].ServiceChargePercent" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].ServiceChargeFixed" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MinServiceCharge" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MaxServiceCharge" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].CommissionPercent" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].CommissionFixed" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MinComission" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].MaxComission" type="text" onkeypress="return isNumber(event)" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].FromDate" type="date" /></td>
+                            <td><input class="form-control" asp-for="@Model[i].ToDate" type="date" /></td>
+                            <td><button id="btnRow" type="button" class="btn btn-danger remove-row">Remove</button></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <button type="button" class="btn btn-primary" id="addRow">Create New Slab</button>
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
+
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("UpdateServiceCharge", "ServiceCharges")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#ServiceChargeAddForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+
+    document.getElementById('addRow').addEventListener('click', function () {
+        var tableBody = document.getElementById('serviceChargeBody');
+        var newRow = document.createElement('tr');
+        var index = tableBody.getElementsByTagName('tr').length;
+
+        var dateToday = new Date();
+        var day = String(dateToday.getDate()).padStart(2, '0');
+        var month = String(dateToday.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var year = dateToday.getFullYear();
+        dateToday = year + '-' + month + '-' + day;
+
+        newRow.innerHTML = `
+                     <td><input class="form-control"  name="[${index}].MinAmountSlab" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].MaxAmountSlab" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].ServiceChargePercent" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].ServiceChargeFixed" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].MinServiceCharge" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].MaxServiceCharge" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].CommissionPercent" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].CommissionFixed" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].MinComission" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].MaxComission" type="text" onkeypress="return isNumber(event)"/></td>
+                     <td><input class="form-control"  name="[${index}].FromDate" type="date" value="${dateToday}"/></td>
+                     <td><input class="form-control"  name="[${index}].ToDate" type="date" value="${dateToday}"/></td>
+                 <td><button id="btnRow" type="button" class="btn btn-danger remove-row">Remove</button></td>`;
+        tableBody.appendChild(newRow);
+    });
+
+    document.addEventListener('click', function (event) {
+        if (event.target && event.target.id === 'btnRow') {
+            var row = event.target.closest('tr');
+            var tableBody = document.getElementById('serviceChargeBody');
+            tableBody.removeChild(row);
+            var rows = tableBody.getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].querySelector('input[name$=".MinAmountSlab"]').name = `[${i}].MinAmountSlab`;
+                rows[i].querySelector('input[name$=".MaxAmountSlab"]').name = `[${i}].MaxAmountSlab`;
+                rows[i].querySelector('input[name$=".ServiceChargePercent"]').name = `[${i}].ServiceChargePercent`;
+                rows[i].querySelector('input[name$=".ServiceChargeFixed"]').name = `[${i}].ServiceChargeFixed`;
+                rows[i].querySelector('input[name$=".MinServiceCharge"]').name = `[${i}].MinServiceCharge`;
+                rows[i].querySelector('input[name$=".MaxServiceCharge"]').name = `[${i}].MaxServiceCharge`;
+                rows[i].querySelector('input[name$=".CommissionPercent"]').name = `[${i}].CommissionPercent`;
+                rows[i].querySelector('input[name$=".CommissionFixed"]').name = `[${i}].CommissionFixed`;
+                rows[i].querySelector('input[name$=".MinComission"]').name = `[${i}].MinComission`;
+                rows[i].querySelector('input[name$=".MaxComission"]').name = `[${i}].MaxComission`;
+                rows[i].querySelector('input[name$=".FromDate"]').name = `[${i}].FromDate`;
+                rows[i].querySelector('input[name$=".ToDate"]').name = `[${i}].ToDate`;
+            }
+        }
+    });
+</script>

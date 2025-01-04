@@ -1,0 +1,153 @@
+﻿@using Mpmt.Core.Domain.Partners.Senders;
+@using Mpmt.Core.Dtos.Paging;
+@model PagedList<SenderDto>
+
+<div class="container-fluid">
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Users</a></li>
+                            <li class="breadcrumb-item active">Users List</li>
+                        </ol>
+                    </div><!--end col-->
+                    <div class="col-auto">
+                    </div>
+                    <div class="col-auto align-self-center">
+                        <div class="general-label">
+                            <form id="FormUserfilter" class="row row-cols-lg-auto align-items-end">
+                                <div class="col-12">
+                                    <label class="visually-hidden"  for="inlineFormInputGroupUsername">First Name</label>
+                                    <div class="input-group">
+                                        <input type="text" name="FirstName"  class="form-control" id="inlineFormInputGroupUsername" placeholder="First Name">
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="visually-hidden" for="inlineFormInputGroupUsername">Email</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="Email" id="inlineFormInputGroupUsername" placeholder="Email">
+                                    </div>
+                                </div>
+                               
+                                <div class="col-12">
+                                    <label class="visually-hidden"  for="inlineFormInputGroupUsername">Mobile Number</label>
+                                    <div class="input-group">
+                                        @* <input type="text" name="MobileNumber" class="form-control" id="inlineFormInputGroupUsername" placeholder="Mobile Number"> *@
+                                        <input type="text" class="form-control" maxlength="10" name="MobileNumber" onkeypress="return isNumber(event)" placeholder="Mobile Number">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-0" name="UserStatus" for="inlineFormSelectPref">User Status</label>
+                                    <select class="form-select" id="validationTooltip05" >
+                                        <option value="true">Active</option>
+                                        <option value="false">Inactive</option>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" id="btnUserfilter" class="btn btn-primary"><i class="las la-filter ms-1"></i> Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!--end page-title-box-->
+        </div><!--end col-->
+    </div><!--end row-->
+    <!-- end page title end breadcrumb -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">List of Senders</h4>
+                        </div>
+                        <!--end col-->
+                        <div class="col-auto">
+                            <div class="add-btn">
+                                <a onclick="ShowPopUp('@Url.Action("AddUser","Users")','Add Sender')" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#adduser">
+                                    <i class="las la-plus ms-1"></i> Add Sender
+                                </a>
+
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <!--end card-header-->
+                <div class="card-body overflow-x-auto">
+                    <partial name="_PaginationHeader" />
+                    <div id="UserTableWrapper" >
+                        <partial name="_UserListTable" model="@Model" />
+                    </div>
+                </div>
+                
+                
+               
+                <!--end card-body-->
+            </div>
+            <!--end card-->
+        </div> <!-- end col -->
+    </div> <!-- end row -->
+
+</div><!-- container -->
+<!--modal-->
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            // Initialize pagination settings object
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("UserList", "Users")',
+                selector: '#UserTableWrapper'
+            });
+
+            $(Pagination).on('before', function (e) {
+                e.preventDefault();
+                { debugger }
+                var usersFilterFormValues = $('#FormUserfilter').serializeArray();
+                $.each(usersFilterFormValues, function (i, obj) {
+                    e.payload.paramsBuilder.addParameter(obj['name'], obj['value']);
+                });
+
+                e.payload.paramsBuilder.addParameters(getPaginationFieldParams());
+            });
+
+            addUsersPageHandlers();
+
+            addPaginationHandlers();
+            function addUsersPageHandlers() {
+
+                /* Custom Handlers */
+                $('#FormUserfilter').on('submit', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+
+                $('#btnUserfilter').on('click', function (e) {
+                    e.preventDefault();
+                    Pagination.getData();
+                    return false;
+                });
+            }
+
+           
+        });
+    </script>
+
+     
+}

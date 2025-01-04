@@ -1,0 +1,90 @@
+﻿@using Mpmt.Core.Dtos.Pagination;
+@using Mpmt.Core.Dtos.Paging;
+@using Mpmt.Core.Dtos.Transaction;
+@using Mpmt.Core.Models.RMP;
+@model IEnumerable<BulkTransactionResponse>
+
+<div class="table-responsive">
+    <table class="table table-striped dataTable nowrap">
+        <thead class="table-light">
+            <tr>
+                <th>Payment Type </th>
+                <th>Source Currency</th>
+                <th>Destination Currency</th>
+                <th>Sending Amount </th>
+                <th>Receiving Amount</th>
+                <th>Sender Name </th>
+                <th>Sender Contact Number</th>
+                <th>Sender Email</th>
+                <th>Sender Country</th>
+                <th>Sender City</th>
+                <th>SenderAddress</th>
+                <th>SenderDocType</th>
+                <th>SenderDocNumber</th>
+                <th>RelationshipWithBeneficiary</th>
+                <th>SenderOccupation</th>
+                <th>SenderSourceOfIncome</th>
+                <th>PurposeOfRemittance</th>
+                <th>BeneficiaryName</th>
+                <th>BeneficiaryContactNumber</th>
+                <th>BeneficiaryDOB</th>
+                <th>BeneficiaryCountry</th>
+                <th>BeneficiaryCity</th>
+                <th>BeneficiaryAddress</th>
+                <th>BeneficiaryRelationwithSender</th>
+                <th>BeneficiaryBankCode</th>
+                <th>BeneficiaryBankName</th>
+                <th>BeneficiaryBankBranch</th>
+                <th>BankAccountNo</th>
+                <th>WalletCode</th>
+                <th>WalletID</th>
+                <th>Status</th>
+                <th> Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td>@item.PaymentType</td>
+                    <td>@item.SourceCurrency</td>
+                    <td>@item.DestinationCurrency</td>
+                    <td>@item.SendingAmount </td>
+                    <td>@item.ReceivingAmount</td>
+                    <td>@item.SenderName </td>
+                    <td>@item.SendeContactNumber</td>
+                    <td>@item.SenderEmail</td>
+                    <td>@item.SenderCountry</td>
+                    <td>@item.SenderCity</td>
+                    <td>@item.SenderAddress</td>
+                    <td>@item.SenderDocType</td>
+                    <td>@item.SenderDocNumber</td>
+                    <td>@item.RelationshipWithBeneficiary</td>
+                    <td>@item.SenderOccupation</td>
+                    <td>@item.SenderSourceOfIncome</td>
+                    <td>@item.PurposeOfRemittance</td>
+                    <td>@item.BeneficiaryName</td>
+                    <td>@item.BeneficiaryContactNumber</td>
+                    <td>@item.BeneficiaryDOB</td>
+                    <td>@item.BeneficiaryCountry</td>
+                    <td>@item.BeneficiaryCity</td>
+                    <td>@item.BeneficiaryAddress</td>
+                    <td>@item.BeneficiaryRelationwithSender</td>
+                    <td>@item.BeneficiaryBankCode</td>
+                    <td>@item.BeneficiaryBankName</td>
+                    <td>@item.BeneficiaryBankBranch</td>
+                    <td>@item.BankAccountNo</td>
+                    <td>@item.WalletCode</td>
+                    <td>@item.WalletID</td>
+                    <td>@item.Status</td>
+                    <td>@item.Remarks</td>             
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@* <partial name="_PaginationFooter"
+         model="new PaginationFooter(Model.PageNumber, Model.PageSize, Model.Items.Count(), Model.FilteredCount, Model.TotalCount, Model.TotalPages)" />
+ *@

@@ -1,0 +1,126 @@
+﻿<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+<table class="body-wrap" style="font-family: 'Lato', sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: transparent; margin: 0;" bgcolor="transparent">
+    <tr>
+        <td class="container" width="1200" style=" display: block !important; max-width: 1000px !important; clear: both !important; margin:0 auto" valign="top">
+            <div class="content" style="padding: 20px;">
+                <table class="main" width="100%" cellpadding="0" cellspacing="0" style="padding: 45px;border: 1px solid rgba(130, 134, 156, 0.15);" bgcolor="transparent">
+                    <tr>
+                        <td class="alert alert-dark border-0" style="font-size: 13px;color:#000;text-align: center;">
+                            Payment Receipt(Official Copy)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content-wrap" style="padding:0px 20px;" valign="top">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="content-block" style="font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px" valign="top">
+                                        <img src="https://mypaymt.com/assets/img/logo-success.png" alt="" style="margin:5px 0px ; display:inline;width: 160px;">
+                                    </td>
+                                    <td class="content-block" style="text-align: end;font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px" valign="top">
+                                        <p style="margin: 6px 10px;">Partner : {{PartnerName}}</p>
+                                        <p style="margin: 6px 10px;">{{PartnerContact}}</p>
+                                        <p style="margin: 6px 10px;">{{PartnerAddress}}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <hr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content-wrap" style="padding: 0px 20px;" valign="top">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr style="background: linear-gradient(45deg, rgba(43,57,144,1) 49%, #f6911c 92%);padding:0px 20px;">
+                                    <td class="content-block" style="font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px" valign="top">
+                                    </td>
+                                    <td class="content-block" style="font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px" valign="top">
+                                        <h4 style="color: #cc0000;font-size: 18px;margin: 0;"></h4>
+                                    </td>
+                                    <td class="content-block" style="text-align: end;font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px" valign="top">
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content-wrap" style="padding: 20px;" valign="top">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="content-block" style="font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px" valign="top">
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Transaction ID : {{TransactionId}}</h6>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Gateway Txn ID : {{GatewayTransactionId}}</h6>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Paid Date : {{TransactionDate}}</h6>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Send Amount : {{SendAmount}} {{SendCurrency}}</h6>
+                                    </td>
+                                    <td class="content-block" style="font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px" valign="top">
+                                        <h5 style="color: #ff0000;font-size: 16px;margin: 6px 10px;">SENDER DETAILS :</h5>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Full Name : {{SenderName}}</h6>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Address : {{SenderAddress}}</h6>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Country : {{SenderCountry}}</h6>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Contact : {{SenderContact}}</h6>
+                                    </td>
+                                    <td class="content-block" style="font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px" valign="top">
+                                        <h5 style="color: #ff0000;font-size: 16px;margin: 6px 10px;">RECEIVER DETAILS :</h5>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Full Name: {{ReceiverName}}</h6>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Address : {{ReceiverAddress}}</h6>
+                                        <!--<h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Contact : {{ReceiverContact}}</h6>-->
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Payment Type : {{PaymentType}}</h6>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">A/c No : {{AccountNumber}}</h6>
+                                        <h6 style="color: #000000;font-size: 14px;margin: 6px 10px;">Bank Name : {{BankName}}</h6>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content-wrap" style="padding: 0px 20px;" valign="top">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr style="background: #ebebeb;padding:0px 20px;">
+                                    <td class="content-block" style="font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px 20px" valign="top">
+                                        <h4 style="color: #cc0000;font-size: 16px;margin: 0;">Received Amount</h4>
+                                    </td>
+                                    <td class="content-block" style="text-align: center;font-family: 'Lato', sans-serif; font-size: 14px; padding: 6px" valign="top">
+                                        <h4 style="color: #cc0000;font-size: 16px;margin: 0;"> {{ReceiveAmountString}} {{ReceiveCurrency}}</h4>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content-block" style="font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 6px 10px;" valign="top">
+                            <h6 style="color: #38c700;font-size: 14px;margin-right: 140px; text-align:right;">Status : {{Status}}</h6>
+                            <p style="font-size: 16px;margin: 10px 0px; padding: 0px 20px;">Amount (In words) : {{AmountInWords}}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content-wrap" style="padding: 20px;" valign="top">
+                            <table width="100%" cellpadding="0" cellspacing="0">
+                                <tr>
+                                    <td class="content-block" style="margin: 0px;font-family: 'Lato', sans-serif; font-size: 14px; padding: 0px" valign="top">
+                                        <h4 style="color: #000000;font-size: 16px;margin: 0;">Disclaimer: </h4>
+                                        <p style=" margin: 10px 0px 0px 0px;"> This receipt is electronically printed, so no signature required.</p>
+                                    </td>
+                                    <td class="content-block" style="text-align: end;margin: 0px;font-family: 'Lato', sans-serif; font-size: 14px; padding: 0px" valign="top">
+                                        <h4 style="color: #000000;font-size: 16px;margin: 0;">Authorized By:</h4>
+                                        <p style=" margin: 10px 0px 0px 0px;">MyPay Money Transfer </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="content-block" style="text-align: center;font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 6px 10px;" valign="top">
+                            <p style="margin: 10px 0px; padding: 0px 20px;">Thank you very much for doing transaction with us. </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+        <td style="font-family: 'Lato', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
+    </tr>
+</table>
+

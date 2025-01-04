@@ -1,0 +1,50 @@
+﻿@using Mpmt.Core.Dtos.PrefundRequest
+@model PreFundRequest
+@if (Model is not null)
+{
+    <form id="formRejectPrefundRequest" method="post" autocomplete="off" class="text-center">
+        <ul>
+            @if (ViewBag.Error is not null)
+            {
+                <li class="text-danger">@ViewBag.Error</li>
+            }
+        </ul>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="PartnerCode" />
+        <div class="card-body">
+            <i class="fa fa-circle-xmark text-danger fa-5x mb-20 m-t-15 "></i>
+            <h3 class="mb-1">Are you sure?</h3>
+            <p class="mb-0 text-muted">You won't be able to revert this!</p>
+            <input asp-for="Remarks" class="form-control" type="text" placeholder="Remarks"/>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+        </div>
+    </form>
+}
+else
+{
+    <i class="fa fa-circle-xmark text-danger fa-5x mb-20 m-t-15 "></i>
+    <h3 class="m-t-25">Opps!!</h3>
+    <p class="m-t-25 m-b-15">
+        We could not find Detail.<br>
+        SomeThing went wrong!
+    </p>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">Cancel</button>
+    </div>
+}
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("RejectPreFundRequest", "PreFundRequest")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#formRejectPrefundRequest'
+    }, function() {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>

@@ -1,0 +1,56 @@
+﻿@using Mpmt.Core.Dtos.CashAgent;
+@model IEnumerable<AgentUnsettledAmount>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="page-title-box">
+                <div class="row">
+                    <div class="col">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0);">Agent Management</a></li>
+                            <li class="breadcrumb-item active">Agent Unsettled Amount Summary List</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h4 class="card-title">Agent Unsettled Amount Summary List</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="AgentUnsettledAmountTableWrapper" class="table-responsive">
+                        <partial name="_AgentUnsettledAmountSummary" model="@Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/js/admin.pagination.js" asp-append-version="true"></script>
+    <script src="~/js/admin.users.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            Pagination.init({
+                ajax: true,
+                method: 'GET',
+                browserPath: '@Context.Request.Path',
+                fetchUrl: '@Url.Action("AgentUnsettledAmountSummary", "SuperAgent")',
+                selector: '#AgentUnsettledAmountTableWrapper'
+            });
+            addPaginationHandlers();
+        });
+    </script>
+}

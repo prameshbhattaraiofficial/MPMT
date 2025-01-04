@@ -1,0 +1,360 @@
+﻿@using Mpmt.Core.ViewModel.User;
+
+
+@model UpdateUserVM
+
+<div class="card-body p-0 auth-header-box mb-3">
+    <form id="UserForm" class="form-horizontal auth-form" method="post" autocomplete="off">
+        <input asp-for="Id" hidden readonly />
+        @if (ViewBag.Error is not null)
+        {
+            <li class="text-danger">@ViewBag.Error</li>
+        }
+        <div id="userStep-1" style="display:block">
+            <h3>Personal Details</h3>
+            <fieldset>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-2">
+                        @if (@Model.FirstName is not null)
+                        {
+                            <label asp-for="@Model.FirstName" class="form-label">First Name</label>
+                            <input asp-for="@Model.FirstName" onkeydown="return /[a-z]/i.test(event.key)" type="text" class="form-control">
+                            <div class="form-check">
+                                <input  class="form-check-input" onchange="Namechange()" type="checkbox" id="ContinueWithoutFirstNameupdate">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Continue without First Name
+                                </label>
+
+                            </div>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        }
+                        else
+                        {
+                            <label asp-for="@Model.FirstName" class="form-label">First Name</label>
+                            <input asp-for="@Model.FirstName" onkeydown="return /[a-z]/i.test(event.key)" type="text" class="form-control" disabled>
+                            <div class="form-check">
+                                <input  class="form-check-input" onchange="Namechange()" type="checkbox" id="ContinueWithoutFirstNameupdate" checked>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Continue without First Name
+                                </label>
+
+                            </div>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        }
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="SurName" for="userpassword">Last Name *</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="SurName" class="form-control" placeholder="Last Name">
+                        </div>
+                        <span asp-validation-for="SurName" class="text-danger"></span>
+                       
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="MobileNumber" for="userpassword">Contact *</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="MobileNumber" class="form-control" placeholder="e.g.984511541">
+
+                        </div>
+                        <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="Email">Email *</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text" id="inputGroupPrepend">
+                                @{
+                                    var note = "@";
+                                }@note
+                            </span>
+                            <input type="text" asp-for="Email" class="form-control" aria-describedby="inputGroupPrepend">
+
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="GenderId" for="exampleFormControlSelect1">Gender</label>
+                        <select class="form-select" asp-for="GenderId" asp-items="@ViewBag.genderType" id="exampleFormControlSelect1">
+                            
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group mb-2">
+                        <label class="form-label" asp-for="DateOfBirth">Date of Birth *</label>
+                        <div class="input-group">
+                            <input type="date" asp-for="DateOfBirth" class="form-control">
+
+                        </div>
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-md-6 form-group mb-2">
+                        <label class="form-label" asp-for="ProfileImage">Profile Image *</label>
+                        <div class="input-group">
+                            <input type="file" asp-for="ProfileImage" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimageUploadchange(this,'ProfileImagePathId','ProfileImagePathhide','ProfileImtextid')">
+                        </div>
+                        <span id="ProfileImtextid" class="text-danger" hidden></span>
+                        @{
+                            if (Model != null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(Model.ProfileImagePath))
+                                {
+                            <img style="width:90px;" id="ProfileImagePathhide" src="@Model.ProfileImagePath" alt="@Model.ProfileImagePath">
+                                }
+
+                            }
+                            <img id="ProfileImagePathId" src="#" style="width:90px;" hidden>
+                        }
+                        <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="CountryCode">Country</label>
+                        <select asp-for="CountryCode" class="form-select" asp-items="@ViewBag.Countryddl">
+                        </select>
+                        <span asp-validation-for="CountryCode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6  form-group mb-2">
+                        <label class="form-label" asp-for="Province">State</label>
+                        <input type="text" asp-for="Province" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="City">City *</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="City" class="form-control" placeholder="e.g.984511541">
+
+                        </div>
+                        <span asp-validation-for="City" class="text-danger"></span>
+                        .
+                    </div>
+
+                    <div class="col-md-6  form-group mb-2">
+                        <label class="form-label" asp-for="Zipcode">Zip code</label>
+                        <div class="input-group">
+                            <input type="text" asp-for="Zipcode" class="form-control" placeholder="">
+                        </div>
+                        <span asp-validation-for="Zipcode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6  form-group mb-2">
+                        <label class="form-label" asp-for="OccupationId">Occupation</label>
+                        <select asp-for="OccupationId" class="form-select" asp-items="@ViewBag.occupationType">
+                        </select>
+                       
+                    </div>
+
+                </div>
+                <a class="btn btn-primary" onclick="showForm('1')">Next</a>
+            </fieldset><!--end fieldset-->
+        </div>
+        <div id="userStep-2" style="display:none">
+            <h3>Identity Details </h3>
+            <fieldset>
+                <div class="row ">
+                    <div class="col-md-6 position-relative mb-2">
+                        <label class="form-label">ID Type</label>
+                        <select asp-for="DocumentTypeId" class="form-select" asp-items="@ViewBag.DocumentType">
+                        </select>
+                        <span asp-validation-for="DocumentTypeId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="DocumentNumber">ID Number *</label>
+                        <input type="text" asp-for="DocumentNumber" class="form-control">
+                        <span asp-validation-for="DocumentNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="IssuedDate">Issued Date *</label>
+                        <input type="date" asp-for="IssuedDate" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                        <span asp-validation-for="IssuedDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="ExpiryDate">Expiry date</label>
+                        <input type="date" asp-for="ExpiryDate" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control">
+                        <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="IdFrontImg">ID Front *</label>
+                        <div class="input-group mb-3">
+                            <input type="file" asp-for="IdFrontImg" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimageUploadchange(this,'IdFrontImgId','IdFrontImghide','IdFrontImgtext')">
+                        </div>
+                        <span id="IdFrontImgtext" class="text-danger" hidden></span>
+                        @{
+                            if (Model != null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(Model.IdFrontImgPath))
+                                {
+                                    <img style="width:90px;" id="IdFrontImghide" src="@Model.IdFrontImgPath" alt="@Model.IdFrontImgPath">
+                                }
+
+                            }
+                            <img id="IdFrontImgId" src="#" style="width:90px;" hidden>
+                        }
+                        <span asp-validation-for="IdFrontImg" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="IdBackImg">ID Back *</label>
+                        <div class="input-group mb-3">
+                            <input type="file" asp-for="IdBackImg" class="form-control" accept=".png, .jpg, .jpeg" onchange="onimageUploadchange(this,'IdBackImgId','IdBackImghide','IdBackImgtextid')">
+                        </div>
+                        <span id="IdBackImgtextid" class="text-danger" hidden></span>
+                        @{
+                            if (Model != null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(Model.IdBackImgPath))
+                                {
+                                    <img style="width:90px;" id="IdBackImghide" src="@Model.IdBackImgPath" alt="@Model.IdBackImgPath">
+                                }
+
+                            }
+                            <img id="IdBackImgId" src="#" style="width:90px;" hidden>
+                        }
+                        <span asp-validation-for="IdBackImg" class="text-danger"></span>
+                    </div>
+                </div><!--end form-->
+            </fieldset><!--end fieldset-->
+            <a class="btn btn-primary" onclick="showForm('0')">Previous</a>
+            <a class="btn btn-primary" onclick="showForm('2')">Next</a>
+        </div>
+        <div id="userStep-3" style="display:none">
+            <h3>Bank Details</h3>
+            <fieldset>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="BankName">Bank Name *</label>
+                        <input type="text" class="form-control" asp-for="BankName" placeholder="e.g.Nic Asia Bank Ltd">
+                        <span asp-validation-for="BankName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="Branch">Branch *</label>
+                        <input type="text" class="form-control" asp-for="Branch" placeholder="Newroad">
+                        <span asp-validation-for="BankName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="BankCode">Bank Code *</label>
+                        <input type="text" asp-for="BankCode" class="form-control" placeholder="0155">
+                        <span asp-validation-for="BankCode" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="AccountHolderName">A/C Holder Name *</label>
+                        <input type="text" class="form-control" asp-for="AccountHolderName" placeholder="">
+                        <span asp-validation-for="AccountHolderName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label" asp-for="AccountNumber">A/C Number *</label>
+                        <input type="text" class="form-control" asp-for="AccountNumber" placeholder="02154815484">
+                        <span asp-validation-for="AccountNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6  form-group mb-2">
+                        <label class="form-label" asp-for="IncomeSourceId" for="userpassword">Income Source</label>
+                        <select asp-for="IncomeSourceId" class="form-select" asp-items="@ViewBag.IncomeSourceType">
+                        </select>
+                    </div>
+                </div>
+            </fieldset><!--end fieldset-->
+            <a class="btn btn-primary" onclick="showForm('1')">Previous</a>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+    </form><!--end form-->
+</div>
+<script src="~/js/imageupload.js"></script>
+@*<script>
+    function onimagechange(data, id, hideid) {
+        debugger
+        readURL(data, id);
+        $('#' + hideid).attr("hidden", true);
+
+    }
+    function readURL(input, id) {
+        debugger
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+
+                var data = e.target.result;
+
+                $('#' + id).attr('src', e.target.result);
+                $('#' + id).removeAttr('hidden');
+
+
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
+
+</script>*@
+
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("UpdateUser", "Users")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#UserForm'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>
+
+<script>
+
+    function checkformonevalidation(sectionId) {
+        debugger
+        var $inputField = $("#" + sectionId + " input");
+        $.validator.unobtrusive.parse($inputField);
+        if ($inputField.valid()) {
+            return true
+        }
+        return false
+    }
+
+    function showForm(divId) {
+
+
+        //debugger
+        if (divId == '1') {
+            var check = checkformonevalidation('userStep-1');
+            if (check) {
+                document.getElementById("userStep-1").style.display = "none"
+                document.getElementById("userStep-2").style.display = "block"
+                document.getElementById("userStep-3").style.display = "none"
+
+            }
+
+        }
+        if (divId == '2') {
+            var check = checkformonevalidation('userStep-2');
+            if (check) {
+                document.getElementById("userStep-1").style.display = "none"
+                document.getElementById("userStep-2").style.display = "none"
+                document.getElementById("userStep-3").style.display = "block"
+            }
+        }
+        if (divId == '0') {
+            debugger
+            var check = checkformonevalidation('userStep-1');
+
+            if (check) {
+                document.getElementById("userStep-1").style.display = "block"
+                document.getElementById("userStep-2").style.display = "none"
+                document.getElementById("userStep-3").style.display = "none"
+            }
+        }
+
+
+    }
+    function Namechange() {
+        debugger
+        var data = $('#ContinueWithoutFirstNameupdate').is(":checked");
+        if (data) {
+            $('#FirstName').val('');
+            $('#FirstName').attr('disabled', 'disabled');
+        } else {
+            $('#FirstName').val('');
+            $('#FirstName').removeAttr('disabled');
+        }
+
+    }
+</script>

@@ -1,0 +1,313 @@
+﻿@using Mpmt.Services.Services.Common;
+@using Mpmt.Web.Areas.Partner.ViewModels
+@model RecipientsAddUpdateViewmodel
+@inject ICommonddlServices _ddl;
+<div class="card-body p-0 auth-header-box mb-3">
+    <form id="FormRecipientadd" method="post" autocomplete="off">
+        <ul>
+            @if (ViewBag.Error is not null)
+            {
+                <li class="text-danger">@ViewBag.Error</li>
+            }
+        </ul>
+        <div class="row">
+            <input type="text" asp-for="SenderId" readonly hidden />
+            <div class="col-md-4 mb-2">
+                <label class="form-label" >First Name</label>
+                <div class="input-group">
+                    <input asp-for="FirstName" type="text" class="form-control" placeholder="jacob ">
+                </div>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+
+            <div class="col-md-4 mb-2">
+                <label class="form-label" >Last Name</label>
+                <div class="input-group">
+                    <input asp-for="SurName" type="text" class="form-control" placeholder=" ">
+                </div>
+
+                <div class="form-check">
+                    <input asp-for="IsSurNamePresent" class="form-check-input" type="checkbox" id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        No surname
+                    </label>
+                   
+                </div>
+                <span asp-validation-for="SurName" class="text-danger"></span>
+            </div>
+             <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >Gender</label>
+                <select asp-for="GenderId" class="form-select" id="exampleFormControlSelect1">
+                    <option value="1">Male</option>
+                    <option value="2">Female</option>
+                    <option value="3">Others</option>
+
+                </select>
+                <span asp-validation-for="GenderId" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-2">
+                <label class="form-label" >Contact</label>
+                <div class="input-group">
+                    <input asp-for="MobileNumber" type="text" class="form-control" placeholder="e.g.984511541">
+                </div>
+                <span asp-validation-for="MobileNumber" class="text-danger"></span>
+            </div>
+
+
+            <div class="col-md-6 form-group mb-2">
+                <label class="form-label" for="exampleFormControlSelect1">Date Of Birth</label>
+                <div class="input-group">
+                    @* <input asp-for="DateOfBirth" type="date" class="form-control" value="" name="DateOfBirth"> *@
+                    <input type="date" asp-for="DateOfBirth" max="@DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd")" min="@DateTime.Now.AddYears(-130).ToString("yyyy-MM-dd")" class="form-control">
+                </div>
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label" for="exampleFormControlSelect1">Country</label>
+                <select asp-for="CountryCode"  class="form-select" id="exampleFormControlSelect1" readonly>
+                    <option value="NP" selected>Nepal</option>
+                </select>
+                <span asp-validation-for="CountryCode" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >State</label>
+                <select asp-for="ProvinceCode" id="pradesh" onchange="Cascadedropdown('@Url.Action("GetDistrictList","Recipient")','?provinceCode='+this.value,'District'); onprovincechange();" class="form-control">
+                    <option value="" selected> Select--</option>
+                    @{
+                      
+                            var provinceList = await _ddl.Getprovinceddl("NP");
+                            foreach (var provienc in provinceList)
+                            {
+                                    <option value="@provienc.value">@provienc.Text</option>
+
+                            }
+                        
+                    }
+                </select>
+                <span asp-validation-for="ProvinceCode" class="text-danger"></span>
+            </div> 
+           @* <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >State</label>
+                <select asp-for="ProvinceCode" asp-items="ViewBag.stateddl" class="form-select" id="exampleFormControlSelect1">
+               
+                </select>
+            </div>*@
+           @* <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >District</label>
+                <select asp-for="DistrictCode" class="form-select" asp-items="ViewBag.Districtddl" id="exampleFormControlSelect1">
+                </select>
+            </div>*@
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >District</label>
+                <select asp-for="DistrictCode" id="District" onchange="Cascadedropdown('@Url.Action("GetLocalLevalList","Recipient")','?DistrictCode='+this.value,'Locallevel')" class="form-control">
+
+                            <option value="">--Select--</option>
+
+                </select>
+                <span asp-validation-for="DistrictCode" class="text-danger"></span>
+            </div>
+               <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >Local Body</label>
+                <select asp-for="LocalBodyCode" id="Locallevel" class="form-control">
+                    @{
+                         <option value="">--Select--</option>
+                    }
+
+                </select>
+                <span asp-validation-for="LocalBodyCode" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >City</label>
+                <input asp-for="City" type="text" class="form-control" placeholder="">
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+               <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >GMT</label>
+                <select asp-for="GMTTimeZone" class="form-select" asp-items="ViewBag.UtcTimeZoneddl" id="exampleFormControlSelect1">
+                </select>
+                <span asp-validation-for="GMTTimeZone" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >Zip code</label>
+                <div class="input-group">
+                    <input asp-for="Zipcode" type="text" class="form-control" placeholder="">
+                </div>
+                <span asp-validation-for="Zipcode" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >Address</label>
+                <div class="input-group">
+                    <input asp-for="Address" type="text" class="form-control" placeholder="">
+                </div>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >Source Symbol</label>
+                <select asp-for="SourceCurrency" asp-items="ViewBag.SourceCurrencyddl" class="form-select" id="exampleFormControlSelect1">
+                </select>
+                <span asp-validation-for="SourceCurrency" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >Destination Symbol</label>
+                <select asp-for="DestinationCurrency" asp-items="ViewBag.DestinationCurrencyddl" class="form-select" id="exampleFormControlSelect1">
+                </select>
+                <span asp-validation-for="DestinationCurrency" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >Relationship</label>
+                <select asp-for="RelationshipId" asp-items="ViewBag.Relationshipddl" class="form-select" id="exampleFormControlSelect1">
+                </select>
+                <span asp-validation-for="RelationshipId" class="text-danger"></span>
+            </div>
+            <div class="col-md-6  form-group mb-2">
+                <label class="form-label" >Payout Type</label>
+                <select asp-for="PayoutTypeId" asp-items="ViewBag.Paymenttypeddl" class="form-select" id="payoutTypeSelect">
+                    <option value="0" selected disabled>Choose option</option>
+                </select>
+                <span asp-validation-for="PayoutTypeId" class="text-danger"></span>
+            </div>
+
+            <div id="bankIdContainer" hidden>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Bank Name</label>
+                        <select asp-for="BankName" asp-items="ViewBag.bankddl" class="form-select" id="exampleFormControlSelect1">
+                            <option>Choose Bank</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Branch</label>
+                        <input asp-for="Branch" type="text" class="form-control" placeholder="Newroad">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Bank Code</label>
+                        <input asp-for="BankCode" type="text" class="form-control" placeholder="0155">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">A/c Holder Name</label>
+                        <input asp-for="AccountHolderName" type="text" class="form-control" placeholder="Jacub Duffy">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">A/c Number</label>
+                        <input asp-for="AccountNumber" type="text" class="form-control" placeholder="02154815484">
+                    </div>
+                </div>
+            </div>
+
+            <div id="walletIdContainer" hidden>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Wallet</label>
+                        <select asp-for="WalletRegisteredName" class="form-select" id="exampleFormControlSelect1">
+                            <option>Choose Wallet</option>
+                            <option value="mypay">Mypay</option>
+                            <option value="nic">Nic Wallet</option>
+
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Wallet ID</label>
+                        <input asp-for="WalletId" type="text" class="form-control" placeholder="0215">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Wallet Number</label>
+                        <input asp-for="WalletName" type="text" class="form-control" placeholder="0155">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">A/c Holder Name</label>
+                        <input asp-for="AccountHolderName" type="text" class="form-control" placeholder="Sarita Baidhya">
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Email ID</label>
+                        <input asp-for="Email" type="text" class="form-control" placeholder="saritabaidhyas@gmail.com">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mb-0 row mt-4">
+            <div class="button-items">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </form><!--end form-->
+</div>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    FormHandler.init({
+        method: 'POST',
+        actionUrl: '@Url.Action("RecipientsAdd", "Recipient")',
+        containerSelector: '#add-new .modal-body',
+        selector: '#FormRecipientadd'
+    }, function () {
+        $("#add-new .modal-body").html("");
+        $("#add-new .modal-title").html("");
+        $("#add-new").modal('hide');
+        Pagination.getData();
+    });
+</script>
+
+<script>
+
+    // $("#FormRecipientadd #exampleFormControlSelect1").on('change', function () {
+    //     $("#recipientLocalBody").html('<option value="0" selected>--Select--</option>');
+    //     CascadeDropdown('/partner/sendtransactions/getrecipientdistrictlist', '?provinceCode=' + $(this).val(), 'addTransactionForm #recipientDistrict');
+    // });
+
+    // $("#FormRecipientadd #recipientDistrict").on('change', function () {
+    //     CascadeDropdown('/partner/sendtransactions/getrecipientlocallevellist', '?districtCode=' + $(this).val(), 'addTransactionForm #recipientLocalBody');
+    // });
+
+
+    $("#payoutTypeSelect").on("change", function () {
+        var selectedValue = $(this).val();
+        debugger;
+        $("#bankIdContainer").hide();
+        $("#walletIdContainer").hide();
+
+        if (selectedValue === "4") {
+            $("#bankIdContainer").removeAttr("hidden");
+            $("#bankIdContainer").show();
+            $("#walletIdContainer").hide();
+
+        } else if (selectedValue === "6") {
+
+                    $("#walletIdContainer").removeAttr("hidden");
+                    $("#walletIdContainer").show();
+                     $("#bankIdContainer").hide();
+                }
+            });
+    </script>
+
+<script>
+    async function Cascadedropdown(Url, value, ReplaceId) {
+        debugger
+        var url = Url + value;
+        var decodeurl = decodeURIComponent(url);
+        $.ajax({
+            async: true,
+            type: "GET",
+            url: decodeurl,
+            success: await function (res) {
+                debugger
+                var items = '<option value="">--Select--</option > ';
+                var jsonArray = JSON.parse(res);
+                $.each(jsonArray, function (i, IncommingValue) {
+                    console.log(IncommingValue);
+                    items += "<option value='" + IncommingValue.value + "'>" + IncommingValue.Text + "</option>";
+                });
+                $("#" + ReplaceId).html(items);
+            }
+        })
+    };
+    function onprovincechange() {
+
+        console.log("hello world");
+        $("#Locallevel").html('<option value="0">--Select--</option > ')
+    }
+</script>
